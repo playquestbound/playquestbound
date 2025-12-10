@@ -3,10 +3,14 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from './useAuth';
 import { calculateLevel } from '@/lib/levelSystem';
 
+import type { Json } from '@/integrations/supabase/types';
+
 export interface Profile {
   id: string;
   character_name: string | null;
   race: string | null;
+  class: string | null;
+  customization: Json | null;
   xp: number;
   gold: number;
   level: number;

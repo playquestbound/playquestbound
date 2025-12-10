@@ -1,151 +1,156 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useCreateCharacter } from '@/hooks/useProfile';
-import { RaceSelector } from '@/components/RaceSelector';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { toast } from '@/hooks/use-toast';
-import { Loader2, Sparkles } from 'lucide-react';
+import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
+import { toast } from '@/hooks/use-toast';
+import { useQueryClient } from '@tanstack/react-query';
+import type { Json } from '@/integrations/supabase/types';
+
+import { ProgressIndicator } from '@/components/character-creation/ProgressIndicator';
+import { RaceSelection } from '@/components/character-creation/RaceSelection';
+import { ClassSelection } from '@/components/character-creation/ClassSelection';
+import { AppearanceCustomization } from '@/components/character-creation/AppearanceCustomization';
+import { NameSelection } from '@/components/character-creation/NameSelection';
+import { ReviewConfirm } from '@/components/character-creation/ReviewConfirm';
+import { DEFAULT_CUSTOMIZATION, CharacterCustomization } from '@/lib/characterData';
+
+const TOTAL_STEPS = 5;
 
 export default function CharacterCreation() {
-  const [characterName, setCharacterName] = useState('');
+  const [step, setStep] = useState(1);
   const [selectedRace, setSelectedRace] = useState<string | null>(null);
-  const [isChecking, setIsChecking] = useState(false);
-  const createCharacter = useCreateCharacter();
+  const [selectedClass, setSelectedClass] = useState<string | null>(null);
+  const [customization, setCustomization] = useState<CharacterCustomization>(DEFAULT_CUSTOMIZATION);
+  const [characterName, setCharacterName] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const { user } = useAuth();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!characterName.trim()) {
+  const handleSubmit = async () => {
+    if (!user || !selectedRace || !selectedClass || !characterName.trim()) {
       toast({
-        title: 'Name Required',
-        description: 'Please enter a character name.',
+        title: 'Missing Information',
+        description: 'Please complete all steps.',
         variant: 'destructive',
       });
       return;
     }
 
-    if (characterName.length < 3 || characterName.length > 20) {
-      toast({
-        title: 'Invalid Name',
-        description: 'Character name must be 3-20 characters.',
-        variant: 'destructive',
-      });
-      return;
-    }
+    setIsSubmitting(true);
 
-    if (!selectedRace) {
-      toast({
-        title: 'Race Required',
-        description: 'Please choose your race.',
-        variant: 'destructive',
-      });
-      return;
-    }
-
-    // Check name uniqueness
-    setIsChecking(true);
     try {
+      // Check name uniqueness one more time
       const { data: existing } = await supabase
         .from('profiles')
         .select('id')
-        .eq('character_name', characterName.trim())
-        .maybeSingle();
+        .eq('character_name', characterName.trim());
 
-      if (existing) {
+      if (existing && existing.length > 0) {
         toast({
           title: 'Name Taken',
-          description: 'This character name is already in use. Choose another.',
+          description: 'This name was just claimed. Please choose another.',
           variant: 'destructive',
         });
-        setIsChecking(false);
+        setStep(4); // Go back to name step
+        setIsSubmitting(false);
         return;
       }
 
-      await createCharacter.mutateAsync({
-        characterName: characterName.trim(),
-        race: selectedRace,
-      });
+      // Save character data
+      const { error } = await supabase
+        .from('profiles')
+        .update({
+          character_name: characterName.trim(),
+          race: selectedRace,
+          class: selectedClass,
+          customization: customization as unknown as Json,
+          has_created_character: true,
+        })
+        .eq('id', user.id);
+
+      if (error) throw error;
+
+      // Invalidate profile query
+      queryClient.invalidateQueries({ queryKey: ['profile'] });
 
       toast({
         title: 'Character Created!',
-        description: 'Your adventure begins now!',
+        description: `Welcome, ${characterName}! Your adventure begins now.`,
       });
+
       navigate('/');
     } catch (error) {
+      console.error('Failed to create character:', error);
       toast({
         title: 'Error',
         description: 'Failed to create character. Please try again.',
         variant: 'destructive',
       });
     } finally {
-      setIsChecking(false);
+      setIsSubmitting(false);
     }
   };
 
-  const isLoading = isChecking || createCharacter.isPending;
+  const goToStep = (newStep: number) => {
+    if (newStep >= 1 && newStep <= TOTAL_STEPS) {
+      setStep(newStep);
+    }
+  };
 
   return (
-    <div className="min-h-screen flex flex-col p-4 bg-background">
-      {/* Header */}
-      <div className="text-center py-6">
-        <div className="w-16 h-16 mx-auto mb-3 rounded-full bg-secondary/20 flex items-center justify-center">
-          <Sparkles className="w-8 h-8 text-secondary" />
-        </div>
-        <h1 className="font-display text-2xl font-bold">Create Your Character</h1>
-        <p className="text-muted-foreground text-sm mt-1">
-          Choose wisely, adventurer
-        </p>
-      </div>
+    <div className="min-h-screen flex flex-col bg-background">
+      <ProgressIndicator currentStep={step} totalSteps={TOTAL_STEPS} />
 
-      <form onSubmit={handleSubmit} className="flex-1 flex flex-col max-w-md mx-auto w-full">
-        {/* Character Name */}
-        <div className="parchment-card p-4 mb-4">
-          <label className="font-display font-semibold text-sm mb-2 block">
-            Character Name
-          </label>
-          <Input
-            placeholder="Enter your name..."
-            value={characterName}
-            onChange={(e) => setCharacterName(e.target.value)}
-            maxLength={20}
-          />
-          <p className="text-xs text-muted-foreground mt-1">
-            3-20 characters, must be unique
-          </p>
-        </div>
-
-        {/* Race Selection */}
-        <div className="parchment-card p-4 mb-4 flex-1">
-          <label className="font-display font-semibold text-sm mb-3 block">
-            Choose Your Race
-          </label>
-          <RaceSelector
+      <div className="flex-1 p-4 max-w-md mx-auto w-full flex flex-col">
+        {step === 1 && (
+          <RaceSelection
             selectedRace={selectedRace}
             onSelect={setSelectedRace}
+            onContinue={() => goToStep(2)}
           />
-        </div>
+        )}
 
-        {/* Submit */}
-        <Button
-          type="submit"
-          variant="gold"
-          size="lg"
-          className="w-full"
-          disabled={isLoading || !characterName || !selectedRace}
-        >
-          {isLoading ? (
-            <>
-              <Loader2 className="w-4 h-4 animate-spin" />
-              Creating...
-            </>
-          ) : (
-            'Begin Your Journey'
-          )}
-        </Button>
-      </form>
+        {step === 2 && (
+          <ClassSelection
+            selectedClass={selectedClass}
+            onSelect={setSelectedClass}
+            onContinue={() => goToStep(3)}
+            onBack={() => goToStep(1)}
+          />
+        )}
+
+        {step === 3 && (
+          <AppearanceCustomization
+            customization={customization}
+            onChange={setCustomization}
+            onContinue={() => goToStep(4)}
+            onBack={() => goToStep(2)}
+          />
+        )}
+
+        {step === 4 && (
+          <NameSelection
+            name={characterName}
+            onNameChange={setCharacterName}
+            onContinue={() => goToStep(5)}
+            onBack={() => goToStep(3)}
+          />
+        )}
+
+        {step === 5 && selectedRace && selectedClass && (
+          <ReviewConfirm
+            name={characterName}
+            raceId={selectedRace}
+            classId={selectedClass}
+            customization={customization}
+            onConfirm={handleSubmit}
+            onBack={() => goToStep(4)}
+            isLoading={isSubmitting}
+          />
+        )}
+      </div>
     </div>
   );
 }
