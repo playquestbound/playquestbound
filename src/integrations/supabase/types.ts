@@ -14,10 +14,54 @@ export type Database = {
   }
   public: {
     Tables: {
+      items: {
+        Row: {
+          class_restriction: string | null
+          created_at: string
+          description: string
+          gold_price: number | null
+          id: string
+          image_url: string | null
+          is_purchasable: boolean
+          name: string
+          race_restriction: string | null
+          rarity: string
+          slot: string
+        }
+        Insert: {
+          class_restriction?: string | null
+          created_at?: string
+          description: string
+          gold_price?: number | null
+          id?: string
+          image_url?: string | null
+          is_purchasable?: boolean
+          name: string
+          race_restriction?: string | null
+          rarity?: string
+          slot: string
+        }
+        Update: {
+          class_restriction?: string | null
+          created_at?: string
+          description?: string
+          gold_price?: number | null
+          id?: string
+          image_url?: string | null
+          is_purchasable?: boolean
+          name?: string
+          race_restriction?: string | null
+          rarity?: string
+          slot?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           character_name: string | null
+          class: string | null
           created_at: string
+          customization: Json | null
           gold: number
           has_created_character: boolean
           id: string
@@ -28,7 +72,9 @@ export type Database = {
         }
         Insert: {
           character_name?: string | null
+          class?: string | null
           created_at?: string
+          customization?: Json | null
           gold?: number
           has_created_character?: boolean
           id: string
@@ -39,7 +85,9 @@ export type Database = {
         }
         Update: {
           character_name?: string | null
+          class?: string | null
           created_at?: string
+          customization?: Json | null
           gold?: number
           has_created_character?: boolean
           id?: string
@@ -52,6 +100,7 @@ export type Database = {
       }
       quests: {
         Row: {
+          class_affinity: string | null
           created_at: string
           description: string
           difficulty: string
@@ -63,6 +112,7 @@ export type Database = {
           xp_reward: number
         }
         Insert: {
+          class_affinity?: string | null
           created_at?: string
           description: string
           difficulty?: string
@@ -74,6 +124,7 @@ export type Database = {
           xp_reward?: number
         }
         Update: {
+          class_affinity?: string | null
           created_at?: string
           description?: string
           difficulty?: string
@@ -85,6 +136,48 @@ export type Database = {
           xp_reward?: number
         }
         Relationships: []
+      }
+      user_equipment: {
+        Row: {
+          equipped: boolean
+          id: string
+          item_id: string
+          obtained_at: string
+          obtained_via: string
+          user_id: string
+        }
+        Insert: {
+          equipped?: boolean
+          id?: string
+          item_id: string
+          obtained_at?: string
+          obtained_via?: string
+          user_id: string
+        }
+        Update: {
+          equipped?: boolean
+          id?: string
+          item_id?: string
+          obtained_at?: string
+          obtained_via?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_equipment_item_id_fkey"
+            columns: ["item_id"]
+            isOneToOne: false
+            referencedRelation: "items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_equipment_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_quests: {
         Row: {
