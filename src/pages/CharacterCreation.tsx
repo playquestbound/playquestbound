@@ -72,15 +72,16 @@ export default function CharacterCreation() {
 
       if (error) throw error;
 
-      // Invalidate profile query
-      queryClient.invalidateQueries({ queryKey: ['profile'] });
+      // Invalidate and refetch profile before navigating
+      await queryClient.invalidateQueries({ queryKey: ['profile'] });
+      await queryClient.refetchQueries({ queryKey: ['profile'] });
 
       toast({
         title: 'Character Created!',
         description: `Welcome, ${characterName}! Your adventure begins now.`,
       });
 
-      navigate('/');
+      navigate('/', { replace: true });
     } catch (error) {
       console.error('Failed to create character:', error);
       toast({

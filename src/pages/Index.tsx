@@ -7,22 +7,23 @@ import Home from './Home';
 
 export default function Index() {
   const { user, loading: authLoading } = useAuth();
-  const { data: profile, isLoading: profileLoading } = useProfile();
+  const { data: profile, isLoading: profileLoading, isFetching } = useProfile();
   const navigate = useNavigate();
 
   useEffect(() => {
     if (!authLoading && !user) {
-      navigate('/auth');
+      navigate('/auth', { replace: true });
     }
   }, [user, authLoading, navigate]);
 
   useEffect(() => {
-    if (!profileLoading && profile && !profile.has_created_character) {
-      navigate('/create-character');
+    // Only redirect if we have fresh data (not fetching) and character not created
+    if (!profileLoading && !isFetching && profile && !profile.has_created_character) {
+      navigate('/create-character', { replace: true });
     }
-  }, [profile, profileLoading, navigate]);
+  }, [profile, profileLoading, isFetching, navigate]);
 
-  const isLoading = authLoading || profileLoading;
+  const isLoading = authLoading || profileLoading || isFetching;
 
   if (isLoading) {
     return <LoadingScreen />;
