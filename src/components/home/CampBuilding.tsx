@@ -15,8 +15,9 @@ export function CampBuilding({ name, icon, to }: CampBuildingProps) {
     >
       <span className="text-2xl">{icon}</span>
       <span 
-        className="font-display text-xs font-bold uppercase tracking-wider text-parchment-light"
+        className="font-display text-xs font-bold uppercase tracking-wider"
         style={{
+          color: 'hsl(50 60% 85%)',
           textShadow: '1px 1px 2px rgba(0,0,0,0.8)',
         }}
       >
