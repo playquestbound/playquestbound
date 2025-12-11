@@ -1,6 +1,6 @@
-import { Campfire } from './Campfire';
 import { CampBuilding } from './CampBuilding';
 import qbLogo from '@/assets/qb-logo.png';
+import forestBg from '@/assets/forest-bg.jpg';
 
 interface CampSceneProps {
   characterRace: string;
@@ -11,50 +11,37 @@ const BUILDINGS = [
     name: 'Quests',
     icon: '📜',
     to: '/quests',
-    position: 'top-left' as const,
     color: '#6b5a3c',
-    description: 'Accept new adventures',
   },
   {
     name: 'Journal',
     icon: '📖',
     to: '/journal',
-    position: 'top-right' as const,
     color: '#5a4a35',
-    description: 'View your memories',
   },
   {
     name: 'Arena',
     icon: '🏆',
     to: '/leaderboard',
-    position: 'bottom-left' as const,
     color: '#4a5a40',
-    description: 'Compare with others',
   },
   {
     name: 'Profile',
     icon: '⚔️',
     to: '/profile',
-    position: 'bottom-right' as const,
     color: '#5a4535',
-    description: 'Your character',
   },
 ];
 
 export function CampScene({ characterRace }: CampSceneProps) {
   return (
     <div className="flex-1 relative overflow-hidden">
-      {/* Video overlay */}
-      <video
-        autoPlay
-        loop
-        muted
-        playsInline
-        className="absolute inset-0 w-full h-full object-cover pointer-events-none"
-        style={{ opacity: 0.7 }}
-      >
-        <source src="/videos/camp-overlay.mp4" type="video/mp4" />
-      </video>
+      {/* Background image */}
+      <img
+        src={forestBg}
+        alt=""
+        className="absolute inset-0 w-full h-full object-cover"
+      />
 
       {/* Dark overlay for better contrast */}
       <div 
@@ -75,8 +62,8 @@ export function CampScene({ characterRace }: CampSceneProps) {
 
       {/* Center content */}
       <div className="absolute inset-0 flex flex-col items-center justify-center pt-32 pb-16 z-10">
-        {/* Navigation buttons grid */}
-        <div className="grid grid-cols-2 gap-4 px-8">
+        {/* Navigation buttons stacked vertically */}
+        <div className="flex flex-col gap-4 px-8">
           {BUILDINGS.map((building) => (
             <CampBuilding key={building.name} {...building} />
           ))}
