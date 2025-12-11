@@ -19,7 +19,9 @@ import {
   Calendar,
   Shield,
   Star,
-  Backpack
+  Backpack,
+  Search,
+  Users
 } from 'lucide-react';
 import { format } from 'date-fns';
 
@@ -65,8 +67,31 @@ export default function Profile() {
       </div>
 
       <div className="relative p-4 space-y-6 max-w-lg mx-auto">
-        {/* Header with Bag Icon */}
+        {/* Header with Action Buttons */}
         <div className="relative flex items-center justify-center pt-4">
+          {/* Left buttons - Search & Guild */}
+          <div className="absolute left-0 flex gap-2">
+            <Button 
+              size="icon" 
+              variant="outline"
+              className="w-11 h-11 rounded-full border-2 border-secondary/50 bg-card/80 backdrop-blur hover:bg-secondary/20 hover:border-secondary"
+              onClick={() => navigate('/search-players')}
+            >
+              <Search className="w-5 h-5 text-secondary" />
+            </Button>
+            <Button 
+              size="icon" 
+              variant="outline"
+              className="w-11 h-11 rounded-full border-2 border-secondary/50 bg-card/80 backdrop-blur hover:bg-secondary/20 hover:border-secondary"
+              onClick={() => toast({
+                title: 'Guilds Coming Soon!',
+                description: 'Band together with fellow adventurers...',
+              })}
+            >
+              <Users className="w-5 h-5 text-secondary" />
+            </Button>
+          </div>
+          
           <h1 className="font-display text-2xl font-bold">Profile</h1>
           
           {/* Bag/Equipment Button */}
