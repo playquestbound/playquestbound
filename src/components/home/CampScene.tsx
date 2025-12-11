@@ -43,13 +43,6 @@ export function CampScene({ characterRace }: CampSceneProps) {
         className="absolute inset-0 w-full h-full object-cover"
       />
 
-      {/* Dark overlay for better contrast */}
-      <div 
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background: 'radial-gradient(ellipse at center, rgba(26,21,16,0.3) 0%, rgba(26,21,16,0.7) 100%)',
-        }}
-      />
 
       {/* Logo at top center */}
       <div className="absolute top-6 left-1/2 -translate-x-1/2 z-10">
