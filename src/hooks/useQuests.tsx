@@ -63,13 +63,13 @@ export function useAvailableQuests() {
   });
 }
 
-export function useActiveQuest() {
+export function useActiveQuests() {
   const { user } = useAuth();
 
   return useQuery({
-    queryKey: ['active-quest', user?.id],
-    queryFn: async (): Promise<UserQuest | null> => {
-      if (!user) return null;
+    queryKey: ['active-quests', user?.id],
+    queryFn: async (): Promise<UserQuest[]> => {
+      if (!user) return [];
 
       const { data, error } = await supabase
         .from('user_quests')
@@ -79,17 +79,14 @@ export function useActiveQuest() {
         `)
         .eq('user_id', user.id)
         .eq('status', 'active')
-        .maybeSingle();
+        .order('created_at', { ascending: false });
 
       if (error) throw error;
       
-      if (data) {
-        return {
-          ...data,
-          quest: data.quest as Quest,
-        };
-      }
-      return null;
+      return (data || []).map(item => ({
+        ...item,
+        quest: item.quest as Quest,
+      }));
     },
     enabled: !!user,
   });
@@ -146,7 +143,26 @@ export function useAcceptQuest() {
       return data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['active-quest'] });
+      queryClient.invalidateQueries({ queryKey: ['active-quests'] });
+      queryClient.invalidateQueries({ queryKey: ['available-quests'] });
+    },
+  });
+}
+
+export function useAbandonQuest() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (userQuestId: string) => {
+      const { error } = await supabase
+        .from('user_quests')
+        .delete()
+        .eq('id', userQuestId);
+
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['active-quests'] });
       queryClient.invalidateQueries({ queryKey: ['available-quests'] });
     },
   });
@@ -184,7 +200,7 @@ export function useCompleteQuest() {
       return data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['active-quest'] });
+      queryClient.invalidateQueries({ queryKey: ['active-quests'] });
       queryClient.invalidateQueries({ queryKey: ['completed-quests'] });
       queryClient.invalidateQueries({ queryKey: ['available-quests'] });
       queryClient.invalidateQueries({ queryKey: ['profile'] });

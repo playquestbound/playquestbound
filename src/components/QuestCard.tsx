@@ -1,4 +1,4 @@
-import { Coins, Sparkles, MapPin, TreePine, Building, Crown, Sword, Scroll } from 'lucide-react';
+import { Coins, Sparkles, MapPin, TreePine, Building, Crown, Sword, Scroll, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
@@ -12,6 +12,7 @@ interface QuestCardProps {
   questCategory?: 'side' | 'main' | 'grand';
   onAccept?: () => void;
   onComplete?: () => void;
+  onAbandon?: () => void;
   isActive?: boolean;
   isLoading?: boolean;
 }
@@ -50,6 +51,7 @@ export function QuestCard({
   questCategory = 'side',
   onAccept,
   onComplete,
+  onAbandon,
   isActive = false,
   isLoading = false,
 }: QuestCardProps) {
@@ -122,6 +124,17 @@ export function QuestCard({
             disabled={isLoading}
           >
             {isLoading ? 'Completing...' : 'Complete Quest'}
+          </Button>
+        )}
+        {onAbandon && (
+          <Button 
+            variant="outline" 
+            className="w-full mt-2 text-destructive hover:bg-destructive/10 hover:text-destructive border-destructive/50" 
+            onClick={onAbandon}
+            disabled={isLoading}
+          >
+            <X className="w-4 h-4 mr-2" />
+            {isLoading ? 'Abandoning...' : 'Abandon Quest'}
           </Button>
         )}
       </div>
