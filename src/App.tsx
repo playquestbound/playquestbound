@@ -13,6 +13,8 @@ import Quests from "./pages/Quests";
 import Journal from "./pages/Journal";
 import Leaderboard from "./pages/Leaderboard";
 import Profile from "./pages/Profile";
+import SearchPlayers from "./pages/SearchPlayers";
+import PlayerProfile from "./pages/PlayerProfile";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -53,6 +55,8 @@ const App = () => {
               <Route path="/journal" element={<Journal />} />
               <Route path="/leaderboard" element={<Leaderboard />} />
               <Route path="/profile" element={<Profile />} />
+              <Route path="/search-players" element={<SearchPlayers />} />
+              <Route path="/player/:playerId" element={<PlayerProfile />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
