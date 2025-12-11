@@ -16,6 +16,7 @@ import Leaderboard from "./pages/Leaderboard";
 import Profile from "./pages/Profile";
 import SearchPlayers from "./pages/SearchPlayers";
 import PlayerProfile from "./pages/PlayerProfile";
+import RunTracker from "./pages/RunTracker";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -59,6 +60,7 @@ const App = () => {
               <Route path="/settings" element={<Settings />} />
               <Route path="/search-players" element={<SearchPlayers />} />
               <Route path="/player/:playerId" element={<PlayerProfile />} />
+              <Route path="/run" element={<RunTracker />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
