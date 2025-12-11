@@ -73,22 +73,14 @@ export function CampScene({ characterRace }: CampSceneProps) {
         />
       </div>
 
-      {/* Buildings */}
-      {BUILDINGS.map((building) => (
-        <CampBuilding key={building.name} {...building} />
-      ))}
-
-      {/* Campfire in center */}
-      <Campfire characterRace={characterRace} />
-
-      {/* Decorative elements */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 text-center">
-        <p 
-          className="text-xs text-parchment/40 font-display tracking-wider"
-          style={{ textShadow: '0 0 10px rgba(0,0,0,0.8)' }}
-        >
-          TAP A BUILDING TO EXPLORE
-        </p>
+      {/* Center content */}
+      <div className="absolute inset-0 flex flex-col items-center justify-center pt-32 pb-16 z-10">
+        {/* Navigation buttons grid */}
+        <div className="grid grid-cols-2 gap-4 px-8">
+          {BUILDINGS.map((building) => (
+            <CampBuilding key={building.name} {...building} />
+          ))}
+        </div>
       </div>
     </div>
   );
