@@ -17,6 +17,7 @@ import Profile from "./pages/Profile";
 import SearchPlayers from "./pages/SearchPlayers";
 import PlayerProfile from "./pages/PlayerProfile";
 import RunTracker from "./pages/RunTracker";
+import Store from "./pages/Store";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -61,6 +62,7 @@ const App = () => {
               <Route path="/search-players" element={<SearchPlayers />} />
               <Route path="/player/:playerId" element={<PlayerProfile />} />
               <Route path="/run" element={<RunTracker />} />
+              <Route path="/store" element={<Store />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
