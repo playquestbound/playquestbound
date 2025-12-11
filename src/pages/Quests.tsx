@@ -8,7 +8,7 @@ import { toast } from '@/hooks/use-toast';
 import { Scroll, AlertCircle, ArrowLeft } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { useProfile } from '@/hooks/useProfile';
+import { useProfile, useUpdateStats } from '@/hooks/useProfile';
 
 const MAX_ACTIVE_QUESTS = 5;
 
@@ -19,6 +19,7 @@ export default function Quests() {
   const acceptQuest = useAcceptQuest();
   const abandonQuest = useAbandonQuest();
   const completeQuest = useCompleteQuest();
+  const updateStats = useUpdateStats();
   
   const [completingQuest, setCompletingQuest] = useState<UserQuest | null>(null);
 
@@ -97,6 +98,11 @@ export default function Quests() {
         locationLat,
         locationLng,
       });
+
+      // Update XP and gold
+      const xpReward = completingQuest.quest?.xp_reward || 0;
+      const goldReward = completingQuest.quest?.gold_reward || 0;
+      await updateStats.mutateAsync({ xpGain: xpReward, goldGain: goldReward });
 
       await refetchProfile();
 
