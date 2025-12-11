@@ -67,18 +67,27 @@ export default function Auth() {
     <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-background">
       {/* Hero Section */}
       <div className="text-center mb-8">
-        <div className="w-24 h-24 mx-auto mb-4 rounded-full bg-secondary/20 flex items-center justify-center animate-float">
-          <Sword className="w-12 h-12 text-secondary" />
+        <div 
+          className="w-24 h-24 mx-auto mb-4 rounded-full flex items-center justify-center animate-float"
+          style={{ backgroundColor: 'hsl(0 65% 25% / 0.3)' }}
+        >
+          <Sword className="w-12 h-12" style={{ color: 'hsl(50 60% 85%)' }} />
         </div>
-        <h1 className="font-display text-4xl font-bold mb-2">Questbound</h1>
+        <h1 className="font-display text-4xl font-bold mb-2" style={{ color: 'hsl(50 60% 85%)' }}>Questbound</h1>
         <p className="text-muted-foreground max-w-xs mx-auto">
           Embark on real-world adventures. Earn glory and gold.
         </p>
       </div>
 
       {/* Auth Card */}
-      <div className="w-full max-w-sm parchment-card p-6">
-        <h2 className="font-display text-xl font-semibold text-center mb-6">
+      <div 
+        className="w-full max-w-sm p-6 rounded-lg border"
+        style={{ 
+          backgroundColor: 'hsl(0 65% 25% / 0.2)',
+          borderColor: 'hsl(0 65% 25% / 0.5)'
+        }}
+      >
+        <h2 className="font-display text-xl font-semibold text-center mb-6" style={{ color: 'hsl(50 60% 85%)' }}>
           {isLogin ? 'Continue Your Journey' : 'Begin Your Adventure'}
         </h2>
 
@@ -90,7 +99,7 @@ export default function Auth() {
               placeholder="Your email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="pl-10"
+              className="pl-10 bg-background/50 border-muted"
               required
             />
           </div>
@@ -102,15 +111,18 @@ export default function Auth() {
               placeholder="Your password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="pl-10"
+              className="pl-10 bg-background/50 border-muted"
               required
             />
           </div>
 
           <Button
             type="submit"
-            variant="fantasy"
-            className="w-full"
+            className="w-full font-display font-bold"
+            style={{ 
+              backgroundColor: 'hsl(0 65% 25%)',
+              color: 'hsl(50 60% 85%)'
+            }}
             disabled={isLoading}
           >
             {isLoading ? (
@@ -128,10 +140,10 @@ export default function Auth() {
           <button
             type="button"
             onClick={() => setIsLogin(!isLogin)}
-            className="text-sm text-muted-foreground hover:text-secondary transition-colors"
+            className="text-sm text-muted-foreground transition-colors"
           >
             {isLogin ? "New adventurer? " : "Already have an account? "}
-            <span className="text-secondary font-semibold">
+            <span className="font-semibold" style={{ color: 'hsl(50 60% 85%)' }}>
               {isLogin ? 'Sign up' : 'Log in'}
             </span>
           </button>
