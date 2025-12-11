@@ -53,10 +53,14 @@ export function CampScene({ characterRace }: CampSceneProps) {
         />
       </div>
 
-      {/* Center content */}
-      <div className="absolute inset-0 flex flex-col items-center justify-center pt-32 pb-16 z-10">
-        {/* Navigation buttons stacked vertically */}
-        <div className="flex flex-col gap-4 px-8">
+      {/* Bottom navigation bar */}
+      <div className="absolute bottom-0 left-0 right-0 z-10">
+        <div 
+          className="flex justify-around items-center py-3 px-2"
+          style={{
+            background: 'linear-gradient(to top, rgba(26,21,16,0.95) 0%, rgba(26,21,16,0.8) 70%, transparent 100%)',
+          }}
+        >
           {BUILDINGS.map((building) => (
             <CampBuilding key={building.name} {...building} />
           ))}
