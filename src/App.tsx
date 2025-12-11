@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { Toaster } from "@/components/ui/toaster";
-import Settings from "@/pages/Settings";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -14,10 +13,12 @@ import Quests from "./pages/Quests";
 import Journal from "./pages/Journal";
 import Leaderboard from "./pages/Leaderboard";
 import Profile from "./pages/Profile";
+import Settings from "./pages/Settings";
 import SearchPlayers from "./pages/SearchPlayers";
 import PlayerProfile from "./pages/PlayerProfile";
 import RunTracker from "./pages/RunTracker";
 import Store from "./pages/Store";
+import Discover from "./pages/Discover";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -63,6 +64,7 @@ const App = () => {
               <Route path="/player/:playerId" element={<PlayerProfile />} />
               <Route path="/run" element={<RunTracker />} />
               <Route path="/store" element={<Store />} />
+              <Route path="/discover" element={<Discover />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>

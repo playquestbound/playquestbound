@@ -1,11 +1,11 @@
-import { Home, Scroll, BookOpen, Trophy, ShoppingBag } from 'lucide-react';
+import { Home, Scroll, BookOpen, Compass, ShoppingBag } from 'lucide-react';
 import { NavLink } from '@/components/NavLink';
 
 const navItems = [
   { to: '/', icon: Home, label: 'Home' },
   { to: '/quests', icon: Scroll, label: 'Quests' },
   { to: '/journal', icon: BookOpen, label: 'Journal' },
-  { to: '/leaderboard', icon: Trophy, label: 'Ranks' },
+  { to: '/discover', icon: Compass, label: 'Discover' },
   { to: '/store', icon: ShoppingBag, label: 'Store' },
 ];
 
