@@ -21,7 +21,8 @@ import {
   Star,
   Backpack,
   Search,
-  Users
+  Users,
+  Settings
 } from 'lucide-react';
 import { format } from 'date-fns';
 
@@ -94,16 +95,26 @@ export default function Profile() {
           
           <h1 className="font-display text-2xl font-bold">Profile</h1>
           
-          {/* Bag/Equipment Button */}
-          <EquipmentDrawer>
+          {/* Right buttons - Settings & Equipment */}
+          <div className="absolute right-0 flex gap-2">
             <Button 
               size="icon" 
               variant="outline"
-              className="absolute right-0 w-11 h-11 rounded-full border-2 border-secondary/50 bg-card/80 backdrop-blur hover:bg-secondary/20 hover:border-secondary"
+              className="w-11 h-11 rounded-full border-2 border-secondary/50 bg-card/80 backdrop-blur hover:bg-secondary/20 hover:border-secondary"
+              onClick={() => navigate('/settings')}
             >
-              <Backpack className="w-5 h-5 text-secondary" />
+              <Settings className="w-5 h-5 text-secondary" />
             </Button>
-          </EquipmentDrawer>
+            <EquipmentDrawer>
+              <Button 
+                size="icon" 
+                variant="outline"
+                className="w-11 h-11 rounded-full border-2 border-secondary/50 bg-card/80 backdrop-blur hover:bg-secondary/20 hover:border-secondary"
+              >
+                <Backpack className="w-5 h-5 text-secondary" />
+              </Button>
+            </EquipmentDrawer>
+          </div>
         </div>
 
         {profile && (
