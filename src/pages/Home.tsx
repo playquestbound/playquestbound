@@ -22,11 +22,14 @@ export default function Home() {
   ];
 
   const handleQuickAction = (action: string) => {
-    toast({
-      title: `Quick ${action}`,
-      description: `Starting a ${action.toLowerCase()} quest...`,
-    });
-    navigate('/quests');
+    if (action === 'Run') {
+      navigate('/run');
+    } else {
+      toast({
+        title: `${action} Coming Soon`,
+        description: `${action} tracking will be available soon!`,
+      });
+    }
   };
 
   return (
