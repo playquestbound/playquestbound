@@ -7,8 +7,6 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
-import mapboxgl from 'mapbox-gl';
-import 'mapbox-gl/dist/mapbox-gl.css';
 
 interface Unlockable {
   id: string;
@@ -60,7 +58,7 @@ export default function Discover() {
   const [mapReady, setMapReady] = useState(false);
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
   const mapContainer = useRef<HTMLDivElement>(null);
-  const map = useRef<mapboxgl.Map | null>(null);
+  const map = useRef<any>(null);
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -72,65 +70,74 @@ export default function Discover() {
           });
         },
         () => {
-          // Default to NYC if location denied
           setUserLocation({ lat: 40.7128, lng: -74.006 });
         }
       );
+    } else {
+      setUserLocation({ lat: 40.7128, lng: -74.006 });
     }
   }, []);
 
   useEffect(() => {
     if (!mapContainer.current || !mapboxToken || !userLocation) return;
 
-    mapboxgl.accessToken = mapboxToken;
+    let mapInstance: any = null;
 
-    try {
-      map.current = new mapboxgl.Map({
-        container: mapContainer.current,
-        style: 'mapbox://styles/mapbox/dark-v11',
-        center: [userLocation.lng, userLocation.lat],
-        zoom: 12,
-      });
+    const initMap = async () => {
+      try {
+        const mapboxgl = (await import('mapbox-gl')).default;
+        await import('mapbox-gl/dist/mapbox-gl.css');
+        
+        mapboxgl.accessToken = mapboxToken;
 
-      map.current.addControl(new mapboxgl.NavigationControl(), 'top-right');
+        mapInstance = new mapboxgl.Map({
+          container: mapContainer.current!,
+          style: 'mapbox://styles/mapbox/dark-v11',
+          center: [userLocation.lng, userLocation.lat],
+          zoom: 12,
+        });
 
-      // Add user marker
-      new mapboxgl.Marker({ color: '#c9a227' })
-        .setLngLat([userLocation.lng, userLocation.lat])
-        .addTo(map.current);
+        mapInstance.addControl(new mapboxgl.NavigationControl(), 'top-right');
 
-      // Add unlockable markers
-      mockUnlockables.forEach((item) => {
-        const el = document.createElement('div');
-        el.className = item.claimed ? 'unlockable-marker claimed' : 'unlockable-marker';
-        el.innerHTML = item.claimed ? '✓' : '📍';
-        el.style.cssText = `
-          width: 30px;
-          height: 30px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 18px;
-          background: ${item.claimed ? 'rgba(100, 100, 100, 0.8)' : 'rgba(201, 162, 39, 0.9)'};
-          border-radius: 50%;
-          border: 2px solid ${item.claimed ? '#666' : '#c9a227'};
-          cursor: pointer;
-          ${!item.claimed ? 'animation: pulse 2s infinite;' : ''}
-        `;
+        new mapboxgl.Marker({ color: '#c9a227' })
+          .setLngLat([userLocation.lng, userLocation.lat])
+          .addTo(mapInstance);
 
-        new mapboxgl.Marker(el)
-          .setLngLat([item.lng, item.lat])
-          .setPopup(new mapboxgl.Popup().setHTML(`<strong>${item.name}</strong><br/>${item.location}`))
-          .addTo(map.current!);
-      });
+        mockUnlockables.forEach((item) => {
+          const el = document.createElement('div');
+          el.className = item.claimed ? 'unlockable-marker claimed' : 'unlockable-marker';
+          el.innerHTML = item.claimed ? '✓' : '📍';
+          el.style.cssText = `
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            background: ${item.claimed ? 'rgba(100, 100, 100, 0.8)' : 'rgba(201, 162, 39, 0.9)'};
+            border-radius: 50%;
+            border: 2px solid ${item.claimed ? '#666' : '#c9a227'};
+            cursor: pointer;
+            ${!item.claimed ? 'animation: pulse 2s infinite;' : ''}
+          `;
 
-      setMapReady(true);
-    } catch (error) {
-      console.error('Map initialization failed:', error);
-    }
+          new mapboxgl.Marker(el)
+            .setLngLat([item.lng, item.lat])
+            .setPopup(new mapboxgl.Popup().setHTML(`<strong>${item.name}</strong><br/>${item.location}`))
+            .addTo(mapInstance);
+        });
+
+        map.current = mapInstance;
+        setMapReady(true);
+      } catch (error) {
+        console.error('Map initialization failed:', error);
+      }
+    };
+
+    initMap();
 
     return () => {
-      map.current?.remove();
+      mapInstance?.remove();
     };
   }, [mapboxToken, userLocation]);
 
@@ -146,13 +153,11 @@ export default function Discover() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#0d0d0d] via-[#2a2a2a] to-[#1a1a1a] pb-24">
-      {/* Header */}
       <header className="px-4 pt-6 pb-4">
         <h1 className="font-display text-2xl text-gold">Discover</h1>
         <p className="text-muted-foreground text-sm">Find exclusive items in the real world</p>
       </header>
 
-      {/* View Toggle */}
       <div className="px-4 mb-4">
         <div className="flex bg-card/50 rounded-lg p-1 border border-border/30">
           <button
@@ -178,7 +183,6 @@ export default function Discover() {
         </div>
       </div>
 
-      {/* Map Section */}
       <div className="px-4 mb-4">
         <div className="relative h-[280px] rounded-xl overflow-hidden border border-border/30 bg-card/30">
           {!mapboxToken ? (
@@ -217,7 +221,6 @@ export default function Discover() {
         </div>
       </div>
 
-      {/* Nearby Unlockables or Empty State */}
       <div className="px-4 mb-6">
         <h2 className="font-display text-lg text-foreground mb-3 flex items-center gap-2">
           <Sparkles className="w-4 h-4 text-gold" />
@@ -282,7 +285,6 @@ export default function Discover() {
         )}
       </div>
 
-      {/* Collections Section */}
       <div className="px-4 mb-6">
         <h2 className="font-display text-lg text-foreground mb-3">Collections</h2>
         <ScrollArea className="w-full">
@@ -313,7 +315,6 @@ export default function Discover() {
         </ScrollArea>
       </div>
 
-      {/* Add custom pulse animation */}
       <style>{`
         @keyframes pulse {
           0%, 100% { box-shadow: 0 0 0 0 rgba(201, 162, 39, 0.4); }
