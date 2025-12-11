@@ -52,7 +52,7 @@ export function CampScene({ characterRace }: CampSceneProps) {
         <img 
           src={qbLogo} 
           alt="Questbound" 
-          className="h-48 w-auto drop-shadow-lg"
+          className="w-auto max-w-[400px] drop-shadow-lg object-contain"
         />
       </div>
 
