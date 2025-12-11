@@ -1,5 +1,6 @@
 import { Campfire } from './Campfire';
 import { CampBuilding } from './CampBuilding';
+import qbLogo from '@/assets/qb-logo.png';
 
 interface CampSceneProps {
   characterRace: string;
@@ -62,6 +63,15 @@ export function CampScene({ characterRace }: CampSceneProps) {
           background: 'radial-gradient(ellipse at center, rgba(26,21,16,0.3) 0%, rgba(26,21,16,0.7) 100%)',
         }}
       />
+
+      {/* Logo at top center */}
+      <div className="absolute top-6 left-1/2 -translate-x-1/2 z-10">
+        <img 
+          src={qbLogo} 
+          alt="Questbound" 
+          className="h-16 w-auto drop-shadow-lg"
+        />
+      </div>
 
       {/* Buildings */}
       {BUILDINGS.map((building) => (
