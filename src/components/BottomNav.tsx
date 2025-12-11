@@ -1,4 +1,4 @@
-import { Home, Scroll, BookOpen, Trophy, User } from 'lucide-react';
+import { Home, Scroll, BookOpen, Trophy, ShoppingBag } from 'lucide-react';
 import { NavLink } from '@/components/NavLink';
 
 const navItems = [
@@ -6,7 +6,7 @@ const navItems = [
   { to: '/quests', icon: Scroll, label: 'Quests' },
   { to: '/journal', icon: BookOpen, label: 'Journal' },
   { to: '/leaderboard', icon: Trophy, label: 'Ranks' },
-  { to: '/profile', icon: User, label: 'Profile' },
+  { to: '/store', icon: ShoppingBag, label: 'Store' },
 ];
 
 export function BottomNav() {
