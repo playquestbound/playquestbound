@@ -64,7 +64,7 @@ export function CampScene({ characterRace }: CampSceneProps) {
         <div 
           className="flex justify-around items-center py-3 px-2"
           style={{
-            background: 'linear-gradient(to top, rgba(26,21,16,0.95) 0%, rgba(26,21,16,0.8) 70%, transparent 100%)',
+            background: 'linear-gradient(to top, hsl(0 65% 25% / 0.98) 0%, hsl(0 65% 25% / 0.9) 70%, transparent 100%)',
           }}
         >
           {BUILDINGS.map((building) => (

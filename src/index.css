@@ -72,8 +72,12 @@
   }
 
   .dark {
-    --background: 25 45% 8%;
+    --background: 0 0% 15%;
     --foreground: 40 25% 90%;
+    
+    /* Nav bar colors */
+    --nav-bg: 0 65% 25%;
+    --nav-foreground: 50 60% 85%;
 
     --card: 25 40% 12%;
     --card-foreground: 40 25% 90%;
