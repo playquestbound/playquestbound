@@ -116,26 +116,30 @@ export function QuestCard({
             {isLoading ? 'Accepting...' : 'Accept Quest'}
           </Button>
         )}
-        {onComplete && (
-          <Button 
-            variant="gold" 
-            className="w-full" 
-            onClick={onComplete}
-            disabled={isLoading}
-          >
-            {isLoading ? 'Completing...' : 'Complete Quest'}
-          </Button>
-        )}
-        {onAbandon && (
-          <Button 
-            variant="outline" 
-            className="w-full mt-2 text-destructive hover:bg-destructive/10 hover:text-destructive border-destructive/50" 
-            onClick={onAbandon}
-            disabled={isLoading}
-          >
-            <X className="w-4 h-4 mr-2" />
-            {isLoading ? 'Abandoning...' : 'Abandon Quest'}
-          </Button>
+        {(onComplete || onAbandon) && (
+          <div className="flex gap-2">
+            {onComplete && (
+              <Button 
+                variant="gold" 
+                className="flex-1" 
+                onClick={onComplete}
+                disabled={isLoading}
+              >
+                {isLoading ? 'Loading...' : 'Complete Quest'}
+              </Button>
+            )}
+            {onAbandon && (
+              <Button 
+                variant="outline" 
+                className="flex-1 text-destructive hover:bg-destructive/10 hover:text-destructive border-destructive/50" 
+                onClick={onAbandon}
+                disabled={isLoading}
+              >
+                <X className="w-4 h-4 mr-1" />
+                Abandon
+              </Button>
+            )}
+          </div>
         )}
       </div>
     </div>
