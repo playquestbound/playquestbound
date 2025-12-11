@@ -1,18 +1,26 @@
-import { useAvailableQuests, useActiveQuests, useAcceptQuest, useAbandonQuest } from '@/hooks/useQuests';
+import { useState } from 'react';
+import { useAvailableQuests, useActiveQuests, useAcceptQuest, useAbandonQuest, useCompleteQuest, UserQuest } from '@/hooks/useQuests';
 import { QuestCard } from '@/components/QuestCard';
 import { BottomNav } from '@/components/BottomNav';
 import { LoadingScreen } from '@/components/LoadingScreen';
+import { VideoUploader } from '@/components/VideoUploader';
 import { toast } from '@/hooks/use-toast';
-import { Scroll, AlertCircle } from 'lucide-react';
+import { Scroll, AlertCircle, ArrowLeft } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Button } from '@/components/ui/button';
+import { useProfile } from '@/hooks/useProfile';
 
 const MAX_ACTIVE_QUESTS = 5;
 
 export default function Quests() {
   const { data: availableQuests, isLoading: questsLoading } = useAvailableQuests();
   const { data: activeQuests, isLoading: activeLoading } = useActiveQuests();
+  const { refetch: refetchProfile } = useProfile();
   const acceptQuest = useAcceptQuest();
   const abandonQuest = useAbandonQuest();
+  const completeQuest = useCompleteQuest();
+  
+  const [completingQuest, setCompletingQuest] = useState<UserQuest | null>(null);
 
   const isLoading = questsLoading || activeLoading;
   const activeQuestCount = activeQuests?.length || 0;
@@ -63,6 +71,90 @@ export default function Quests() {
     }
   };
 
+  const handleVideoUploadComplete = async (videoUrl: string) => {
+    if (!completingQuest) return;
+
+    try {
+      // Get current location
+      let locationLat = 0;
+      let locationLng = 0;
+      
+      if (navigator.geolocation) {
+        try {
+          const position = await new Promise<GeolocationPosition>((resolve, reject) => {
+            navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 5000 });
+          });
+          locationLat = position.coords.latitude;
+          locationLng = position.coords.longitude;
+        } catch {
+          console.log('Location not available, using defaults');
+        }
+      }
+
+      await completeQuest.mutateAsync({
+        userQuestId: completingQuest.id,
+        videoUrl,
+        locationLat,
+        locationLng,
+      });
+
+      await refetchProfile();
+
+      toast({
+        title: 'Quest Complete!',
+        description: `You earned ${completingQuest.quest?.xp_reward || 0} XP and ${completingQuest.quest?.gold_reward || 0} gold!`,
+      });
+      
+      setCompletingQuest(null);
+    } catch {
+      toast({
+        title: 'Error',
+        description: 'Failed to complete quest.',
+        variant: 'destructive',
+      });
+    }
+  };
+
+  // Show quest completion screen
+  if (completingQuest) {
+    return (
+      <div className="min-h-screen bg-background pb-20">
+        <div className="p-4 space-y-4 max-w-lg mx-auto">
+          {/* Back Button */}
+          <Button 
+            variant="ghost" 
+            className="mb-2"
+            onClick={() => setCompletingQuest(null)}
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back to Quests
+          </Button>
+
+          {/* Quest Info */}
+          <div className="parchment-card p-4">
+            <h2 className="font-display text-xl font-bold mb-2">
+              Complete: {completingQuest.quest?.title}
+            </h2>
+            <p className="text-sm text-muted-foreground mb-3">
+              {completingQuest.quest?.description}
+            </p>
+            <div className="flex items-center gap-4 text-sm">
+              <span className="text-xp font-semibold">+{completingQuest.quest?.xp_reward} XP</span>
+              <span className="text-secondary font-semibold">+{completingQuest.quest?.gold_reward} Gold</span>
+            </div>
+          </div>
+
+          {/* Video Uploader */}
+          <VideoUploader
+            onUploadComplete={handleVideoUploadComplete}
+            onCancel={() => setCompletingQuest(null)}
+          />
+        </div>
+        <BottomNav />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-background pb-20">
       <div className="p-4 space-y-4 max-w-lg mx-auto">
@@ -97,8 +189,9 @@ export default function Quests() {
                   goldReward={userQuest.quest?.gold_reward || 0}
                   difficulty={userQuest.quest?.difficulty || 'Easy'}
                   isActive={true}
+                  onComplete={() => setCompletingQuest(userQuest)}
                   onAbandon={() => handleAbandonQuest(userQuest.id, userQuest.quest?.title || 'Quest')}
-                  isLoading={abandonQuest.isPending}
+                  isLoading={abandonQuest.isPending || completeQuest.isPending}
                 />
               ))
             ) : (
