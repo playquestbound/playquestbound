@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { useProfile } from '@/hooks/useProfile';
@@ -7,8 +7,9 @@ import Home from './Home';
 
 export default function Index() {
   const { user, loading: authLoading } = useAuth();
-  const { data: profile, isLoading: profileLoading, isFetching } = useProfile();
+  const { data: profile, isLoading: profileLoading } = useProfile();
   const navigate = useNavigate();
+  const [hasCheckedCharacter, setHasCheckedCharacter] = useState(false);
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -17,13 +18,16 @@ export default function Index() {
   }, [user, authLoading, navigate]);
 
   useEffect(() => {
-    // Only redirect if we have fresh data (not fetching) and character not created
-    if (!profileLoading && !isFetching && profile && !profile.has_created_character) {
-      navigate('/create-character', { replace: true });
+    // Only redirect once when we first get profile data
+    if (!profileLoading && profile && !hasCheckedCharacter) {
+      setHasCheckedCharacter(true);
+      if (!profile.has_created_character) {
+        navigate('/create-character', { replace: true });
+      }
     }
-  }, [profile, profileLoading, isFetching, navigate]);
+  }, [profile, profileLoading, hasCheckedCharacter, navigate]);
 
-  const isLoading = authLoading || profileLoading || isFetching;
+  const isLoading = authLoading || profileLoading;
 
   if (isLoading) {
     return <LoadingScreen />;
