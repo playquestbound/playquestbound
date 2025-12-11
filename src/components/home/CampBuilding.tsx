@@ -7,32 +7,21 @@ interface CampBuildingProps {
   color: string;
 }
 
-export function CampBuilding({ name, icon, to, color }: CampBuildingProps) {
+export function CampBuilding({ name, icon, to }: CampBuildingProps) {
   return (
     <Link
       to={to}
-      className="group cursor-pointer"
+      className="group cursor-pointer flex flex-col items-center gap-1 transition-transform duration-200 active:scale-95"
     >
-      <div 
-        className="w-32 h-24 rounded-lg flex flex-col items-center justify-center gap-2 transition-transform duration-200 group-hover:scale-105 group-active:scale-95"
+      <span className="text-2xl">{icon}</span>
+      <span 
+        className="font-display text-xs font-bold uppercase tracking-wider text-parchment-light"
         style={{
-          backgroundColor: color,
-          boxShadow: `inset -4px -4px 0 rgba(0,0,0,0.3), inset 4px 4px 0 rgba(255,255,255,0.1), 0 4px 12px rgba(0,0,0,0.5)`,
+          textShadow: '1px 1px 2px rgba(0,0,0,0.8)',
         }}
       >
-        {/* Icon */}
-        <span className="text-3xl">{icon}</span>
-        
-        {/* Label */}
-        <span 
-          className="font-display text-sm font-bold uppercase tracking-wider text-parchment-light"
-          style={{
-            textShadow: '1px 1px 2px rgba(0,0,0,0.8)',
-          }}
-        >
-          {name}
-        </span>
-      </div>
+        {name}
+      </span>
     </Link>
   );
 }
