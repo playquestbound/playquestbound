@@ -48,11 +48,14 @@ export function CampScene({ characterRace }: CampSceneProps) {
 
 
       {/* Logo at top center */}
-      <div className="absolute top-6 left-1/2 -translate-x-1/2 z-10">
+      <div className="absolute top-2 left-1/2 -translate-x-1/2 z-10">
         <img 
           src={qbLogo} 
           alt="Questbound" 
-          className="w-auto max-w-[400px] drop-shadow-lg object-contain"
+          className="w-auto max-w-[320px] object-contain"
+          style={{
+            filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.8))',
+          }}
         />
       </div>
 
