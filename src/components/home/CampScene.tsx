@@ -1,6 +1,5 @@
 import { CampBuilding } from './CampBuilding';
 import qbLogo from '@/assets/qb-logo.png';
-import forestBg from '@/assets/forest-bg.jpg';
 
 interface CampSceneProps {
   characterRace: string;
@@ -36,12 +35,16 @@ const BUILDINGS = [
 export function CampScene({ characterRace }: CampSceneProps) {
   return (
     <div className="flex-1 relative overflow-hidden">
-      {/* Background image */}
-      <img
-        src={forestBg}
-        alt=""
+      {/* Background video */}
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
         className="absolute inset-0 w-full h-full object-cover"
-      />
+      >
+        <source src="/videos/camp-bg.mp4" type="video/mp4" />
+      </video>
 
 
       {/* Logo at top center */}
