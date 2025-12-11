@@ -5,19 +5,30 @@ import { useAuth } from '@/hooks/useAuth';
 import { BottomNav } from '@/components/BottomNav';
 import { LoadingScreen } from '@/components/LoadingScreen';
 import { Button } from '@/components/ui/button';
-import { getRaceEmoji, getRaceName } from '@/lib/races';
+import { CharacterDisplay } from '@/components/profile/CharacterDisplay';
+import { EquipmentDrawer } from '@/components/profile/EquipmentDrawer';
+import { StatOrb } from '@/components/profile/StatOrb';
+import { getRaceName } from '@/lib/races';
 import { getXpProgress, formatNumber } from '@/lib/levelSystem';
 import { toast } from '@/hooks/use-toast';
 import { 
-  User, 
   LogOut, 
   Coins, 
   Sparkles, 
   Scroll, 
   Calendar,
-  Shield
+  Shield,
+  Star,
+  Backpack
 } from 'lucide-react';
 import { format } from 'date-fns';
+
+interface Customization {
+  skinTone?: string;
+  hairStyle?: string;
+  hairColor?: string;
+  eyeColor?: string;
+}
 
 export default function Profile() {
   const { data: profile, isLoading: profileLoading } = useProfile();
@@ -44,84 +55,129 @@ export default function Profile() {
   const totalXp = profile?.xp || 0;
   const totalGold = profile?.gold || 0;
   const questsCompleted = completedQuests?.length || 0;
+  const customization = profile?.customization as Customization | null;
 
   return (
-    <div className="min-h-screen bg-background pb-20">
-      <div className="p-4 space-y-4 max-w-lg mx-auto">
-        {/* Header */}
-        <div className="text-center py-4">
-          <User className="w-10 h-10 mx-auto mb-2 text-secondary" />
+    <div className="min-h-screen bg-background pb-20 overflow-hidden">
+      {/* Background decoration */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-20 left-1/2 -translate-x-1/2 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
+      </div>
+
+      <div className="relative p-4 space-y-6 max-w-lg mx-auto">
+        {/* Header with Bag Icon */}
+        <div className="relative flex items-center justify-center pt-4">
           <h1 className="font-display text-2xl font-bold">Profile</h1>
+          
+          {/* Bag/Equipment Button */}
+          <EquipmentDrawer>
+            <Button 
+              size="icon" 
+              variant="outline"
+              className="absolute right-0 w-11 h-11 rounded-full border-2 border-secondary/50 bg-card/80 backdrop-blur hover:bg-secondary/20 hover:border-secondary"
+            >
+              <Backpack className="w-5 h-5 text-secondary" />
+            </Button>
+          </EquipmentDrawer>
         </div>
 
-        {/* Character Card */}
         {profile && (
-          <div className="parchment-card p-6">
-            {/* Avatar & Name */}
-            <div className="flex flex-col items-center mb-6">
-              <div className="avatar-frame mb-3">
-                <div className="avatar-inner w-20 h-20 flex items-center justify-center text-4xl">
-                  {getRaceEmoji(profile.race || 'wanderer')}
-                </div>
-                <div className="level-badge text-sm">{profile.level}</div>
-              </div>
-              <h2 className="font-display text-xl font-bold">
+          <>
+            {/* Character Name & Class Badge */}
+            <div className="text-center">
+              <h2 className="font-display text-2xl font-bold mb-1">
                 {profile.character_name || 'Adventurer'}
               </h2>
-              <p className="text-muted-foreground flex items-center gap-1.5">
-                <Shield className="w-4 h-4" />
-                {getRaceName(profile.race || 'wanderer')}
-              </p>
-            </div>
-
-            {/* XP Bar */}
-            <div className="mb-6">
-              <div className="flex justify-between text-sm mb-1">
-                <span className="text-muted-foreground">Level Progress</span>
-                <span className="font-display font-semibold text-xp">
-                  {formatNumber(xpProgress.current)} / {formatNumber(xpProgress.required)} XP
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-muted/50 border border-border">
+                <Shield className="w-3.5 h-3.5 text-secondary" />
+                <span className="text-sm text-muted-foreground">
+                  {getRaceName(profile.race || 'human')} {profile.class ? `• ${profile.class.charAt(0).toUpperCase() + profile.class.slice(1)}` : ''}
                 </span>
               </div>
-              <div className="xp-bar h-4">
-                <div 
-                  className="xp-bar-fill" 
-                  style={{ width: `${xpProgress.percentage}%` }}
+            </div>
+
+            {/* Character Display with Surrounding Stats */}
+            <div className="relative py-8">
+              {/* Top Stats */}
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 z-10">
+                <StatOrb 
+                  icon={Star} 
+                  value={profile.level} 
+                  label="Level" 
+                  color="level" 
+                />
+              </div>
+
+              {/* Left Stat */}
+              <div className="absolute left-2 top-1/2 -translate-y-1/2 z-10">
+                <StatOrb 
+                  icon={Sparkles} 
+                  value={formatNumber(totalXp)} 
+                  label="XP" 
+                  color="xp" 
+                />
+              </div>
+
+              {/* Right Stat */}
+              <div className="absolute right-2 top-1/2 -translate-y-1/2 z-10">
+                <StatOrb 
+                  icon={Coins} 
+                  value={formatNumber(totalGold)} 
+                  label="Gold" 
+                  color="gold" 
+                />
+              </div>
+
+              {/* Bottom Stat */}
+              <div className="absolute bottom-0 left-1/2 -translate-x-1/2 z-10">
+                <StatOrb 
+                  icon={Scroll} 
+                  value={questsCompleted} 
+                  label="Quests" 
+                  color="quest" 
+                />
+              </div>
+
+              {/* Character Display */}
+              <div className="flex items-center justify-center py-8">
+                <CharacterDisplay 
+                  customization={customization}
+                  race={profile.race}
+                  characterClass={profile.class}
                 />
               </div>
             </div>
 
-            {/* Stats Grid */}
-            <div className="grid grid-cols-3 gap-3">
-              <div className="text-center p-3 rounded-lg bg-muted/50">
-                <Sparkles className="w-5 h-5 mx-auto mb-1 text-xp" />
-                <p className="font-display font-bold text-lg">{formatNumber(totalXp)}</p>
-                <p className="text-xs text-muted-foreground">Total XP</p>
+            {/* XP Progress Bar */}
+            <div className="parchment-card p-4">
+              <div className="flex justify-between text-sm mb-2">
+                <span className="text-muted-foreground">Level {profile.level} Progress</span>
+                <span className="font-display font-semibold text-xp">
+                  {formatNumber(xpProgress.current)} / {formatNumber(xpProgress.required)} XP
+                </span>
               </div>
-              <div className="text-center p-3 rounded-lg bg-muted/50">
-                <Coins className="w-5 h-5 mx-auto mb-1 text-secondary" />
-                <p className="font-display font-bold text-lg">{formatNumber(totalGold)}</p>
-                <p className="text-xs text-muted-foreground">Gold</p>
+              <div className="xp-bar h-3 rounded-full overflow-hidden">
+                <div 
+                  className="xp-bar-fill h-full transition-all duration-500" 
+                  style={{ width: `${xpProgress.percentage}%` }}
+                />
               </div>
-              <div className="text-center p-3 rounded-lg bg-muted/50">
-                <Scroll className="w-5 h-5 mx-auto mb-1 text-accent" />
-                <p className="font-display font-bold text-lg">{questsCompleted}</p>
-                <p className="text-xs text-muted-foreground">Quests</p>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Member Since */}
-        {profile && (
-          <div className="parchment-card p-4 flex items-center gap-3">
-            <Calendar className="w-5 h-5 text-muted-foreground" />
-            <div>
-              <p className="text-sm font-semibold">Member Since</p>
-              <p className="text-xs text-muted-foreground">
-                {format(new Date(profile.created_at), 'MMMM d, yyyy')}
+              <p className="text-xs text-muted-foreground mt-2 text-center">
+                {formatNumber(xpProgress.required - xpProgress.current)} XP to level {profile.level + 1}
               </p>
             </div>
-          </div>
+
+            {/* Member Since */}
+            <div className="parchment-card p-4 flex items-center gap-3">
+              <Calendar className="w-5 h-5 text-muted-foreground" />
+              <div>
+                <p className="text-sm font-semibold">Member Since</p>
+                <p className="text-xs text-muted-foreground">
+                  {format(new Date(profile.created_at), 'MMMM d, yyyy')}
+                </p>
+              </div>
+            </div>
+          </>
         )}
 
         {/* Logout Button */}
