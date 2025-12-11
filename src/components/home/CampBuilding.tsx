@@ -4,9 +4,7 @@ interface CampBuildingProps {
   name: string;
   icon: string;
   to: string;
-  position: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
   color: string;
-  description?: string;
 }
 
 export function CampBuilding({ name, icon, to, color }: CampBuildingProps) {
