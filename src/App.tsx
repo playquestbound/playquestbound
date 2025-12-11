@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Toaster } from "@/components/ui/toaster";
+import Settings from "@/pages/Settings";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -55,6 +56,7 @@ const App = () => {
               <Route path="/journal" element={<Journal />} />
               <Route path="/leaderboard" element={<Leaderboard />} />
               <Route path="/profile" element={<Profile />} />
+              <Route path="/settings" element={<Settings />} />
               <Route path="/search-players" element={<SearchPlayers />} />
               <Route path="/player/:playerId" element={<PlayerProfile />} />
               <Route path="*" element={<NotFound />} />
