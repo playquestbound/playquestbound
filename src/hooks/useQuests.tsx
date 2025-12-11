@@ -7,6 +7,7 @@ export interface Quest {
   title: string;
   description: string;
   quest_type: string;
+  quest_category: string;
   xp_reward: number;
   gold_reward: number;
   difficulty: string;

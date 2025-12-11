@@ -69,6 +69,7 @@ export default function Quests() {
                 title={activeQuest.quest?.title || 'Unknown Quest'}
                 description={activeQuest.quest?.description || ''}
                 questType={activeQuest.quest?.quest_type || 'nature'}
+                questCategory={(activeQuest.quest?.quest_category as 'side' | 'main' | 'grand') || 'side'}
                 xpReward={activeQuest.quest?.xp_reward || 0}
                 goldReward={activeQuest.quest?.gold_reward || 0}
                 difficulty={activeQuest.quest?.difficulty || 'Easy'}
@@ -108,6 +109,7 @@ export default function Quests() {
                   title={quest.title}
                   description={quest.description}
                   questType={quest.quest_type}
+                  questCategory={quest.quest_category as 'side' | 'main' | 'grand'}
                   xpReward={quest.xp_reward}
                   goldReward={quest.gold_reward}
                   difficulty={quest.difficulty}

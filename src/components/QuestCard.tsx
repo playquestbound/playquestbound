@@ -1,4 +1,4 @@
-import { Coins, Sparkles, MapPin, TreePine, Building } from 'lucide-react';
+import { Coins, Sparkles, MapPin, TreePine, Building, Crown, Sword, Scroll } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
@@ -9,6 +9,7 @@ interface QuestCardProps {
   xpReward: number;
   goldReward: number;
   difficulty: string;
+  questCategory?: 'side' | 'main' | 'grand';
   onAccept?: () => void;
   onComplete?: () => void;
   isActive?: boolean;
@@ -21,6 +22,24 @@ const questTypeIcons: Record<string, React.ReactNode> = {
   exploration: <MapPin className="w-4 h-4" />,
 };
 
+const categoryConfig: Record<string, { label: string; icon: React.ReactNode; className: string }> = {
+  side: {
+    label: 'Side Quest',
+    icon: <Scroll className="w-3 h-3" />,
+    className: 'bg-muted text-muted-foreground border-border',
+  },
+  main: {
+    label: 'Main Quest',
+    icon: <Sword className="w-3 h-3" />,
+    className: 'bg-primary/20 text-primary border-primary/50',
+  },
+  grand: {
+    label: 'Grand Quest',
+    icon: <Crown className="w-3 h-3" />,
+    className: 'grand-quest-badge',
+  },
+};
+
 export function QuestCard({
   title,
   description,
@@ -28,25 +47,29 @@ export function QuestCard({
   xpReward,
   goldReward,
   difficulty,
+  questCategory = 'side',
   onAccept,
   onComplete,
   isActive = false,
   isLoading = false,
 }: QuestCardProps) {
+  const category = categoryConfig[questCategory] || categoryConfig.side;
+
   return (
     <div className={cn(
       "quest-scroll p-4",
       isActive && "ring-2 ring-secondary animate-pulse-gold"
     )}>
       <div className="relative z-10 pt-2 pb-2">
-        {/* Header */}
-        <div className="flex items-start justify-between gap-2 mb-2">
-          <div className="flex items-center gap-2">
-            <span className="text-muted-foreground">
-              {questTypeIcons[questType] || <MapPin className="w-4 h-4" />}
-            </span>
-            <h3 className="font-display font-semibold text-base leading-tight">{title}</h3>
-          </div>
+        {/* Category Badge */}
+        <div className="flex items-center justify-between mb-2">
+          <span className={cn(
+            "inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-semibold border",
+            category.className
+          )}>
+            {category.icon}
+            {category.label}
+          </span>
           <span className={cn(
             "difficulty-badge shrink-0",
             difficulty === 'Easy' && "difficulty-easy",
@@ -55,6 +78,14 @@ export function QuestCard({
           )}>
             {difficulty}
           </span>
+        </div>
+
+        {/* Header */}
+        <div className="flex items-start gap-2 mb-2">
+          <span className="text-muted-foreground">
+            {questTypeIcons[questType] || <MapPin className="w-4 h-4" />}
+          </span>
+          <h3 className="font-display font-semibold text-base leading-tight">{title}</h3>
         </div>
 
         {/* Description */}

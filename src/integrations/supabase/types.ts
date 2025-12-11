@@ -107,6 +107,7 @@ export type Database = {
           gold_reward: number
           id: string
           is_active: boolean
+          quest_category: string
           quest_type: string
           title: string
           xp_reward: number
@@ -119,6 +120,7 @@ export type Database = {
           gold_reward?: number
           id?: string
           is_active?: boolean
+          quest_category?: string
           quest_type: string
           title: string
           xp_reward?: number
@@ -131,6 +133,7 @@ export type Database = {
           gold_reward?: number
           id?: string
           is_active?: boolean
+          quest_category?: string
           quest_type?: string
           title?: string
           xp_reward?: number
