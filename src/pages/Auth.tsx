@@ -64,7 +64,10 @@ export default function Auth() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-background">
+    <div 
+      className="min-h-screen flex flex-col items-center justify-center p-4"
+      style={{ background: 'linear-gradient(180deg, hsl(0 0% 8%) 0%, hsl(0 0% 18%) 50%, hsl(0 0% 12%) 100%)' }}
+    >
       {/* Hero Section */}
       <div className="text-center mb-8">
         <div 
