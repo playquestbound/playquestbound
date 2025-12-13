@@ -22,6 +22,7 @@ import { QuestTable, QuestCards } from "@/components/admin/QuestTable";
 import { QuestPreviewModal } from "@/components/admin/QuestPreviewModal";
 import { ConfirmPublishModal } from "@/components/admin/ConfirmPublishModal";
 import { ScheduleQuestModal } from "@/components/admin/ScheduleQuestModal";
+import { QuickPublishPanel } from "@/components/admin/QuickPublishPanel";
 import { ArrowLeft, Play, Archive, Loader2, RefreshCw } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { supabase } from "@/integrations/supabase/client";
@@ -133,6 +134,57 @@ export default function QuestManagement() {
         description: "Failed to publish quest. Please try again.",
         variant: "destructive",
       });
+    }
+  };
+
+  const handleQuickPublish = async (quest: AdminQuest) => {
+    try {
+      await publishMutation.mutateAsync(quest.id);
+      toast({
+        title: "Quest Published",
+        description: `"${quest.title}" is now live!`,
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to publish quest. Please try again.",
+        variant: "destructive",
+      });
+      throw error;
+    }
+  };
+
+  const handleQuickArchive = async (quest: AdminQuest) => {
+    try {
+      await archiveMutation.mutateAsync(quest.id);
+      toast({
+        title: "Quest Archived",
+        description: `"${quest.title}" has been archived.`,
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to archive quest. Please try again.",
+        variant: "destructive",
+      });
+      throw error;
+    }
+  };
+
+  const handleQuickBatchPublish = async (questIds: string[]) => {
+    try {
+      await bulkPublishMutation.mutateAsync(questIds);
+      toast({
+        title: "Quests Published",
+        description: `${questIds.length} quests are now live!`,
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to publish quests. Please try again.",
+        variant: "destructive",
+      });
+      throw error;
     }
   };
 
@@ -273,6 +325,16 @@ export default function QuestManagement() {
             </div>
           </div>
         </div>
+
+        {/* Quick Publish Panel */}
+        <QuickPublishPanel
+          quests={quests}
+          onPublish={handleQuickPublish}
+          onArchive={handleQuickArchive}
+          onBatchPublish={handleQuickBatchPublish}
+          isPublishing={publishMutation.isPending}
+          isArchiving={archiveMutation.isPending}
+        />
 
         {/* Filters */}
         <div className="mb-4">
