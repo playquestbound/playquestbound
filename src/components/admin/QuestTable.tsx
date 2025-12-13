@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { format } from "date-fns";
 import {
   Table,
   TableBody,
@@ -14,10 +14,12 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { MoreHorizontal, Play, Calendar, Archive, Eye, Coins, Sparkles } from "lucide-react";
+import { MoreHorizontal, Play, Calendar, Archive, Eye, Coins, Sparkles, Clock, X } from "lucide-react";
 import type { AdminQuest } from "@/hooks/useAdminQuests";
+import { formatTimeUntil } from "@/hooks/useScheduledQuests";
 
 interface QuestTableProps {
   quests: AdminQuest[];
@@ -27,6 +29,7 @@ interface QuestTableProps {
   onSchedule: (quest: AdminQuest) => void;
   onArchive: (quest: AdminQuest) => void;
   onPreview: (quest: AdminQuest) => void;
+  onCancelSchedule?: (quest: AdminQuest) => void;
 }
 
 const statusStyles: Record<string, string> = {
@@ -50,6 +53,7 @@ export function QuestTable({
   onSchedule,
   onArchive,
   onPreview,
+  onCancelSchedule,
 }: QuestTableProps) {
   const allSelected = quests.length > 0 && selectedIds.length === quests.length;
   const someSelected = selectedIds.length > 0 && selectedIds.length < quests.length;
@@ -90,7 +94,7 @@ export function QuestTable({
             <TableHead className="w-[100px]">Tier</TableHead>
             <TableHead className="w-[100px]">Niche</TableHead>
             <TableHead className="w-[120px]">Rewards</TableHead>
-            <TableHead className="w-[100px]">Status</TableHead>
+            <TableHead className="w-[150px]">Status</TableHead>
             <TableHead className="w-[80px] text-right">Actions</TableHead>
           </TableRow>
         </TableHeader>
@@ -141,9 +145,23 @@ export function QuestTable({
                   </div>
                 </TableCell>
                 <TableCell>
-                  <Badge variant="outline" className={statusStyles[quest.status || 'draft']}>
-                    {quest.status || 'draft'}
-                  </Badge>
+                  <div className="space-y-1">
+                    <Badge variant="outline" className={statusStyles[quest.status || 'draft']}>
+                      {quest.status === 'scheduled' && <Clock className="h-3 w-3 mr-1" />}
+                      {quest.status || 'draft'}
+                    </Badge>
+                    {quest.status === 'scheduled' && quest.scheduled_for && (
+                      <div className="text-xs text-blue-400">
+                        <p className="flex items-center gap-1">
+                          <Clock className="h-3 w-3" />
+                          {formatTimeUntil(quest.scheduled_for)}
+                        </p>
+                        <p className="text-muted-foreground">
+                          {format(new Date(quest.scheduled_for), 'MMM d, h:mm a')}
+                        </p>
+                      </div>
+                    )}
+                  </div>
                 </TableCell>
                 <TableCell className="text-right">
                   <DropdownMenu>
@@ -157,23 +175,38 @@ export function QuestTable({
                         <Eye className="mr-2 h-4 w-4" />
                         Preview
                       </DropdownMenuItem>
+                      
+                      <DropdownMenuSeparator />
+                      
                       {quest.status !== 'live' && (
                         <DropdownMenuItem onClick={() => onPublish(quest)}>
                           <Play className="mr-2 h-4 w-4 text-green-400" />
-                          Go Live
+                          {quest.status === 'scheduled' ? 'Publish Now' : 'Go Live'}
                         </DropdownMenuItem>
                       )}
+                      
                       {quest.status === 'draft' && (
                         <DropdownMenuItem onClick={() => onSchedule(quest)}>
                           <Calendar className="mr-2 h-4 w-4 text-blue-400" />
                           Schedule
                         </DropdownMenuItem>
                       )}
-                      {quest.status !== 'archived' && (
-                        <DropdownMenuItem onClick={() => onArchive(quest)}>
-                          <Archive className="mr-2 h-4 w-4 text-red-400" />
-                          Archive
+                      
+                      {quest.status === 'scheduled' && onCancelSchedule && (
+                        <DropdownMenuItem onClick={() => onCancelSchedule(quest)}>
+                          <X className="mr-2 h-4 w-4 text-orange-400" />
+                          Cancel Schedule
                         </DropdownMenuItem>
+                      )}
+                      
+                      {quest.status !== 'archived' && (
+                        <>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem onClick={() => onArchive(quest)}>
+                            <Archive className="mr-2 h-4 w-4 text-red-400" />
+                            Archive
+                          </DropdownMenuItem>
+                        </>
                       )}
                     </DropdownMenuContent>
                   </DropdownMenu>
@@ -196,6 +229,7 @@ export function QuestCards({
   onSchedule,
   onArchive,
   onPreview,
+  onCancelSchedule,
 }: QuestTableProps) {
   const toggleOne = (id: string) => {
     if (selectedIds.includes(id)) {
@@ -248,13 +282,19 @@ export function QuestCards({
                 {quest.status !== 'live' && (
                   <DropdownMenuItem onClick={() => onPublish(quest)}>
                     <Play className="mr-2 h-4 w-4 text-green-400" />
-                    Go Live
+                    {quest.status === 'scheduled' ? 'Publish Now' : 'Go Live'}
                   </DropdownMenuItem>
                 )}
                 {quest.status === 'draft' && (
                   <DropdownMenuItem onClick={() => onSchedule(quest)}>
                     <Calendar className="mr-2 h-4 w-4 text-blue-400" />
                     Schedule
+                  </DropdownMenuItem>
+                )}
+                {quest.status === 'scheduled' && onCancelSchedule && (
+                  <DropdownMenuItem onClick={() => onCancelSchedule(quest)}>
+                    <X className="mr-2 h-4 w-4 text-orange-400" />
+                    Cancel Schedule
                   </DropdownMenuItem>
                 )}
                 {quest.status !== 'archived' && (
@@ -272,6 +312,7 @@ export function QuestCards({
               {quest.tier || 'side'}
             </Badge>
             <Badge variant="outline" className={statusStyles[quest.status || 'draft']}>
+              {quest.status === 'scheduled' && <Clock className="h-3 w-3 mr-1" />}
               {quest.status || 'draft'}
             </Badge>
             {quest.niche && (
@@ -280,6 +321,19 @@ export function QuestCards({
               </Badge>
             )}
           </div>
+
+          {/* Scheduled Info */}
+          {quest.status === 'scheduled' && quest.scheduled_for && (
+            <div className="bg-blue-600/10 border border-blue-600/30 rounded p-2 text-sm">
+              <p className="text-blue-400 flex items-center gap-1">
+                <Clock className="h-3 w-3" />
+                Goes live in {formatTimeUntil(quest.scheduled_for)}
+              </p>
+              <p className="text-xs text-muted-foreground">
+                {format(new Date(quest.scheduled_for), 'EEEE, MMM d \'at\' h:mm a')}
+              </p>
+            </div>
+          )}
 
           <div className="flex gap-4 text-sm">
             <span className="flex items-center gap-1 text-blue-400">

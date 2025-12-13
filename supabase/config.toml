@@ -1,1 +1,4 @@
 project_id = "troczukbuqnkicqhdfqc"
+
+[functions.publish-scheduled-quests]
+verify_jwt = false
