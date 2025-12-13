@@ -102,6 +102,7 @@ export type Database = {
         Row: {
           auto_approved: boolean | null
           avg_speed: number | null
+          challenge_confirmed: boolean | null
           completion_lat: number | null
           completion_lng: number | null
           created_at: string | null
@@ -127,6 +128,7 @@ export type Database = {
         Insert: {
           auto_approved?: boolean | null
           avg_speed?: number | null
+          challenge_confirmed?: boolean | null
           completion_lat?: number | null
           completion_lng?: number | null
           created_at?: string | null
@@ -152,6 +154,7 @@ export type Database = {
         Update: {
           auto_approved?: boolean | null
           avg_speed?: number | null
+          challenge_confirmed?: boolean | null
           completion_lat?: number | null
           completion_lng?: number | null
           created_at?: string | null
