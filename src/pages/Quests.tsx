@@ -1,11 +1,13 @@
 import { useState } from 'react';
-import { useAvailableQuests, useActiveQuests, useAcceptQuest, useAbandonQuest, useCompleteQuest, UserQuest } from '@/hooks/useQuests';
+import { useQuestsGroupedByTier, useActiveQuests, useAcceptQuest, useAbandonQuest, useCompleteQuest, UserQuest, Quest, QuestFilters } from '@/hooks/useQuests';
 import { QuestCard } from '@/components/QuestCard';
+import { QuestDetailModal } from '@/components/QuestDetailModal';
+import { QuestFiltersBar } from '@/components/QuestFiltersBar';
 import { BottomNav } from '@/components/BottomNav';
 import { LoadingScreen } from '@/components/LoadingScreen';
 import { VideoUploader } from '@/components/VideoUploader';
 import { toast } from '@/hooks/use-toast';
-import { Scroll, AlertCircle, ArrowLeft } from 'lucide-react';
+import { Scroll, AlertCircle, ArrowLeft, Crown, Sword, ChevronRight, Sparkles } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { useProfile, useUpdateStats } from '@/hooks/useProfile';
@@ -13,7 +15,22 @@ import { useProfile, useUpdateStats } from '@/hooks/useProfile';
 const MAX_ACTIVE_QUESTS = 5;
 
 export default function Quests() {
-  const { data: availableQuests, isLoading: questsLoading } = useAvailableQuests();
+  const { data: profile } = useProfile();
+  const userClass = profile?.class || null;
+  
+  const [filters, setFilters] = useState<QuestFilters>({
+    niche: 'all',
+    difficulty: 'all',
+    classFilter: 'all',
+  });
+
+  // Adjust filters for "For You" option
+  const effectiveFilters = {
+    ...filters,
+    classFilter: filters.classFilter === 'for-you' ? (userClass || 'all') : filters.classFilter,
+  };
+
+  const { groupedQuests, isLoading: questsLoading, allQuests } = useQuestsGroupedByTier(effectiveFilters, userClass);
   const { data: activeQuests, isLoading: activeLoading } = useActiveQuests();
   const { refetch: refetchProfile } = useProfile();
   const acceptQuest = useAcceptQuest();
@@ -22,6 +39,9 @@ export default function Quests() {
   const updateStats = useUpdateStats();
   
   const [completingQuest, setCompletingQuest] = useState<UserQuest | null>(null);
+  const [selectedQuest, setSelectedQuest] = useState<Quest | null>(null);
+  const [showAllGrand, setShowAllGrand] = useState(false);
+  const [showAllMain, setShowAllMain] = useState(false);
 
   const isLoading = questsLoading || activeLoading;
   const activeQuestCount = activeQuests?.length || 0;
@@ -47,6 +67,7 @@ export default function Quests() {
         title: 'Quest Accepted!',
         description: 'Your adventure awaits!',
       });
+      setSelectedQuest(null);
     } catch {
       toast({
         title: 'Error',
@@ -76,7 +97,6 @@ export default function Quests() {
     if (!completingQuest) return;
 
     try {
-      // Get current location
       let locationLat = 0;
       let locationLng = 0;
       
@@ -99,7 +119,6 @@ export default function Quests() {
         locationLng,
       });
 
-      // Update XP and gold
       const xpReward = completingQuest.quest?.xp_reward || 0;
       const goldReward = completingQuest.quest?.gold_reward || 0;
       await updateStats.mutateAsync({ xpGain: xpReward, goldGain: goldReward });
@@ -126,7 +145,6 @@ export default function Quests() {
     return (
       <div className="min-h-screen bg-background pb-20">
         <div className="p-4 space-y-4 max-w-lg mx-auto">
-          {/* Back Button */}
           <Button 
             variant="ghost" 
             className="mb-2"
@@ -136,7 +154,6 @@ export default function Quests() {
             Back to Quests
           </Button>
 
-          {/* Quest Info */}
           <div className="parchment-card p-4">
             <h2 className="font-display text-xl font-bold mb-2">
               Complete: {completingQuest.quest?.title}
@@ -150,7 +167,6 @@ export default function Quests() {
             </div>
           </div>
 
-          {/* Video Uploader */}
           <VideoUploader
             onUploadComplete={handleVideoUploadComplete}
             onCancel={() => setCompletingQuest(null)}
@@ -160,6 +176,10 @@ export default function Quests() {
       </div>
     );
   }
+
+  const displayedGrandQuests = showAllGrand ? groupedQuests.grand : groupedQuests.grand.slice(0, 3);
+  const displayedMainQuests = showAllMain ? groupedQuests.main : groupedQuests.main.slice(0, 5);
+  const hasNoQuests = allQuests.length === 0;
 
   return (
     <div className="min-h-screen bg-background pb-20">
@@ -191,6 +211,8 @@ export default function Quests() {
                   description={userQuest.quest?.description || ''}
                   questType={userQuest.quest?.quest_type || 'nature'}
                   questCategory={(userQuest.quest?.quest_category as 'side' | 'main' | 'grand') || 'side'}
+                  niche={userQuest.quest?.niche}
+                  classAffinity={userQuest.quest?.class_affinity}
                   xpReward={userQuest.quest?.xp_reward || 0}
                   goldReward={userQuest.quest?.gold_reward || 0}
                   difficulty={userQuest.quest?.difficulty || 'Easy'}
@@ -212,7 +234,14 @@ export default function Quests() {
           </TabsContent>
 
           {/* New Quests Tab */}
-          <TabsContent value="new" className="mt-4 space-y-3">
+          <TabsContent value="new" className="mt-4 space-y-6">
+            {/* Filters */}
+            <QuestFiltersBar 
+              filters={filters} 
+              onFiltersChange={setFilters}
+              userClass={userClass}
+            />
+
             {/* Quest Limit Warning */}
             {!canAcceptMore && (
               <div className="parchment-card p-3 flex items-start gap-3 border-secondary/50">
@@ -226,34 +255,182 @@ export default function Quests() {
               </div>
             )}
 
-            {/* Quest List */}
-            {availableQuests && availableQuests.length > 0 ? (
-              availableQuests.map((quest) => (
-                <QuestCard
-                  key={quest.id}
-                  title={quest.title}
-                  description={quest.description}
-                  questType={quest.quest_type}
-                  questCategory={quest.quest_category as 'side' | 'main' | 'grand'}
-                  xpReward={quest.xp_reward}
-                  goldReward={quest.gold_reward}
-                  difficulty={quest.difficulty}
-                  onAccept={canAcceptMore ? () => handleAcceptQuest(quest.id) : undefined}
-                  isLoading={acceptQuest.isPending}
-                />
-              ))
-            ) : (
+            {/* No Quests State */}
+            {hasNoQuests ? (
               <div className="parchment-card p-8 text-center">
-                <Scroll className="w-12 h-12 mx-auto mb-3 text-muted-foreground opacity-50" />
-                <h3 className="font-display font-semibold mb-2">All Quests Completed!</h3>
+                <Sparkles className="w-12 h-12 mx-auto mb-3 text-muted-foreground opacity-50" />
+                <h3 className="font-display font-semibold mb-2">New Quests Coming Soon!</h3>
                 <p className="text-sm text-muted-foreground">
-                  You've conquered every challenge. New quests will appear soon.
+                  Stay adventurous. More challenges await.
                 </p>
               </div>
+            ) : (
+              <>
+                {/* For You Section */}
+                {groupedQuests.forYou.length > 0 && filters.classFilter === 'all' && (
+                  <section className="space-y-3">
+                    <div className="flex items-center gap-2">
+                      <Sparkles className="w-5 h-5 text-primary" />
+                      <h2 className="font-display font-bold text-lg">Recommended for {userClass}</h2>
+                    </div>
+                    <div className="space-y-3">
+                      {groupedQuests.forYou.slice(0, 3).map((quest) => (
+                        <QuestCard
+                          key={quest.id}
+                          title={quest.title}
+                          description={quest.description}
+                          questType={quest.quest_type}
+                          questCategory={(quest.quest_category as 'side' | 'main' | 'grand') || 'side'}
+                          niche={quest.niche}
+                          classAffinity={quest.class_affinity}
+                          xpReward={quest.xp_reward}
+                          goldReward={quest.gold_reward}
+                          difficulty={quest.difficulty}
+                          isRecommended
+                          onClick={() => setSelectedQuest(quest)}
+                        />
+                      ))}
+                    </div>
+                  </section>
+                )}
+
+                {/* Grand Quests Section */}
+                {groupedQuests.grand.length > 0 && (
+                  <section className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <Crown className="w-5 h-5 text-yellow-500" />
+                        <h2 className="font-display font-bold text-lg bg-gradient-to-r from-yellow-400 to-amber-500 text-transparent bg-clip-text">
+                          Legendary Challenges
+                        </h2>
+                      </div>
+                      {groupedQuests.grand.length > 3 && (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => setShowAllGrand(!showAllGrand)}
+                          className="text-xs"
+                        >
+                          {showAllGrand ? 'Show Less' : 'See All'}
+                          <ChevronRight className="w-4 h-4 ml-1" />
+                        </Button>
+                      )}
+                    </div>
+                    <div className="space-y-3">
+                      {displayedGrandQuests.map((quest) => (
+                        <QuestCard
+                          key={quest.id}
+                          title={quest.title}
+                          description={quest.description}
+                          questType={quest.quest_type}
+                          questCategory="grand"
+                          niche={quest.niche}
+                          classAffinity={quest.class_affinity}
+                          xpReward={quest.xp_reward}
+                          goldReward={quest.gold_reward}
+                          difficulty={quest.difficulty}
+                          onClick={() => setSelectedQuest(quest)}
+                        />
+                      ))}
+                    </div>
+                  </section>
+                )}
+
+                {/* Main Quests Section */}
+                {groupedQuests.main.length > 0 && (
+                  <section className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <Sword className="w-5 h-5 text-primary" />
+                        <h2 className="font-display font-bold text-lg">Main Quests</h2>
+                      </div>
+                      {groupedQuests.main.length > 5 && (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => setShowAllMain(!showAllMain)}
+                          className="text-xs"
+                        >
+                          {showAllMain ? 'Show Less' : 'See All'}
+                          <ChevronRight className="w-4 h-4 ml-1" />
+                        </Button>
+                      )}
+                    </div>
+                    <div className="space-y-3">
+                      {displayedMainQuests.map((quest) => (
+                        <QuestCard
+                          key={quest.id}
+                          title={quest.title}
+                          description={quest.description}
+                          questType={quest.quest_type}
+                          questCategory="main"
+                          niche={quest.niche}
+                          classAffinity={quest.class_affinity}
+                          xpReward={quest.xp_reward}
+                          goldReward={quest.gold_reward}
+                          difficulty={quest.difficulty}
+                          onClick={() => setSelectedQuest(quest)}
+                        />
+                      ))}
+                    </div>
+                  </section>
+                )}
+
+                {/* Side Quests Section */}
+                {groupedQuests.side.length > 0 && (
+                  <section className="space-y-3">
+                    <div className="flex items-center gap-2">
+                      <Scroll className="w-5 h-5 text-muted-foreground" />
+                      <h2 className="font-display font-bold text-lg">Side Quests</h2>
+                    </div>
+                    <div className="space-y-2">
+                      {groupedQuests.side.map((quest) => (
+                        <QuestCard
+                          key={quest.id}
+                          title={quest.title}
+                          description={quest.description}
+                          questType={quest.quest_type}
+                          questCategory="side"
+                          niche={quest.niche}
+                          classAffinity={quest.class_affinity}
+                          xpReward={quest.xp_reward}
+                          goldReward={quest.gold_reward}
+                          difficulty={quest.difficulty}
+                          compact
+                          onClick={() => setSelectedQuest(quest)}
+                        />
+                      ))}
+                    </div>
+                  </section>
+                )}
+
+                {/* No quests in filtered category */}
+                {groupedQuests.grand.length === 0 && 
+                 groupedQuests.main.length === 0 && 
+                 groupedQuests.side.length === 0 && (
+                  <div className="parchment-card p-8 text-center">
+                    <Scroll className="w-12 h-12 mx-auto mb-3 text-muted-foreground opacity-50" />
+                    <h3 className="font-display font-semibold mb-2">No Quests Found</h3>
+                    <p className="text-sm text-muted-foreground">
+                      No quests match your filters. Try adjusting them!
+                    </p>
+                  </div>
+                )}
+              </>
             )}
           </TabsContent>
         </Tabs>
       </div>
+
+      {/* Quest Detail Modal */}
+      <QuestDetailModal
+        quest={selectedQuest}
+        open={!!selectedQuest}
+        onOpenChange={(open) => !open && setSelectedQuest(null)}
+        onAccept={selectedQuest ? () => handleAcceptQuest(selectedQuest.id) : undefined}
+        isLoading={acceptQuest.isPending}
+        canAccept={canAcceptMore}
+      />
 
       <BottomNav />
     </div>
