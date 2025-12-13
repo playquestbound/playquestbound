@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Navigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
@@ -16,13 +16,15 @@ import {
   type AdminQuest,
   type QuestFilters,
 } from "@/hooks/useAdminQuests";
+import { useCancelSchedule } from "@/hooks/useScheduledQuests";
 import { QuestFilters as QuestFiltersComponent } from "@/components/admin/QuestFilters";
 import { QuestTable, QuestCards } from "@/components/admin/QuestTable";
 import { QuestPreviewModal } from "@/components/admin/QuestPreviewModal";
 import { ConfirmPublishModal } from "@/components/admin/ConfirmPublishModal";
 import { ScheduleQuestModal } from "@/components/admin/ScheduleQuestModal";
-import { ArrowLeft, Play, Archive, Loader2 } from "lucide-react";
+import { ArrowLeft, Play, Archive, Loader2, RefreshCw } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { supabase } from "@/integrations/supabase/client";
 
 export default function QuestManagement() {
   const { user, loading: authLoading } = useAuth();
@@ -40,6 +42,7 @@ export default function QuestManagement() {
 
   // Selection state
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [isCheckingScheduled, setIsCheckingScheduled] = useState(false);
 
   // Modal states
   const [previewQuest, setPreviewQuest] = useState<AdminQuest | null>(null);
@@ -47,15 +50,46 @@ export default function QuestManagement() {
   const [scheduleQuest, setScheduleQuest] = useState<AdminQuest | null>(null);
 
   // Queries
-  const { data: quests = [], isLoading: questsLoading } = useAdminQuests(filters);
-  const { data: stats } = useQuestStats();
+  const { data: quests = [], isLoading: questsLoading, refetch: refetchQuests } = useAdminQuests(filters);
+  const { data: stats, refetch: refetchStats } = useQuestStats();
 
   // Mutations
   const publishMutation = usePublishQuest();
   const scheduleMutation = useScheduleQuest();
   const archiveMutation = useArchiveQuest();
+  const cancelScheduleMutation = useCancelSchedule();
   const bulkPublishMutation = useBulkPublishQuests();
   const bulkArchiveMutation = useBulkArchiveQuests();
+
+  // Check for scheduled quests on load
+  useEffect(() => {
+    checkScheduledQuests();
+  }, []);
+
+  const checkScheduledQuests = async () => {
+    setIsCheckingScheduled(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('publish-scheduled-quests');
+      
+      if (error) {
+        console.error('Error checking scheduled quests:', error);
+        return;
+      }
+
+      if (data?.publishedCount > 0) {
+        toast({
+          title: "Scheduled Quests Published",
+          description: `${data.publishedCount} scheduled quest(s) are now live!`,
+        });
+        refetchQuests();
+        refetchStats();
+      }
+    } catch (error) {
+      console.error('Error invoking scheduled quests function:', error);
+    } finally {
+      setIsCheckingScheduled(false);
+    }
+  };
 
   // Loading state
   if (authLoading || adminLoading) {
@@ -140,6 +174,22 @@ export default function QuestManagement() {
     }
   };
 
+  const handleCancelSchedule = async (quest: AdminQuest) => {
+    try {
+      await cancelScheduleMutation.mutateAsync(quest.id);
+      toast({
+        title: "Schedule Cancelled",
+        description: `"${quest.title}" has been returned to draft status.`,
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to cancel schedule. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
   const handleBulkPublish = async () => {
     if (selectedIds.length === 0) return;
 
@@ -199,13 +249,28 @@ export default function QuestManagement() {
                 Quest Management
               </h1>
               <p className="text-muted-foreground mt-1">
-                {stats?.total || 0} quests total • {stats?.live || 0} live • {stats?.draft || 0} draft
+                {stats?.total || 0} quests total • {stats?.live || 0} live • {stats?.scheduled || 0} scheduled • {stats?.draft || 0} draft
               </p>
             </div>
 
-            <Button disabled className="opacity-50">
-              Create Quest (Coming Soon)
-            </Button>
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={checkScheduledQuests}
+                disabled={isCheckingScheduled}
+              >
+                {isCheckingScheduled ? (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                ) : (
+                  <RefreshCw className="mr-2 h-4 w-4" />
+                )}
+                Check Scheduled
+              </Button>
+              <Button disabled className="opacity-50">
+                Create Quest (Coming Soon)
+              </Button>
+            </div>
           </div>
         </div>
 
@@ -271,6 +336,7 @@ export default function QuestManagement() {
             onSchedule={setScheduleQuest}
             onArchive={handleArchive}
             onPreview={setPreviewQuest}
+            onCancelSchedule={handleCancelSchedule}
           />
         ) : (
           <QuestTable
@@ -281,6 +347,7 @@ export default function QuestManagement() {
             onSchedule={setScheduleQuest}
             onArchive={handleArchive}
             onPreview={setPreviewQuest}
+            onCancelSchedule={handleCancelSchedule}
           />
         )}
 
