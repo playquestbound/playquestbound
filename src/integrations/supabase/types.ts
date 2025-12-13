@@ -98,6 +98,92 @@ export type Database = {
         }
         Relationships: []
       }
+      quest_completions: {
+        Row: {
+          auto_approved: boolean | null
+          avg_speed: number | null
+          completion_lat: number | null
+          completion_lng: number | null
+          created_at: string | null
+          elevation_gain: number | null
+          fraud_flags: string[] | null
+          fraud_score: number | null
+          gold_awarded: number | null
+          id: string
+          journey_data: Json | null
+          manual_review_required: boolean | null
+          quest_id: string
+          rejection_reason: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: string | null
+          submitted_at: string | null
+          total_distance: number | null
+          total_duration: number | null
+          user_id: string
+          video_url: string | null
+          xp_awarded: number | null
+        }
+        Insert: {
+          auto_approved?: boolean | null
+          avg_speed?: number | null
+          completion_lat?: number | null
+          completion_lng?: number | null
+          created_at?: string | null
+          elevation_gain?: number | null
+          fraud_flags?: string[] | null
+          fraud_score?: number | null
+          gold_awarded?: number | null
+          id?: string
+          journey_data?: Json | null
+          manual_review_required?: boolean | null
+          quest_id: string
+          rejection_reason?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string | null
+          submitted_at?: string | null
+          total_distance?: number | null
+          total_duration?: number | null
+          user_id: string
+          video_url?: string | null
+          xp_awarded?: number | null
+        }
+        Update: {
+          auto_approved?: boolean | null
+          avg_speed?: number | null
+          completion_lat?: number | null
+          completion_lng?: number | null
+          created_at?: string | null
+          elevation_gain?: number | null
+          fraud_flags?: string[] | null
+          fraud_score?: number | null
+          gold_awarded?: number | null
+          id?: string
+          journey_data?: Json | null
+          manual_review_required?: boolean | null
+          quest_id?: string
+          rejection_reason?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string | null
+          submitted_at?: string | null
+          total_distance?: number | null
+          total_duration?: number | null
+          user_id?: string
+          video_url?: string | null
+          xp_awarded?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quest_completions_quest_id_fkey"
+            columns: ["quest_id"]
+            isOneToOne: false
+            referencedRelation: "quests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       quests: {
         Row: {
           class_affinity: string | null
@@ -107,9 +193,19 @@ export type Database = {
           gold_reward: number
           id: string
           is_active: boolean
+          is_funded_eligible: boolean | null
+          location_type: string[] | null
+          niche: string | null
+          published_at: string | null
           quest_category: string
           quest_type: string
+          requires_manual_review: boolean | null
+          scheduled_for: string | null
+          status: string | null
+          tier: string | null
           title: string
+          updated_at: string | null
+          verification_config: Json | null
           xp_reward: number
         }
         Insert: {
@@ -120,9 +216,19 @@ export type Database = {
           gold_reward?: number
           id?: string
           is_active?: boolean
+          is_funded_eligible?: boolean | null
+          location_type?: string[] | null
+          niche?: string | null
+          published_at?: string | null
           quest_category?: string
           quest_type: string
+          requires_manual_review?: boolean | null
+          scheduled_for?: string | null
+          status?: string | null
+          tier?: string | null
           title: string
+          updated_at?: string | null
+          verification_config?: Json | null
           xp_reward?: number
         }
         Update: {
@@ -133,9 +239,19 @@ export type Database = {
           gold_reward?: number
           id?: string
           is_active?: boolean
+          is_funded_eligible?: boolean | null
+          location_type?: string[] | null
+          niche?: string | null
+          published_at?: string | null
           quest_category?: string
           quest_type?: string
+          requires_manual_review?: boolean | null
+          scheduled_for?: string | null
+          status?: string | null
+          tier?: string | null
           title?: string
+          updated_at?: string | null
+          verification_config?: Json | null
           xp_reward?: number
         }
         Relationships: []
@@ -233,15 +349,42 @@ export type Database = {
           },
         ]
       }
+      user_roles: {
+        Row: {
+          created_at: string | null
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "moderator" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -368,6 +511,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "moderator", "user"],
+    },
   },
 } as const
