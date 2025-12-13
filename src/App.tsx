@@ -20,6 +20,7 @@ import RunTracker from "./pages/RunTracker";
 import Store from "./pages/Store";
 import Discover from "./pages/Discover";
 import NotFound from "./pages/NotFound";
+import QuestManagement from "./pages/admin/QuestManagement";
 
 const queryClient = new QueryClient();
 
@@ -65,6 +66,7 @@ const App = () => {
               <Route path="/run" element={<RunTracker />} />
               <Route path="/store" element={<Store />} />
               <Route path="/discover" element={<Discover />} />
+              <Route path="/admin/quests" element={<QuestManagement />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
