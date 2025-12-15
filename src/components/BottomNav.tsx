@@ -1,11 +1,11 @@
-import { Home, BookOpen, Compass, ShoppingBag } from 'lucide-react';
+import { Home, User, Compass, ShoppingBag } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { useNavTheme } from '@/hooks/useNavTheme';
 import questSword from '@/assets/quest-sword.png';
 
 const navItems = [
   { to: '/', icon: Home, label: 'Home' },
-  { to: '/journal', icon: BookOpen, label: 'Journal' },
+  { to: '/profile', icon: User, label: 'You' },
   { to: '/quests', icon: null, label: 'Quests', isCenter: true },
   { to: '/discover', icon: Compass, label: 'Discover' },
   { to: '/store', icon: ShoppingBag, label: 'Store' },
