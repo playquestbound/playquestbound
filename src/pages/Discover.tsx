@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { MapPin, Navigation, Globe, Map, Lock, CheckCircle, ChevronRight, Sparkles } from 'lucide-react';
-import { BottomNav } from '@/components/BottomNav';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -328,8 +327,6 @@ export default function Discover() {
           50% { box-shadow: 0 0 15px 0 rgba(201, 162, 39, 0.2); }
         }
       `}</style>
-
-      <BottomNav />
     </div>
   );
 }

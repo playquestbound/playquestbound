@@ -1,6 +1,5 @@
 import { useLeaderboard } from '@/hooks/useProfile';
 import { useAuth } from '@/hooks/useAuth';
-import { BottomNav } from '@/components/BottomNav';
 import { LoadingScreen } from '@/components/LoadingScreen';
 import { getRaceEmoji } from '@/lib/races';
 import { formatNumber } from '@/lib/levelSystem';
@@ -100,8 +99,6 @@ export default function Leaderboard() {
           </div>
         )}
       </div>
-
-      <BottomNav />
     </div>
   );
 }

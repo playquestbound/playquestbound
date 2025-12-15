@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useCompletedQuests, UserQuest } from '@/hooks/useQuests';
-import { BottomNav } from '@/components/BottomNav';
 import { LoadingScreen } from '@/components/LoadingScreen';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -152,8 +151,6 @@ export default function Journal() {
           )}
         </DialogContent>
       </Dialog>
-
-      <BottomNav />
     </div>
   );
 }

@@ -2,7 +2,6 @@ import { useProfile } from '@/hooks/useProfile';
 import { StatusBar } from '@/components/home/StatusBar';
 import { CampScene } from '@/components/home/CampScene';
 import { LoadingScreen } from '@/components/LoadingScreen';
-import { BottomNav } from '@/components/BottomNav';
 import { Button } from '@/components/ui/button';
 import { PersonStanding, Dumbbell, Compass } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -71,8 +70,6 @@ export default function Home() {
       <div className="pt-16 flex-1 flex flex-col">
         <CampScene characterRace={profile?.race || 'human'} />
       </div>
-
-      <BottomNav />
     </div>
   );
 }
