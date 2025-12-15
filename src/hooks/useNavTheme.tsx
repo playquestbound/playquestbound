@@ -10,6 +10,14 @@ interface NavThemeConfig {
   activeBgColor: string;
   glowColor: string;
   borderColor: string;
+  // Global CSS variables (HSL values without hsl())
+  cssVars: {
+    primary: string;
+    secondary: string;
+    accent: string;
+    ring: string;
+    cardBorder: string;
+  };
 }
 
 export const navThemes: Record<NavTheme, NavThemeConfig> = {
@@ -21,6 +29,13 @@ export const navThemes: Record<NavTheme, NavThemeConfig> = {
     activeBgColor: '#ffffff',
     glowColor: 'transparent',
     borderColor: 'rgba(255, 255, 255, 0.2)',
+    cssVars: {
+      primary: '0 0% 100%',
+      secondary: '0 0% 85%',
+      accent: '0 0% 70%',
+      ring: '0 0% 60%',
+      cardBorder: '0 0% 30%',
+    },
   },
   blue: {
     name: 'Dekker',
@@ -30,6 +45,13 @@ export const navThemes: Record<NavTheme, NavThemeConfig> = {
     activeBgColor: '#60d0ff',
     glowColor: 'rgba(96, 208, 255, 0.4)',
     borderColor: 'rgba(96, 208, 255, 0.3)',
+    cssVars: {
+      primary: '195 100% 70%',
+      secondary: '195 90% 60%',
+      accent: '195 80% 50%',
+      ring: '195 100% 65%',
+      cardBorder: '195 60% 30%',
+    },
   },
   orange: {
     name: 'Howitzer',
@@ -39,6 +61,13 @@ export const navThemes: Record<NavTheme, NavThemeConfig> = {
     activeBgColor: '#ffaa40',
     glowColor: 'rgba(255, 170, 64, 0.4)',
     borderColor: 'rgba(255, 170, 64, 0.3)',
+    cssVars: {
+      primary: '35 100% 65%',
+      secondary: '35 90% 55%',
+      accent: '35 80% 45%',
+      ring: '35 100% 60%',
+      cardBorder: '35 60% 30%',
+    },
   },
   green: {
     name: 'The Fey',
@@ -48,6 +77,13 @@ export const navThemes: Record<NavTheme, NavThemeConfig> = {
     activeBgColor: '#90ff50',
     glowColor: 'rgba(144, 255, 80, 0.4)',
     borderColor: 'rgba(144, 255, 80, 0.3)',
+    cssVars: {
+      primary: '100 100% 70%',
+      secondary: '100 90% 55%',
+      accent: '100 70% 40%',
+      ring: '100 100% 60%',
+      cardBorder: '100 50% 25%',
+    },
   },
   red: {
     name: 'Revenant',
@@ -57,6 +93,13 @@ export const navThemes: Record<NavTheme, NavThemeConfig> = {
     activeBgColor: '#ff5050',
     glowColor: 'rgba(255, 80, 80, 0.4)',
     borderColor: 'rgba(255, 80, 80, 0.3)',
+    cssVars: {
+      primary: '0 100% 65%',
+      secondary: '0 85% 55%',
+      accent: '0 70% 45%',
+      ring: '0 100% 60%',
+      cardBorder: '0 50% 30%',
+    },
   },
 };
 
@@ -80,6 +123,16 @@ export function NavThemeProvider({ children }: { children: ReactNode }) {
   };
 
   const config = navThemes[theme];
+
+  // Apply CSS variables globally when theme changes
+  useEffect(() => {
+    const root = document.documentElement;
+    root.style.setProperty('--primary', config.cssVars.primary);
+    root.style.setProperty('--secondary', config.cssVars.secondary);
+    root.style.setProperty('--accent', config.cssVars.accent);
+    root.style.setProperty('--ring', config.cssVars.ring);
+    root.style.setProperty('--border', config.cssVars.cardBorder);
+  }, [config]);
 
   return (
     <NavThemeContext.Provider value={{ theme, setTheme, config }}>
