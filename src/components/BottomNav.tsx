@@ -2,6 +2,7 @@ import { Home, User, Compass, ShoppingBag } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { useNavTheme } from '@/hooks/useNavTheme';
 import questSword from '@/assets/quest-sword.png';
+import exploreButton from '@/assets/explore-button.png';
 
 const navItems = [
   { to: '/', icon: Home, label: 'Home' },
@@ -81,15 +82,16 @@ export function BottomNav() {
       {isOnQuests && (
         <Link
           to="/run"
-          className="mb-3 px-6 py-2 rounded-full font-tech text-sm transition-all duration-200 hover:scale-105 active:scale-95"
-          style={{
-            backgroundColor: config.bgColor,
-            border: `1px solid ${config.borderColor}`,
-            color: config.activeIconColor,
-            boxShadow: `0 0 15px ${config.glowColor}, 0 4px 15px rgba(0,0,0,0.3)`,
-          }}
+          className="mb-2 transition-all duration-200 hover:scale-105 active:scale-95"
         >
-          Explore
+          <img 
+            src={exploreButton} 
+            alt="Explore" 
+            className="h-12 w-auto object-contain"
+            style={{
+              filter: `drop-shadow(0 4px 12px ${config.glowColor})`,
+            }}
+          />
         </Link>
       )}
       
