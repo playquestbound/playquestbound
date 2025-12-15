@@ -57,7 +57,7 @@ export function BottomNav() {
 
   return (
     <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50">
-      <nav className="flex items-end bg-black/80 backdrop-blur-sm rounded-full px-2 py-2 border border-white/20">
+      <nav className="flex items-center bg-black/80 backdrop-blur-sm rounded-full px-2 py-2 border border-white/20 overflow-visible">
         {navItems.map((item) => (
           <NavItem key={item.to} {...item} />
         ))}
