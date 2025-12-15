@@ -73,9 +73,9 @@
   }
 
   .dark {
-    --background: 0 0% 12%;
-    --background-gradient: linear-gradient(180deg, hsl(0 0% 8%) 0%, hsl(0 0% 16%) 50%, hsl(0 0% 10%) 100%);
-    --foreground: 40 25% 90%;
+    --background: 0 0% 5%;
+    --background-gradient: linear-gradient(180deg, hsl(0 0% 3%) 0%, hsl(0 0% 10%) 40%, hsl(0 0% 6%) 100%);
+    --foreground: 0 0% 90%;
     
     /* Nav bar colors */
     --nav-bg: 0 65% 20%;
