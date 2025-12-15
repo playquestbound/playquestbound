@@ -19,14 +19,14 @@ export function BottomNav() {
       return (
         <Link
           to={to}
-          className="relative flex flex-col items-center justify-center px-3 -mt-6 transition-transform duration-200 hover:scale-105"
+          className="relative flex flex-col items-center justify-center px-1 transition-transform duration-200 hover:scale-105"
+          style={{ marginTop: '-24px' }}
         >
-          <div className="w-14 h-14 rounded-full bg-gradient-to-br from-amber-500 to-amber-700 flex items-center justify-center shadow-lg shadow-amber-500/30 border-2 border-amber-400">
-            <Icon className="w-7 h-7 text-white" strokeWidth={2.5} />
-          </div>
-          <span className="font-tech text-[10px] mt-1 text-amber-400 font-medium">
-            {label}
-          </span>
+          <img 
+            src="/images/quest-sword.png" 
+            alt="Quests" 
+            className="w-14 h-14 object-contain drop-shadow-[0_4px_12px_rgba(255,255,255,0.4)]"
+          />
         </Link>
       );
     }
