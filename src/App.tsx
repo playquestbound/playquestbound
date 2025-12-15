@@ -1,11 +1,9 @@
-import { useState, useEffect } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/hooks/useAuth";
-import { IntroVideo } from "@/components/IntroVideo";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import CharacterCreation from "./pages/CharacterCreation";
@@ -25,30 +23,10 @@ import QuestManagement from "./pages/admin/QuestManagement";
 const queryClient = new QueryClient();
 
 const App = () => {
-  const [showIntro, setShowIntro] = useState(true);
-  const [introChecked, setIntroChecked] = useState(false);
-
-  useEffect(() => {
-    // Check if intro has been shown this session
-    const hasSeenIntro = sessionStorage.getItem('hasSeenIntro');
-    if (hasSeenIntro) {
-      setShowIntro(false);
-    }
-    setIntroChecked(true);
-  }, []);
-
-  const handleIntroComplete = () => {
-    sessionStorage.setItem('hasSeenIntro', 'true');
-    setShowIntro(false);
-  };
-
-  if (!introChecked) return null;
-
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <TooltipProvider>
-          {showIntro && <IntroVideo onComplete={handleIntroComplete} />}
           <Toaster />
           <Sonner />
           <BrowserRouter>

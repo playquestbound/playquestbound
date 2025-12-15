@@ -19,13 +19,12 @@ export function BottomNav() {
       return (
         <Link
           to={to}
-          className="relative flex flex-col items-center justify-center px-1 transition-transform duration-200 hover:scale-105"
-          style={{ marginTop: '-24px' }}
+          className="relative flex flex-col items-center justify-center px-2 transition-transform duration-200 hover:scale-105"
         >
           <img 
             src="/images/quest-sword.png" 
             alt="Quests" 
-            className="w-14 h-14 object-contain drop-shadow-[0_4px_12px_rgba(255,255,255,0.4)]"
+            className="w-28 h-28 object-contain drop-shadow-[0_4px_12px_rgba(255,255,255,0.4)] -my-8"
           />
         </Link>
       );
