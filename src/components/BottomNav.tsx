@@ -55,21 +55,13 @@ export function BottomNav() {
         {/* Center Quests button - elevated */}
         <Link
           to="/quests"
-          className="relative flex flex-col items-center -mt-4 transition-transform duration-200 hover:scale-105"
+          className="relative flex flex-col items-center -mt-6 transition-transform duration-200 hover:scale-105"
         >
-          <div className={`relative p-2 rounded-full border-2 transition-all duration-200 ${
-            isQuestsActive 
-              ? 'bg-white border-white/40' 
-              : 'bg-black/80 backdrop-blur-sm border-white/20'
-          }`}>
-            <img 
-              src={questSword} 
-              alt="Quests" 
-              className={`w-10 h-10 object-contain transition-all duration-200 ${
-                isQuestsActive ? 'invert' : ''
-              }`}
-            />
-          </div>
+          <img 
+            src={questSword} 
+            alt="Quests" 
+            className="w-14 h-14 object-contain drop-shadow-[0_4px_12px_rgba(255,255,255,0.4)]"
+          />
           <span className={`font-tech text-[10px] mt-1 transition-colors duration-200 ${
             isQuestsActive ? 'text-white font-medium' : 'text-white/60'
           }`}>
