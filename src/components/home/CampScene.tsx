@@ -76,14 +76,12 @@ export function CampScene({ characterRace }: CampSceneProps) {
         />
       </div>
 
-      {/* Bottom navigation bar - flat technical style */}
-      <div className="absolute bottom-0 left-0 right-0 z-10">
-        <div className="bg-gradient-to-t from-[hsl(0_65%_20%/0.95)] via-[hsl(0_65%_20%/0.85)] to-transparent pt-8 pb-6 px-4">
-          <div className="flex justify-around items-center max-w-md mx-auto">
-            {BUILDINGS.map((building) => (
-              <CampBuilding key={building.name} {...building} />
-            ))}
-          </div>
+      {/* Bottom navigation bar - pill style */}
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10">
+        <div className="flex items-center gap-1 bg-[#1a1a1a] rounded-full px-2 py-2 shadow-2xl border border-white/10">
+          {BUILDINGS.map((building) => (
+            <CampBuilding key={building.name} {...building} />
+          ))}
         </div>
       </div>
     </div>
