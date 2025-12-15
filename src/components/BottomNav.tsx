@@ -5,10 +5,10 @@ import questSword from '@/assets/quest-sword.png';
 
 const navItems = [
   { to: '/', icon: Home, label: 'Home' },
-  { to: '/profile', icon: User, label: 'You' },
-  { to: '/quests', icon: null, label: 'Quests', isCenter: true },
   { to: '/discover', icon: Compass, label: 'Discover' },
+  { to: '/quests', icon: null, label: 'Quests', isCenter: true },
   { to: '/store', icon: ShoppingBag, label: 'Store' },
+  { to: '/profile', icon: User, label: 'You' },
 ];
 
 export function BottomNav() {
