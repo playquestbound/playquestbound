@@ -20,7 +20,8 @@ import {
   Gem,
   Backpack,
   Settings,
-  ChevronDown
+  ChevronDown,
+  BookOpen
 } from 'lucide-react';
 
 interface Customization {
@@ -94,14 +95,24 @@ export default function Profile() {
       {/* Header */}
       <div className="relative px-4 pt-4">
         <div className="flex items-center justify-between">
-          <Button 
-            size="icon" 
-            variant="ghost"
-            className="w-10 h-10 rounded-full"
-            onClick={() => navigate('/settings')}
-          >
-            <Settings className="w-5 h-5 text-white/70" />
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button 
+              size="icon" 
+              variant="ghost"
+              className="w-10 h-10 rounded-full"
+              onClick={() => navigate('/journal')}
+            >
+              <BookOpen className="w-5 h-5 text-white/70" />
+            </Button>
+            <Button 
+              size="icon" 
+              variant="ghost"
+              className="w-10 h-10 rounded-full"
+              onClick={() => navigate('/settings')}
+            >
+              <Settings className="w-5 h-5 text-white/70" />
+            </Button>
+          </div>
           
           <Button 
             size="icon" 
