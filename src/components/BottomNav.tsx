@@ -1,10 +1,10 @@
-import { Home, BookOpen, Compass, ShoppingBag } from 'lucide-react';
+import { Home, BookOpen, Compass, ShoppingBag, Sword } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 
 const navItems = [
   { to: '/', icon: Home, label: 'Home' },
   { to: '/journal', icon: BookOpen, label: 'Journal' },
-  { to: '/quests', icon: null, label: 'Quests', isCenter: true },
+  { to: '/quests', icon: Sword, label: 'Quests', isCenter: true },
   { to: '/discover', icon: Compass, label: 'Discover' },
   { to: '/store', icon: ShoppingBag, label: 'Store' },
 ];
@@ -12,20 +12,21 @@ const navItems = [
 export function BottomNav() {
   const location = useLocation();
 
-  const NavItem = ({ to, icon: Icon, label, isCenter }: { to: string; icon: typeof Home | null; label: string; isCenter?: boolean }) => {
+  const NavItem = ({ to, icon: Icon, label, isCenter }: { to: string; icon: typeof Home; label: string; isCenter?: boolean }) => {
     const isActive = location.pathname === to || (to !== '/' && location.pathname.startsWith(to));
     
     if (isCenter) {
       return (
         <Link
           to={to}
-          className="relative flex flex-col items-center justify-center px-2 -mt-8 transition-transform duration-200 hover:scale-105"
+          className="relative flex flex-col items-center justify-center px-3 -mt-6 transition-transform duration-200 hover:scale-105"
         >
-          <img 
-            src="/images/quest-sword.png" 
-            alt="Quests" 
-            className="w-16 h-16 sm:w-20 sm:h-20 object-contain drop-shadow-[0_4px_12px_rgba(255,255,255,0.4)]"
-          />
+          <div className="w-14 h-14 rounded-full bg-gradient-to-br from-amber-500 to-amber-700 flex items-center justify-center shadow-lg shadow-amber-500/30 border-2 border-amber-400">
+            <Icon className="w-7 h-7 text-white" strokeWidth={2.5} />
+          </div>
+          <span className="font-tech text-[10px] mt-1 text-amber-400 font-medium">
+            {label}
+          </span>
         </Link>
       );
     }
