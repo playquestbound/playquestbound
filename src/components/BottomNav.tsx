@@ -23,12 +23,12 @@ export function BottomNav() {
       return (
         <Link
           to={to}
-          className="relative flex flex-col items-center justify-center px-1 sm:px-2 transition-transform duration-200 hover:scale-105"
+          className="relative flex flex-col items-center justify-center px-2 sm:px-4 transition-transform duration-200 hover:scale-105"
         >
           <img 
             src={questSword} 
             alt="Quests" 
-            className="w-10 h-10 sm:w-24 sm:h-24 md:w-28 md:h-28 object-contain -my-2 sm:-my-6 md:-my-8"
+            className="w-16 h-16 sm:w-24 sm:h-24 md:w-28 md:h-28 object-contain -my-4 sm:-my-6 md:-my-8"
             style={{
               filter: `drop-shadow(0 4px 12px ${config.glowColor})`,
             }}
@@ -96,7 +96,7 @@ export function BottomNav() {
       )}
       
       <nav 
-        className="flex items-center backdrop-blur-sm rounded-full px-2 py-2 overflow-visible"
+        className="flex items-center backdrop-blur-sm rounded-full px-4 sm:px-2 py-2 overflow-visible min-w-[320px] sm:min-w-0"
         style={{
           backgroundColor: config.bgColor,
           border: `1px solid ${config.borderColor}`,
