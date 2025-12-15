@@ -2,9 +2,10 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { AuthProvider } from "@/hooks/useAuth";
 import { NavThemeProvider } from "@/hooks/useNavTheme";
+import { BottomNav } from "@/components/BottomNav";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import CharacterCreation from "./pages/CharacterCreation";
@@ -23,6 +24,37 @@ import QuestManagement from "./pages/admin/QuestManagement";
 
 const queryClient = new QueryClient();
 
+// Pages where we don't show the bottom nav
+const hiddenNavRoutes = ['/auth', '/create-character'];
+
+function AppContent() {
+  const location = useLocation();
+  const showNav = !hiddenNavRoutes.some(route => location.pathname.startsWith(route));
+
+  return (
+    <>
+      <Routes>
+        <Route path="/" element={<Index />} />
+        <Route path="/auth" element={<Auth />} />
+        <Route path="/create-character" element={<CharacterCreation />} />
+        <Route path="/quests" element={<Quests />} />
+        <Route path="/journal" element={<Journal />} />
+        <Route path="/leaderboard" element={<Leaderboard />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/settings" element={<Settings />} />
+        <Route path="/search-players" element={<SearchPlayers />} />
+        <Route path="/player/:playerId" element={<PlayerProfile />} />
+        <Route path="/run" element={<RunTracker />} />
+        <Route path="/store" element={<Store />} />
+        <Route path="/discover" element={<Discover />} />
+        <Route path="/admin/quests" element={<QuestManagement />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+      {showNav && <BottomNav />}
+    </>
+  );
+}
+
 const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
@@ -32,28 +64,12 @@ const App = () => {
             <Toaster />
             <Sonner />
             <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/auth" element={<Auth />} />
-              <Route path="/create-character" element={<CharacterCreation />} />
-              <Route path="/quests" element={<Quests />} />
-              <Route path="/journal" element={<Journal />} />
-              <Route path="/leaderboard" element={<Leaderboard />} />
-              <Route path="/profile" element={<Profile />} />
-              <Route path="/settings" element={<Settings />} />
-              <Route path="/search-players" element={<SearchPlayers />} />
-              <Route path="/player/:playerId" element={<PlayerProfile />} />
-              <Route path="/run" element={<RunTracker />} />
-              <Route path="/store" element={<Store />} />
-              <Route path="/discover" element={<Discover />} />
-              <Route path="/admin/quests" element={<QuestManagement />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </BrowserRouter>
-        </TooltipProvider>
-      </NavThemeProvider>
-    </AuthProvider>
-  </QueryClientProvider>
+              <AppContent />
+            </BrowserRouter>
+          </TooltipProvider>
+        </NavThemeProvider>
+      </AuthProvider>
+    </QueryClientProvider>
   );
 };
 

@@ -1,7 +1,6 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { BottomNav } from '@/components/BottomNav';
 import { LoadingScreen } from '@/components/LoadingScreen';
 import { Button } from '@/components/ui/button';
 import { CharacterDisplay } from '@/components/profile/CharacterDisplay';
@@ -61,7 +60,6 @@ export default function PlayerProfile() {
       <div className="min-h-screen bg-background pb-20 flex flex-col items-center justify-center">
         <p className="text-muted-foreground mb-4">Adventurer not found</p>
         <Button onClick={() => navigate('/search-players')}>Go Back</Button>
-        <BottomNav />
       </div>
     );
   }
@@ -172,8 +170,6 @@ export default function PlayerProfile() {
           </div>
         </div>
       </div>
-
-      <BottomNav />
     </div>
   );
 }

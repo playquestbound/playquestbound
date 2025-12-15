@@ -3,7 +3,6 @@ import { useQuestsGroupedByTier, useActiveQuests, useAcceptQuest, useAbandonQues
 import { QuestCard } from '@/components/QuestCard';
 import { QuestDetailModal } from '@/components/QuestDetailModal';
 import { QuestFiltersBar } from '@/components/QuestFiltersBar';
-import { BottomNav } from '@/components/BottomNav';
 import { LoadingScreen } from '@/components/LoadingScreen';
 import { QuestCompletionFlow } from '@/components/quest-completion';
 import { toast } from '@/hooks/use-toast';
@@ -351,8 +350,6 @@ export default function Quests() {
         open={!!completingQuest}
         onOpenChange={(open) => !open && setCompletingQuest(null)}
       />
-
-      <BottomNav />
     </div>
   );
 }

@@ -2,7 +2,6 @@ import { useNavigate } from 'react-router-dom';
 import { useProfile } from '@/hooks/useProfile';
 import { useCompletedQuests } from '@/hooks/useQuests';
 import { useAuth } from '@/hooks/useAuth';
-import { BottomNav } from '@/components/BottomNav';
 import { LoadingScreen } from '@/components/LoadingScreen';
 import { Button } from '@/components/ui/button';
 import { EquipmentDrawer } from '@/components/profile/EquipmentDrawer';
@@ -276,8 +275,6 @@ export default function Profile() {
           </EquipmentDrawer>
         </div>
       )}
-
-      <BottomNav />
     </div>
   );
 }
