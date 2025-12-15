@@ -1,10 +1,11 @@
-import { Home, BookOpen, Compass, ShoppingBag, Sword } from 'lucide-react';
+import { Home, BookOpen, Compass, ShoppingBag } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
+import questSword from '@/assets/quest-sword.png';
 
 const navItems = [
   { to: '/', icon: Home, label: 'Home' },
   { to: '/journal', icon: BookOpen, label: 'Journal' },
-  { to: '/quests', icon: Sword, label: 'Quests', isCenter: true },
+  { to: '/quests', icon: null, label: 'Quests', isCenter: true },
   { to: '/discover', icon: Compass, label: 'Discover' },
   { to: '/store', icon: ShoppingBag, label: 'Store' },
 ];
@@ -12,7 +13,7 @@ const navItems = [
 export function BottomNav() {
   const location = useLocation();
 
-  const NavItem = ({ to, icon: Icon, label, isCenter }: { to: string; icon: typeof Home; label: string; isCenter?: boolean }) => {
+  const NavItem = ({ to, icon: Icon, label, isCenter }: { to: string; icon: typeof Home | null; label: string; isCenter?: boolean }) => {
     const isActive = location.pathname === to || (to !== '/' && location.pathname.startsWith(to));
     
     if (isCenter) {
@@ -22,7 +23,7 @@ export function BottomNav() {
           className="relative flex flex-col items-center justify-center px-2 transition-transform duration-200 hover:scale-105"
         >
           <img 
-            src="/images/quest-sword.png" 
+            src={questSword} 
             alt="Quests" 
             className="w-28 h-28 object-contain drop-shadow-[0_4px_12px_rgba(255,255,255,0.4)] -my-8"
           />
