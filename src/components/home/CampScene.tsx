@@ -76,17 +76,14 @@ export function CampScene({ characterRace }: CampSceneProps) {
         />
       </div>
 
-      {/* Bottom navigation bar */}
+      {/* Bottom navigation bar - flat technical style */}
       <div className="absolute bottom-0 left-0 right-0 z-10">
-        <div 
-          className="flex justify-around items-center py-3 px-2"
-          style={{
-            background: 'linear-gradient(to top, hsl(0 65% 25% / 0.98) 0%, hsl(0 65% 25% / 0.9) 70%, transparent 100%)',
-          }}
-        >
-          {BUILDINGS.map((building) => (
-            <CampBuilding key={building.name} {...building} />
-          ))}
+        <div className="bg-gradient-to-t from-[hsl(0_65%_20%/0.95)] via-[hsl(0_65%_20%/0.85)] to-transparent pt-8 pb-6 px-4">
+          <div className="flex justify-around items-center max-w-md mx-auto">
+            {BUILDINGS.map((building) => (
+              <CampBuilding key={building.name} {...building} />
+            ))}
+          </div>
         </div>
       </div>
     </div>
