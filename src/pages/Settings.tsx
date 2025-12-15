@@ -2,15 +2,16 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
-import { ArrowLeft, Eye, Link2, Apple, Watch, Activity, Palette, Check } from 'lucide-react';
+import { ArrowLeft, Eye, Link2, Apple, Watch, Activity, Palette, Check, Sparkles, Sword } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from '@/hooks/use-toast';
-import { useNavTheme, navThemes, NavTheme } from '@/hooks/useNavTheme';
+import { useNavTheme, navThemes, NavTheme, designStyles, DesignStyle } from '@/hooks/useNavTheme';
+import { cn } from '@/lib/utils';
 
 export default function Settings() {
   const navigate = useNavigate();
   const [publicJournal, setPublicJournal] = useState(false);
-  const { theme: currentTheme, setTheme } = useNavTheme();
+  const { theme: currentTheme, setTheme, designStyle, setDesignStyle } = useNavTheme();
 
   const handlePublicJournalToggle = (checked: boolean) => {
     setPublicJournal(checked);
@@ -39,7 +40,15 @@ export default function Settings() {
     setTheme(theme);
     toast({
       title: 'Theme Updated',
-      description: `Navigation bar set to ${navThemes[theme].name} theme`,
+      description: `Color scheme set to ${navThemes[theme].name}`,
+    });
+  };
+
+  const handleDesignStyleChange = (style: DesignStyle) => {
+    setDesignStyle(style);
+    toast({
+      title: 'Design Style Updated',
+      description: `Switched to ${designStyles[style].name} design`,
     });
   };
 
@@ -49,6 +58,11 @@ export default function Settings() {
     { id: 'orange', preview: '#ffaa40', glow: 'rgba(255, 170, 64, 0.5)' },
     { id: 'green', preview: '#90ff50', glow: 'rgba(144, 255, 80, 0.5)' },
     { id: 'red', preview: '#ff5050', glow: 'rgba(255, 80, 80, 0.5)' },
+  ];
+
+  const designStyleOptions: { id: DesignStyle; icon: typeof Sparkles; gradient: string }[] = [
+    { id: 'sleek', icon: Sparkles, gradient: 'from-gray-600 to-gray-800' },
+    { id: 'adventurer', icon: Sword, gradient: 'from-amber-700 to-amber-900' },
   ];
 
   return (
@@ -67,7 +81,52 @@ export default function Settings() {
         </div>
       </div>
 
-      <div className="p-4 max-w-lg mx-auto space-y-6">
+      <div className="p-4 max-w-lg mx-auto space-y-6 pb-24">
+        {/* Design Style Section */}
+        <div className="parchment-card p-4 space-y-4">
+          <h2 className="font-display text-lg font-semibold flex items-center gap-2">
+            <Palette className="w-5 h-5 text-primary" />
+            Design Style
+          </h2>
+          
+          <p className="text-xs text-muted-foreground">
+            Choose your preferred visual style
+          </p>
+
+          <div className="grid grid-cols-2 gap-3">
+            {designStyleOptions.map(({ id, icon: Icon, gradient }) => (
+              <button
+                key={id}
+                onClick={() => handleDesignStyleChange(id)}
+                className={cn(
+                  "relative p-4 rounded-xl flex flex-col items-center gap-2 transition-all duration-200 border-2",
+                  designStyle === id 
+                    ? "border-primary bg-primary/10 scale-[1.02]" 
+                    : "border-border/50 bg-card/50 hover:border-primary/50"
+                )}
+              >
+                <div className={cn(
+                  "w-12 h-12 rounded-full flex items-center justify-center bg-gradient-to-br",
+                  gradient
+                )}>
+                  <Icon className="w-6 h-6 text-white" />
+                </div>
+                <span className="font-display font-semibold text-sm">
+                  {designStyles[id].name}
+                </span>
+                <span className="text-[10px] text-muted-foreground text-center">
+                  {designStyles[id].description}
+                </span>
+                {designStyle === id && (
+                  <div className="absolute top-2 right-2 w-5 h-5 rounded-full bg-primary flex items-center justify-center">
+                    <Check className="w-3 h-3 text-primary-foreground" />
+                  </div>
+                )}
+              </button>
+            ))}
+          </div>
+        </div>
+
         {/* Color Scheme Section */}
         <div className="parchment-card p-4 space-y-4">
           <h2 className="font-display text-lg font-semibold flex items-center gap-2">

@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
 export type NavTheme = 'classic' | 'blue' | 'orange' | 'green' | 'red';
+export type DesignStyle = 'sleek' | 'adventurer';
 
 interface NavThemeConfig {
   name: string;
@@ -103,10 +104,23 @@ export const navThemes: Record<NavTheme, NavThemeConfig> = {
   },
 };
 
+export const designStyles: Record<DesignStyle, { name: string; description: string }> = {
+  sleek: {
+    name: 'Sleek',
+    description: 'Modern dark minimal design',
+  },
+  adventurer: {
+    name: 'Adventurer',
+    description: 'Classic fantasy RPG aesthetic',
+  },
+};
+
 interface NavThemeContextType {
   theme: NavTheme;
   setTheme: (theme: NavTheme) => void;
   config: NavThemeConfig;
+  designStyle: DesignStyle;
+  setDesignStyle: (style: DesignStyle) => void;
 }
 
 const NavThemeContext = createContext<NavThemeContextType | undefined>(undefined);
@@ -117,9 +131,19 @@ export function NavThemeProvider({ children }: { children: ReactNode }) {
     return (saved as NavTheme) || 'classic';
   });
 
+  const [designStyle, setDesignStyleState] = useState<DesignStyle>(() => {
+    const saved = localStorage.getItem('designStyle');
+    return (saved as DesignStyle) || 'sleek';
+  });
+
   const setTheme = (newTheme: NavTheme) => {
     setThemeState(newTheme);
     localStorage.setItem('navTheme', newTheme);
+  };
+
+  const setDesignStyle = (newStyle: DesignStyle) => {
+    setDesignStyleState(newStyle);
+    localStorage.setItem('designStyle', newStyle);
   };
 
   const config = navThemes[theme];
@@ -134,8 +158,15 @@ export function NavThemeProvider({ children }: { children: ReactNode }) {
     root.style.setProperty('--border', config.cssVars.cardBorder);
   }, [config]);
 
+  // Apply design style class to document
+  useEffect(() => {
+    const root = document.documentElement;
+    root.classList.remove('design-sleek', 'design-adventurer');
+    root.classList.add(`design-${designStyle}`);
+  }, [designStyle]);
+
   return (
-    <NavThemeContext.Provider value={{ theme, setTheme, config }}>
+    <NavThemeContext.Provider value={{ theme, setTheme, config, designStyle, setDesignStyle }}>
       {children}
     </NavThemeContext.Provider>
   );
