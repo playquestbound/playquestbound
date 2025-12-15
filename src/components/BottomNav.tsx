@@ -55,12 +55,12 @@ export function BottomNav() {
         {/* Center Quests button - elevated */}
         <Link
           to="/quests"
-          className="relative flex items-center justify-center -mt-8 transition-transform duration-200 hover:scale-105"
+          className="relative flex items-center justify-center -mt-6 transition-transform duration-200 hover:scale-105"
         >
           <img 
             src={questSword} 
             alt="Quests" 
-            className="w-32 h-32 object-contain drop-shadow-[0_4px_12px_rgba(255,255,255,0.4)]"
+            className="w-20 h-20 sm:w-24 sm:h-24 md:w-32 md:h-32 object-contain drop-shadow-[0_4px_12px_rgba(255,255,255,0.4)]"
           />
         </Link>
 
