@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { Home, ScrollText, BarChart3, User } from 'lucide-react';
+import { Home, ScrollText, BarChart3, User, BookOpen } from 'lucide-react';
 
 interface CampBuildingProps {
   name: string;
@@ -10,7 +10,7 @@ interface CampBuildingProps {
 
 const iconMap: Record<string, React.ElementType> = {
   'Quests': ScrollText,
-  'Journal': BarChart3,
+  'Journal': BookOpen,
   'Arena': BarChart3,
   'Profile': User,
   'Home': Home,
