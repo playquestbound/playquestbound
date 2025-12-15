@@ -2,13 +2,15 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
-import { ArrowLeft, Eye, Link2, Apple, Watch, Activity } from 'lucide-react';
+import { ArrowLeft, Eye, Link2, Apple, Watch, Activity, Palette, Check } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from '@/hooks/use-toast';
+import { useNavTheme, navThemes, NavTheme } from '@/hooks/useNavTheme';
 
 export default function Settings() {
   const navigate = useNavigate();
   const [publicJournal, setPublicJournal] = useState(false);
+  const { theme: currentTheme, setTheme } = useNavTheme();
 
   const handlePublicJournalToggle = (checked: boolean) => {
     setPublicJournal(checked);
@@ -33,6 +35,22 @@ export default function Settings() {
     });
   };
 
+  const handleThemeChange = (theme: NavTheme) => {
+    setTheme(theme);
+    toast({
+      title: 'Theme Updated',
+      description: `Navigation bar set to ${navThemes[theme].name} theme`,
+    });
+  };
+
+  const themeOptions: { id: NavTheme; preview: string; glow: string }[] = [
+    { id: 'classic', preview: '#ffffff', glow: 'transparent' },
+    { id: 'blue', preview: '#60d0ff', glow: 'rgba(96, 208, 255, 0.5)' },
+    { id: 'orange', preview: '#ffaa40', glow: 'rgba(255, 170, 64, 0.5)' },
+    { id: 'green', preview: '#90ff50', glow: 'rgba(144, 255, 80, 0.5)' },
+    { id: 'red', preview: '#ff5050', glow: 'rgba(255, 80, 80, 0.5)' },
+  ];
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -50,6 +68,61 @@ export default function Settings() {
       </div>
 
       <div className="p-4 max-w-lg mx-auto space-y-6">
+        {/* Color Scheme Section */}
+        <div className="parchment-card p-4 space-y-4">
+          <h2 className="font-display text-lg font-semibold flex items-center gap-2">
+            <Palette className="w-5 h-5 text-secondary" />
+            Navigation Theme
+          </h2>
+          
+          <p className="text-xs text-muted-foreground">
+            Choose a color scheme for your navigation bar
+          </p>
+
+          <div className="grid grid-cols-5 gap-3">
+            {themeOptions.map(({ id, preview, glow }) => (
+              <button
+                key={id}
+                onClick={() => handleThemeChange(id)}
+                className={`relative aspect-square rounded-lg flex items-center justify-center transition-all duration-200 ${
+                  currentTheme === id ? 'scale-110' : 'hover:scale-105'
+                }`}
+                style={{
+                  background: navThemes[id].bgColor,
+                  boxShadow: currentTheme === id 
+                    ? `0 0 20px ${glow}, 0 0 0 2px ${preview}` 
+                    : `0 0 12px ${glow}`,
+                  border: `2px solid ${currentTheme === id ? preview : 'transparent'}`,
+                }}
+              >
+                <div 
+                  className="w-4 h-4 rounded-full"
+                  style={{ 
+                    background: preview,
+                    boxShadow: `0 0 8px ${glow}`,
+                  }}
+                />
+                {currentTheme === id && (
+                  <div className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-primary flex items-center justify-center">
+                    <Check className="w-3 h-3 text-primary-foreground" />
+                  </div>
+                )}
+              </button>
+            ))}
+          </div>
+
+          <div className="flex justify-between items-center pt-2">
+            {themeOptions.map(({ id }) => (
+              <span 
+                key={id}
+                className={`text-[10px] ${currentTheme === id ? 'text-foreground font-medium' : 'text-muted-foreground'}`}
+              >
+                {navThemes[id].name}
+              </span>
+            ))}
+          </div>
+        </div>
+
         {/* Privacy Section */}
         <div className="parchment-card p-4 space-y-4">
           <h2 className="font-display text-lg font-semibold flex items-center gap-2">
