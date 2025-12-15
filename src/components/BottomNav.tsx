@@ -73,8 +73,26 @@ export function BottomNav() {
     );
   };
 
+  const isOnQuests = location.pathname === '/quests';
+
   return (
-    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50">
+    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center">
+      {/* Floating Explore button - only visible on quests page */}
+      {isOnQuests && (
+        <Link
+          to="/run"
+          className="mb-3 px-6 py-2 rounded-full font-tech text-sm transition-all duration-200 hover:scale-105 active:scale-95"
+          style={{
+            backgroundColor: config.bgColor,
+            border: `1px solid ${config.borderColor}`,
+            color: config.activeIconColor,
+            boxShadow: `0 0 15px ${config.glowColor}, 0 4px 15px rgba(0,0,0,0.3)`,
+          }}
+        >
+          Explore
+        </Link>
+      )}
+      
       <nav 
         className="flex items-center backdrop-blur-sm rounded-full px-2 py-2 overflow-visible"
         style={{
