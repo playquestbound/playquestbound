@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { 
-  Video, ArrowLeft, Circle, Square, Upload, Play, RotateCcw, 
+  Video, ArrowLeft, Circle, Square, RotateCcw, 
   Loader2, CheckCircle, AlertCircle, Camera
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -31,7 +31,7 @@ export function VideoStep({ questId, onComplete, onBack }: VideoStepProps) {
   const streamRef = useRef<MediaStream | null>(null);
   const chunksRef = useRef<Blob[]>([]);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  
 
   // Cleanup on unmount
   useEffect(() => {
@@ -123,28 +123,6 @@ export function VideoStep({ questId, onComplete, onBack }: VideoStepProps) {
     }
   };
 
-  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    // Validate file type
-    if (!file.type.startsWith("video/")) {
-      setError("Please select a video file");
-      return;
-    }
-
-    // Validate file size (max 100MB)
-    if (file.size > 100 * 1024 * 1024) {
-      setError("Video file is too large (max 100MB)");
-      return;
-    }
-
-    setVideoBlob(file);
-    const url = URL.createObjectURL(file);
-    setVideoPreviewUrl(url);
-    setMode("preview");
-    setError(null);
-  };
 
   const resetVideo = () => {
     if (videoPreviewUrl) {
@@ -236,27 +214,13 @@ export function VideoStep({ questId, onComplete, onBack }: VideoStepProps) {
               </div>
             )}
 
-            <div className="flex flex-col gap-3 w-full max-w-xs">
-              <Button onClick={startCamera} className="w-full">
-                <Camera className="mr-2 h-4 w-4" />
-                Record Video
-              </Button>
-              <Button 
-                variant="outline" 
-                onClick={() => fileInputRef.current?.click()}
-                className="w-full"
-              >
-                <Upload className="mr-2 h-4 w-4" />
-                Upload from Library
-              </Button>
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="video/*"
-                onChange={handleFileSelect}
-                className="hidden"
-              />
-            </div>
+            <Button onClick={startCamera} className="w-full max-w-xs">
+              <Camera className="mr-2 h-4 w-4" />
+              Start Recording
+            </Button>
+            <p className="text-xs text-muted-foreground mt-4 text-center max-w-xs">
+              Videos must be recorded live to verify quest completion
+            </p>
           </div>
         )}
 
@@ -346,7 +310,7 @@ export function VideoStep({ questId, onComplete, onBack }: VideoStepProps) {
                   Retake
                 </Button>
                 <Button onClick={uploadVideo} className="flex-1">
-                  <Upload className="mr-2 h-4 w-4" />
+                  <CheckCircle className="mr-2 h-4 w-4" />
                   Use This Video
                 </Button>
               </div>
