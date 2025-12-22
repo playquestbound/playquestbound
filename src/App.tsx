@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { AuthProvider } from "@/hooks/useAuth";
 import { NavThemeProvider } from "@/hooks/useNavTheme";
 import { BottomNav } from "@/components/BottomNav";
+import { ProtectedRoute } from "@/components/ProtectedRoute";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import CharacterCreation from "./pages/CharacterCreation";
@@ -47,7 +48,7 @@ function AppContent() {
         <Route path="/run" element={<RunTracker />} />
         <Route path="/store" element={<Store />} />
         <Route path="/discover" element={<Discover />} />
-        <Route path="/admin/quests" element={<QuestManagement />} />
+        <Route path="/admin/quests" element={<ProtectedRoute requireAdmin><QuestManagement /></ProtectedRoute>} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       {showNav && <BottomNav />}

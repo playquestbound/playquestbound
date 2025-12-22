@@ -15,6 +15,11 @@ interface PlayerResult {
   xp: number;
 }
 
+// Escape ILIKE/LIKE special characters to prevent pattern injection
+function escapeILIKE(str: string): string {
+  return str.replace(/[%_\\]/g, '\\$&');
+}
+
 export default function SearchPlayers() {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
@@ -28,10 +33,11 @@ export default function SearchPlayers() {
     setIsSearching(true);
     setHasSearched(true);
     
+    const escapedQuery = escapeILIKE(searchQuery.trim());
     const { data, error } = await supabase
       .from('profiles')
       .select('id, character_name, race, class, level, xp')
-      .ilike('character_name', `%${searchQuery}%`)
+      .ilike('character_name', `%${escapedQuery}%`)
       .limit(20);
     
     if (!error && data) {
