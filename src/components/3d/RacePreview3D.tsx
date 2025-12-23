@@ -257,16 +257,7 @@ export function RacePreview3D({ raceId, gender, className = "w-full h-64" }: Rac
         <pointLight position={[-2, 1, -2]} intensity={0.3} color="#4a90d9" />
         <pointLight position={[2, 1, -2]} intensity={0.3} color="#d4af37" />
         
-        {/* Soft backlight glow */}
-        <pointLight position={[0, 0, -1.5]} intensity={0.4} color="#6366f1" distance={4} decay={2} />
-        
         <Suspense fallback={<LoadingSpinner />}>
-          {/* Glowing backdrop */}
-          <mesh position={[0, 0, -1.2]}>
-            <circleGeometry args={[1.2, 32]} />
-            <meshBasicMaterial color="#4338ca" transparent opacity={0.15} />
-          </mesh>
-          
           {raceId ? (
             modelUrl ? (
               <AnimatedModel url={modelUrl} raceId={raceId} />
