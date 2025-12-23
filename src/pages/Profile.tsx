@@ -5,7 +5,9 @@ import { useAuth } from '@/hooks/useAuth';
 import { LoadingScreen } from '@/components/LoadingScreen';
 import { Button } from '@/components/ui/button';
 import { EquipmentDrawer } from '@/components/profile/EquipmentDrawer';
+import { CharacterProfile3D } from '@/components/3d/CharacterProfile3D';
 import { getRaceName } from '@/lib/races';
+import { Gender } from '@/lib/races';
 import { getXpProgress, formatNumber } from '@/lib/levelSystem';
 import { toast } from '@/hooks/use-toast';
 import { 
@@ -207,25 +209,19 @@ export default function Profile() {
               <EquipmentSlot icon={Gem} label="Trinket" position="right" />
             </div>
 
-            {/* Center Character */}
-            <div className="flex items-center justify-center py-8">
+            {/* Center Character - 3D Model */}
+            <div className="flex items-center justify-center py-4">
               <div 
-                className="w-40 h-56 rounded-lg flex items-center justify-center relative"
+                className="w-40 h-56 rounded-lg flex items-center justify-center relative overflow-hidden"
                 style={{
                   background: 'radial-gradient(ellipse at center, rgba(212,168,87,0.1) 0%, transparent 70%)',
                 }}
               >
-                {/* Character silhouette placeholder */}
-                <div 
-                  className="w-32 h-48 rounded-lg border-2 flex items-center justify-center"
-                  style={{
-                    background: 'linear-gradient(180deg, rgba(42,35,24,0.8) 0%, rgba(26,21,16,0.9) 100%)',
-                    borderColor: '#4a3d2a',
-                    boxShadow: '0 0 30px rgba(212,168,87,0.15), inset 0 0 20px rgba(0,0,0,0.5)',
-                  }}
-                >
-                  <User className="w-16 h-16 text-amber-500/40" />
-                </div>
+                <CharacterProfile3D 
+                  raceId={profile.race || 'human'} 
+                  gender={(customization as any)?.gender as Gender || 'male'}
+                  className="w-full h-full"
+                />
               </div>
             </div>
           </div>
