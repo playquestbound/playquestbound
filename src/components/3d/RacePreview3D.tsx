@@ -3,7 +3,8 @@ import { Suspense, useRef, useEffect, useState, Component, ReactNode } from 'rea
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, useGLTF, Environment, ContactShadows } from '@react-three/drei';
 import { Group, AnimationMixer, LoopRepeat } from 'three';
-import { Gender, getRaceById } from '@/lib/races';
+import { Gender } from '@/lib/races';
+import { useRaceModelUrl } from '@/hooks/useRaceModels';
 
 interface RacePreview3DProps {
   raceId: string | null;
@@ -242,8 +243,8 @@ function LoadingSpinner() {
 }
 
 export function RacePreview3D({ raceId, gender, className = "w-full h-64" }: RacePreview3DProps) {
-  const race = raceId ? getRaceById(raceId) : null;
-  const modelUrl = race?.modelUrls?.[gender];
+  // Fetch model URL from database
+  const modelUrl = useRaceModelUrl(raceId, gender);
   
   return (
     <div className={className}>

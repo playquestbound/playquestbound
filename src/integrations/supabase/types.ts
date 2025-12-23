@@ -262,6 +262,33 @@ export type Database = {
         }
         Relationships: []
       }
+      race_models: {
+        Row: {
+          created_at: string
+          gender: string
+          id: string
+          model_url: string
+          race_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          gender: string
+          id?: string
+          model_url: string
+          race_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          gender?: string
+          id?: string
+          model_url?: string
+          race_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       user_equipment: {
         Row: {
           equipped: boolean
