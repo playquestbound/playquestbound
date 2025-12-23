@@ -23,6 +23,7 @@ export type Database = {
           id: string
           image_url: string | null
           is_purchasable: boolean
+          model_url: string | null
           name: string
           race_restriction: string | null
           rarity: string
@@ -36,6 +37,7 @@ export type Database = {
           id?: string
           image_url?: string | null
           is_purchasable?: boolean
+          model_url?: string | null
           name: string
           race_restriction?: string | null
           rarity?: string
@@ -49,6 +51,7 @@ export type Database = {
           id?: string
           image_url?: string | null
           is_purchasable?: boolean
+          model_url?: string | null
           name?: string
           race_restriction?: string | null
           rarity?: string
