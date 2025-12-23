@@ -41,6 +41,9 @@ export const RACES: Race[] = [
     description: 'Fierce warriors connected to primal strength. They embrace battle with wild abandon.',
     traits: ['Fierce', 'Strong', 'Fearless'],
     emoji: '🐺',
+    modelUrls: {
+      male: '/models/orc-male.glb',
+    },
   },
 ];
 
