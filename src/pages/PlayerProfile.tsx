@@ -24,8 +24,9 @@ export default function PlayerProfile() {
   const { data: profile, isLoading } = useQuery({
     queryKey: ['player-profile', playerId],
     queryFn: async () => {
+      // Use public_profiles view for viewing other players (excludes sensitive data like gold)
       const { data, error } = await supabase
-        .from('profiles')
+        .from('public_profiles')
         .select('*')
         .eq('id', playerId)
         .maybeSingle();

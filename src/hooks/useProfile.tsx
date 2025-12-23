@@ -113,10 +113,10 @@ export function useLeaderboard() {
   return useQuery({
     queryKey: ['leaderboard'],
     queryFn: async () => {
+      // Use public_profiles view for leaderboard (excludes sensitive data)
       const { data, error } = await supabase
-        .from('profiles')
+        .from('public_profiles')
         .select('id, character_name, race, xp, level')
-        .eq('has_created_character', true)
         .order('xp', { ascending: false })
         .limit(20);
 

@@ -12,7 +12,6 @@ interface PlayerResult {
   race: string | null;
   class: string | null;
   level: number;
-  xp: number;
 }
 
 // Escape ILIKE/LIKE special characters to prevent pattern injection
@@ -34,9 +33,10 @@ export default function SearchPlayers() {
     setHasSearched(true);
     
     const escapedQuery = escapeILIKE(searchQuery.trim());
+    // Use public_profiles view for social features (excludes sensitive data)
     const { data, error } = await supabase
-      .from('profiles')
-      .select('id, character_name, race, class, level, xp')
+      .from('public_profiles')
+      .select('id, character_name, race, class, level')
       .ilike('character_name', `%${escapedQuery}%`)
       .limit(20);
     
