@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
+import { useProfile } from '@/hooks/useProfile';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
 import { useQueryClient } from '@tanstack/react-query';
@@ -18,6 +19,9 @@ import { DEFAULT_CUSTOMIZATION, CharacterCustomization } from '@/lib/characterDa
 const TOTAL_STEPS = 5;
 
 export default function CharacterCreation() {
+  const { data: profile } = useProfile();
+  const isEditMode = profile?.has_created_character === true;
+  
   const [step, setStep] = useState(1);
   const [selectedRace, setSelectedRace] = useState<string | null>(null);
   const [selectedGender, setSelectedGender] = useState<Gender>('male');
@@ -25,10 +29,24 @@ export default function CharacterCreation() {
   const [customization, setCustomization] = useState<CharacterCustomization>(DEFAULT_CUSTOMIZATION);
   const [characterName, setCharacterName] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [initialized, setInitialized] = useState(false);
 
   const { user } = useAuth();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+
+  // Pre-populate with existing data in edit mode
+  useEffect(() => {
+    if (profile && !initialized) {
+      if (profile.race) setSelectedRace(profile.race);
+      if (profile.class) setSelectedClass(profile.class);
+      if (profile.character_name) setCharacterName(profile.character_name);
+      if (profile.customization) {
+        setCustomization(profile.customization as CharacterCustomization);
+      }
+      setInitialized(true);
+    }
+  }, [profile, initialized]);
 
   const handleSubmit = async () => {
     if (!user || !selectedRace || !selectedClass || !characterName.trim()) {
@@ -43,21 +61,26 @@ export default function CharacterCreation() {
     setIsSubmitting(true);
 
     try {
-      // Check name uniqueness one more time
-      const { data: existing } = await supabase
-        .from('profiles')
-        .select('id')
-        .eq('character_name', characterName.trim());
+      // Check name uniqueness (skip if name unchanged in edit mode)
+      const nameChanged = !isEditMode || characterName.trim() !== profile?.character_name;
+      
+      if (nameChanged) {
+        const { data: existing } = await supabase
+          .from('profiles')
+          .select('id')
+          .eq('character_name', characterName.trim())
+          .neq('id', user.id);
 
-      if (existing && existing.length > 0) {
-        toast({
-          title: 'Name Taken',
-          description: 'This name was just claimed. Please choose another.',
-          variant: 'destructive',
-        });
-        setStep(4); // Go back to name step
-        setIsSubmitting(false);
-        return;
+        if (existing && existing.length > 0) {
+          toast({
+            title: 'Name Taken',
+            description: 'This name was just claimed. Please choose another.',
+            variant: 'destructive',
+          });
+          setStep(4);
+          setIsSubmitting(false);
+          return;
+        }
       }
 
       // Save character data
@@ -79,16 +102,18 @@ export default function CharacterCreation() {
       await queryClient.refetchQueries({ queryKey: ['profile'] });
 
       toast({
-        title: 'Character Created!',
-        description: `Welcome, ${characterName}! Your adventure begins now.`,
+        title: isEditMode ? 'Character Updated!' : 'Character Created!',
+        description: isEditMode 
+          ? `${characterName}'s changes have been saved.`
+          : `Welcome, ${characterName}! Your adventure begins now.`,
       });
 
-      navigate('/', { replace: true });
+      navigate(isEditMode ? '/profile' : '/', { replace: true });
     } catch (error) {
-      console.error('Failed to create character:', error);
+      console.error('Failed to save character:', error);
       toast({
         title: 'Error',
-        description: 'Failed to create character. Please try again.',
+        description: 'Failed to save character. Please try again.',
         variant: 'destructive',
       });
     } finally {
