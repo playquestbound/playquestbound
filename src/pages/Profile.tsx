@@ -21,7 +21,8 @@ import {
   Backpack,
   Settings,
   ChevronDown,
-  BookOpen
+  BookOpen,
+  Pencil
 } from 'lucide-react';
 
 interface Customization {
@@ -114,14 +115,24 @@ export default function Profile() {
             </Button>
           </div>
           
-          <Button 
-            size="icon" 
-            variant="ghost"
-            className="w-10 h-10 rounded-full"
-            onClick={handleLogout}
-          >
-            <LogOut className="w-5 h-5 text-white/70" />
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button 
+              size="icon" 
+              variant="ghost"
+              className="w-10 h-10 rounded-full"
+              onClick={() => navigate('/character-creation')}
+            >
+              <Pencil className="w-5 h-5 text-white/70" />
+            </Button>
+            <Button 
+              size="icon" 
+              variant="ghost"
+              className="w-10 h-10 rounded-full"
+              onClick={handleLogout}
+            >
+              <LogOut className="w-5 h-5 text-white/70" />
+            </Button>
+          </div>
         </div>
       </div>
 
