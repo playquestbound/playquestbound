@@ -134,7 +134,7 @@ export function CharacterProfile3D({ raceId, gender, className = "w-full h-full"
   return (
     <div className={className}>
       <Canvas
-        camera={{ position: [0, 0.5, 2.5], fov: 35 }}
+        camera={{ position: [0, 0.3, 3.2], fov: 35 }}
         shadows
       >
         {/* Lighting - front-facing setup */}
