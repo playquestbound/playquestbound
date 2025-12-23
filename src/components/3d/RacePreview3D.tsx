@@ -220,7 +220,7 @@ function AnimatedModelInner({ url, scale = 1 }: { url: string; scale?: number })
 
 function AnimatedModel({ url, raceId }: AnimatedModelProps) {
   const scale = raceId === 'dwarf' ? 0.5 : 0.85;
-  const positionY = raceId === 'dwarf' ? -0.5 : 0;
+  const positionY = raceId === 'dwarf' ? -0.3 : 0;
   
   return (
     <group position={[0, positionY, 0]}>
