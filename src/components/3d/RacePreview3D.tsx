@@ -176,7 +176,7 @@ interface AnimatedModelProps {
   raceId: string | null;
 }
 
-function AnimatedModelInner({ url }: { url: string }) {
+function AnimatedModelInner({ url, scale = 1 }: { url: string; scale?: number }) {
   const { scene, animations } = useGLTF(url);
   const ref = useRef<Group>(null);
   const mixerRef = useRef<AnimationMixer | null>(null);
@@ -198,13 +198,15 @@ function AnimatedModelInner({ url }: { url: string }) {
     mixerRef.current?.update(delta);
   });
   
-  return <primitive ref={ref} object={scene.clone()} scale={1} />;
+  return <primitive ref={ref} object={scene.clone()} scale={scale} />;
 }
 
 function AnimatedModel({ url, raceId }: AnimatedModelProps) {
+  const scale = raceId === 'dwarf' ? 0.5 : 1;
+  
   return (
     <ModelErrorBoundary fallback={<PlaceholderCharacter raceId={raceId} />}>
-      <AnimatedModelInner url={url} />
+      <AnimatedModelInner url={url} scale={scale} />
     </ModelErrorBoundary>
   );
 }
