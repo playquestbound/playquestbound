@@ -2,8 +2,25 @@ import * as React from 'react';
 import { Suspense, useRef, useEffect, Component, ReactNode } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, useGLTF, Environment, ContactShadows } from '@react-three/drei';
-import { Group, AnimationMixer, LoopRepeat } from 'three';
+import { Group, AnimationMixer, LoopRepeat, PointLight } from 'three';
 import { Gender } from '@/lib/races';
+
+// Dynamic orbiting light component
+function DynamicLight() {
+  const lightRef = useRef<PointLight>(null);
+  
+  useFrame((state) => {
+    if (lightRef.current) {
+      const time = state.clock.elapsedTime;
+      lightRef.current.position.x = Math.sin(time * 0.5) * 3;
+      lightRef.current.position.z = Math.cos(time * 0.5) * 3;
+      lightRef.current.position.y = 2 + Math.sin(time * 0.8) * 0.5;
+      lightRef.current.intensity = 0.15 + Math.sin(time * 2) * 0.05;
+    }
+  });
+  
+  return <pointLight ref={lightRef} color="#ff9944" distance={8} decay={2} />;
+}
 import { useRaceModelUrl } from '@/hooks/useRaceModels';
 
 interface RacePreview3DProps {
@@ -247,15 +264,23 @@ export function RacePreview3D({ raceId, gender, className = "w-full h-64" }: Rac
           castShadow 
         />
         <pointLight position={[-5, 5, -5]} intensity={0.08} color="#d4af37" />
+        
+        {/* Top spotlight for dramatic top-down lighting */}
         <spotLight 
-          position={[0, 5, 0]} 
-          intensity={0.05} 
+          position={[0, 6, 1]} 
+          intensity={0.5} 
           angle={0.5}
-          penumbra={1}
+          penumbra={0.8}
+          color="#ffffff"
+          castShadow
         />
+        
         {/* Rim lights for edge highlight */}
         <pointLight position={[-2, 1, -2]} intensity={0.3} color="#4a90d9" />
         <pointLight position={[2, 1, -2]} intensity={0.3} color="#d4af37" />
+        
+        {/* Dynamic orbiting light */}
+        <DynamicLight />
         
         <Suspense fallback={<LoadingSpinner />}>
           {raceId ? (
