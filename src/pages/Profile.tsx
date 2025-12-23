@@ -22,8 +22,10 @@ import {
   Settings,
   ChevronDown,
   BookOpen,
-  Pencil
+  Pencil,
+  ShieldCheck
 } from 'lucide-react';
+import { useIsAdmin } from '@/hooks/useAdminQuests';
 
 interface Customization {
   skinTone?: string;
@@ -63,6 +65,7 @@ function EquipmentSlot({ icon: Icon, label, item, position }: {
 export default function Profile() {
   const { data: profile, isLoading: profileLoading } = useProfile();
   const { data: completedQuests, isLoading: questsLoading } = useCompletedQuests();
+  const { data: isAdmin } = useIsAdmin();
   const { signOut } = useAuth();
   const navigate = useNavigate();
 
@@ -97,6 +100,16 @@ export default function Profile() {
       <div className="relative px-4 pt-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
+            {isAdmin && (
+              <Button 
+                size="icon" 
+                variant="ghost"
+                className="w-10 h-10 rounded-full"
+                onClick={() => navigate('/admin/quests')}
+              >
+                <ShieldCheck className="w-5 h-5 text-amber-500" />
+              </Button>
+            )}
             <Button 
               size="icon" 
               variant="ghost"
