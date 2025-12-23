@@ -235,7 +235,7 @@ export function RacePreview3D({ raceId, gender, className = "w-full h-64" }: Rac
   return (
     <div className={className}>
       <Canvas
-        camera={{ position: [0, 0.5, 2.5], fov: 45 }}
+        camera={{ position: [0, 0, 3], fov: 40 }}
         shadows
       >
         <ambientLight intensity={0.6} />
