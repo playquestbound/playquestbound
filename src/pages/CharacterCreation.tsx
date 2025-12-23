@@ -5,6 +5,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
 import { useQueryClient } from '@tanstack/react-query';
 import type { Json } from '@/integrations/supabase/types';
+import { Gender } from '@/lib/races';
 
 import { ProgressIndicator } from '@/components/character-creation/ProgressIndicator';
 import { RaceSelection } from '@/components/character-creation/RaceSelection';
@@ -19,6 +20,7 @@ const TOTAL_STEPS = 5;
 export default function CharacterCreation() {
   const [step, setStep] = useState(1);
   const [selectedRace, setSelectedRace] = useState<string | null>(null);
+  const [selectedGender, setSelectedGender] = useState<Gender>('male');
   const [selectedClass, setSelectedClass] = useState<string | null>(null);
   const [customization, setCustomization] = useState<CharacterCustomization>(DEFAULT_CUSTOMIZATION);
   const [characterName, setCharacterName] = useState('');
@@ -110,6 +112,8 @@ export default function CharacterCreation() {
             selectedRace={selectedRace}
             onSelect={setSelectedRace}
             onContinue={() => goToStep(2)}
+            selectedGender={selectedGender}
+            onGenderSelect={setSelectedGender}
           />
         )}
 
