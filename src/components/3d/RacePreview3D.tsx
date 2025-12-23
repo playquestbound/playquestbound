@@ -240,16 +240,16 @@ export function RacePreview3D({ raceId, gender, className = "w-full h-64" }: Rac
         camera={{ position: [0, 0, 3], fov: 40 }}
         shadows
       >
-        <ambientLight intensity={0.3} />
+        <ambientLight intensity={0.1} />
         <directionalLight 
           position={[5, 5, 5]} 
-          intensity={0.5} 
+          intensity={0.2} 
           castShadow 
         />
-        <pointLight position={[-5, 5, -5]} intensity={0.2} color="#d4af37" />
+        <pointLight position={[-5, 5, -5]} intensity={0.08} color="#d4af37" />
         <spotLight 
           position={[0, 5, 0]} 
-          intensity={0.15} 
+          intensity={0.05} 
           angle={0.5}
           penumbra={1}
         />
@@ -264,7 +264,7 @@ export function RacePreview3D({ raceId, gender, className = "w-full h-64" }: Rac
           ) : (
             <LoadingSpinner />
           )}
-          <Environment preset="studio" />
+          <Environment preset="night" />
         </Suspense>
         
         <ContactShadows 
