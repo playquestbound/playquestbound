@@ -163,12 +163,15 @@ export function VideoStep({ questId, onComplete, onBack }: VideoStepProps) {
 
       setUploadProgress(100);
 
-      // Get public URL
-      const { data: urlData } = supabase.storage
+      // Use signed URL instead of public URL for privacy
+      const { data: signedUrlData, error: signedUrlError } = await supabase.storage
         .from("videos")
-        .getPublicUrl(data.path);
+        .createSignedUrl(data.path, 86400); // 24 hour expiry
 
-      onComplete(urlData.publicUrl);
+      if (signedUrlError) throw signedUrlError;
+
+      // Store the path (not the URL) so we can generate fresh signed URLs later
+      onComplete(data.path);
     } catch (err) {
       console.error("Upload error:", err);
       setError(err instanceof Error ? err.message : "Failed to upload video");
