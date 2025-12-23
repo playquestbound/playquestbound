@@ -4,6 +4,32 @@
 @tailwind components;
 @tailwind utilities;
 
+/* iOS-friendly styles */
+html, body {
+  overscroll-behavior: none;
+  -webkit-overflow-scrolling: touch;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Hide scrollbars globally for native app feel */
+* {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+*::-webkit-scrollbar {
+  display: none;
+}
+
+/* Safe area support for notched iPhones */
+.safe-area-top {
+  padding-top: env(safe-area-inset-top);
+}
+
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
 @layer base {
   :root {
     /* Parchment and Earth tones */
