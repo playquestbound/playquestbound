@@ -427,6 +427,7 @@ export type Database = {
           id: string | null
           level: number | null
           race: string | null
+          xp: number | null
         }
         Insert: {
           character_name?: string | null
@@ -435,6 +436,7 @@ export type Database = {
           id?: string | null
           level?: number | null
           race?: string | null
+          xp?: number | null
         }
         Update: {
           character_name?: string | null
@@ -443,6 +445,7 @@ export type Database = {
           id?: string | null
           level?: number | null
           race?: string | null
+          xp?: number | null
         }
         Relationships: []
       }

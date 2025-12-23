@@ -65,8 +65,9 @@ export default function PlayerProfile() {
     );
   }
 
-  const xpProgress = getXpProgress(profile.xp, profile.level);
-  const customization = profile.customization as Customization | null;
+  // public_profiles view has limited fields - xp and customization may not be available
+  const xpProgress = getXpProgress(profile.xp ?? 0, profile.level);
+  const customization = (profile as any).customization as Customization | null;
   const questsCompleted = completedQuests?.length || 0;
 
   return (
@@ -114,11 +115,11 @@ export default function PlayerProfile() {
             />
           </div>
 
-          {/* Left Stat */}
+          {/* Left Stat - XP */}
           <div className="absolute left-2 top-1/2 -translate-y-1/2 z-10">
             <StatOrb 
               icon={Sparkles} 
-              value={formatNumber(profile.xp)} 
+              value={formatNumber(profile.xp ?? 0)} 
               label="XP" 
               color="xp" 
             />
