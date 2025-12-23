@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { LoadingScreen } from "@/components/LoadingScreen";
@@ -23,7 +23,7 @@ import { QuestPreviewModal } from "@/components/admin/QuestPreviewModal";
 import { ConfirmPublishModal } from "@/components/admin/ConfirmPublishModal";
 import { ScheduleQuestModal } from "@/components/admin/ScheduleQuestModal";
 import { QuickPublishPanel } from "@/components/admin/QuickPublishPanel";
-import { ArrowLeft, Play, Archive, Loader2, RefreshCw } from "lucide-react";
+import { ArrowLeft, Play, Archive, Loader2, RefreshCw, Box } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -31,6 +31,7 @@ export default function QuestManagement() {
   const { user, loading: authLoading } = useAuth();
   const { data: isAdmin, isLoading: adminLoading } = useIsAdmin();
   const isMobile = useIsMobile();
+  const navigate = useNavigate();
   const { toast } = useToast();
 
   // Filters state
@@ -305,7 +306,15 @@ export default function QuestManagement() {
               </p>
             </div>
 
-            <div className="flex gap-2">
+            <div className="flex gap-2 flex-wrap">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => navigate('/admin/models')}
+              >
+                <Box className="mr-2 h-4 w-4" />
+                3D Models
+              </Button>
               <Button
                 variant="outline"
                 size="sm"
