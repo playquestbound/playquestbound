@@ -120,7 +120,7 @@ export default function Profile() {
               size="icon" 
               variant="ghost"
               className="w-10 h-10 rounded-full"
-              onClick={() => navigate('/character-creation')}
+              onClick={() => navigate('/create-character')}
             >
               <Pencil className="w-5 h-5 text-white/70" />
             </Button>
