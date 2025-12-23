@@ -253,6 +253,9 @@ export function RacePreview3D({ raceId, gender, className = "w-full h-64" }: Rac
           angle={0.5}
           penumbra={1}
         />
+        {/* Rim lights for edge highlight */}
+        <pointLight position={[-2, 1, -2]} intensity={0.3} color="#4a90d9" />
+        <pointLight position={[2, 1, -2]} intensity={0.3} color="#d4af37" />
         
         <Suspense fallback={<LoadingSpinner />}>
           {raceId ? (
