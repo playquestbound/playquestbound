@@ -238,16 +238,16 @@ export function RacePreview3D({ raceId, gender, className = "w-full h-64" }: Rac
         camera={{ position: [0, 0, 3], fov: 40 }}
         shadows
       >
-        <ambientLight intensity={0.6} />
+        <ambientLight intensity={0.3} />
         <directionalLight 
           position={[5, 5, 5]} 
-          intensity={1} 
+          intensity={0.5} 
           castShadow 
         />
-        <pointLight position={[-5, 5, -5]} intensity={0.5} color="#d4af37" />
+        <pointLight position={[-5, 5, -5]} intensity={0.2} color="#d4af37" />
         <spotLight 
           position={[0, 5, 0]} 
-          intensity={0.3} 
+          intensity={0.15} 
           angle={0.5}
           penumbra={1}
         />
