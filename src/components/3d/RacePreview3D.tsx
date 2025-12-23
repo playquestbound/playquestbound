@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Suspense, useRef, useEffect } from 'react';
+import { Suspense, useRef, useEffect, useState, Component, ReactNode } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, useGLTF, Environment, ContactShadows } from '@react-three/drei';
 import { Group, AnimationMixer, LoopRepeat } from 'three';
@@ -9,6 +9,29 @@ interface RacePreview3DProps {
   raceId: string | null;
   gender: Gender;
   className?: string;
+}
+
+// Error boundary to catch model loading failures
+interface ErrorBoundaryState {
+  hasError: boolean;
+}
+
+class ModelErrorBoundary extends Component<{ children: ReactNode; fallback: ReactNode }, ErrorBoundaryState> {
+  constructor(props: { children: ReactNode; fallback: ReactNode }) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(): ErrorBoundaryState {
+    return { hasError: true };
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return this.props.fallback;
+    }
+    return this.props.children;
+  }
 }
 
 function PlaceholderCharacter({ raceId }: { raceId: string | null }) {
@@ -149,15 +172,36 @@ function PlaceholderCharacter({ raceId }: { raceId: string | null }) {
 
 interface AnimatedModelProps {
   url: string;
+  onError?: () => void;
 }
 
-function AnimatedModel({ url }: AnimatedModelProps) {
-  const { scene, animations } = useGLTF(url);
+function AnimatedModel({ url, onError }: AnimatedModelProps) {
+  const [hasError, setHasError] = useState(false);
   const ref = useRef<Group>(null);
   const mixerRef = useRef<AnimationMixer | null>(null);
   
+  // Preload and catch errors
   useEffect(() => {
-    if (animations.length > 0 && ref.current) {
+    useGLTF.preload(url);
+  }, [url]);
+  
+  let scene: Group | null = null;
+  let animations: any[] = [];
+  
+  try {
+    const result = useGLTF(url);
+    scene = result.scene;
+    animations = result.animations;
+  } catch (error) {
+    if (!hasError) {
+      setHasError(true);
+      onError?.();
+    }
+    return null;
+  }
+  
+  useEffect(() => {
+    if (animations.length > 0 && scene) {
       mixerRef.current = new AnimationMixer(scene);
       const action = mixerRef.current.clipAction(animations[0]);
       action.setLoop(LoopRepeat, Infinity);
@@ -172,6 +216,8 @@ function AnimatedModel({ url }: AnimatedModelProps) {
   useFrame((_, delta) => {
     mixerRef.current?.update(delta);
   });
+  
+  if (!scene) return null;
   
   return <primitive ref={ref} object={scene.clone()} scale={1} />;
 }
@@ -220,15 +266,17 @@ export function RacePreview3D({ raceId, gender, className = "w-full h-64" }: Rac
         />
         
         <Suspense fallback={<LoadingSpinner />}>
-          {raceId ? (
-            modelUrl ? (
-              <AnimatedModel url={modelUrl} />
+          <ModelErrorBoundary fallback={<PlaceholderCharacter raceId={raceId} />}>
+            {raceId ? (
+              modelUrl ? (
+                <AnimatedModel url={modelUrl} onError={() => console.warn('Failed to load model:', modelUrl)} />
+              ) : (
+                <PlaceholderCharacter raceId={raceId} />
+              )
             ) : (
-              <PlaceholderCharacter raceId={raceId} />
-            )
-          ) : (
-            <LoadingSpinner />
-          )}
+              <LoadingSpinner />
+            )}
+          </ModelErrorBoundary>
           <Environment preset="studio" />
         </Suspense>
         
