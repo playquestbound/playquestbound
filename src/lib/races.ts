@@ -19,10 +19,7 @@ export const RACES: Race[] = [
     description: 'Versatile and adaptable, humans thrive in any environment through sheer determination.',
     traits: ['Adaptable', 'Ambitious', 'Resilient'],
     emoji: '⚔️',
-    modelUrls: {
-      male: '/models/human-male.glb',
-      female: '/models/human-female.glb',
-    },
+    // Models will be added when uploaded to storage
   },
   {
     id: 'elf',
@@ -30,10 +27,6 @@ export const RACES: Race[] = [
     description: 'Graceful beings attuned to magic and nature. They move with purpose and ancient wisdom.',
     traits: ['Perceptive', 'Graceful', 'Wise'],
     emoji: '🌙',
-    modelUrls: {
-      male: '/models/elf-male.glb',
-      female: '/models/elf-female.glb',
-    },
   },
   {
     id: 'dwarf',
@@ -41,10 +34,6 @@ export const RACES: Race[] = [
     description: 'Sturdy mountain folk with unbreakable spirit. Masters of crafts and endurance.',
     traits: ['Enduring', 'Steadfast', 'Brave'],
     emoji: '⛏️',
-    modelUrls: {
-      male: '/models/dwarf-male.glb',
-      female: '/models/dwarf-female.glb',
-    },
   },
   {
     id: 'orc',
@@ -52,10 +41,6 @@ export const RACES: Race[] = [
     description: 'Fierce warriors connected to primal strength. They embrace battle with wild abandon.',
     traits: ['Fierce', 'Strong', 'Fearless'],
     emoji: '🐺',
-    modelUrls: {
-      male: '/models/orc-male.glb',
-      female: '/models/orc-female.glb',
-    },
   },
 ];
 
