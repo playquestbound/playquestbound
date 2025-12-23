@@ -11,12 +11,10 @@ import { Gender } from '@/lib/races';
 import { ProgressIndicator } from '@/components/character-creation/ProgressIndicator';
 import { RaceSelection } from '@/components/character-creation/RaceSelection';
 import { ClassSelection } from '@/components/character-creation/ClassSelection';
-import { AppearanceCustomization } from '@/components/character-creation/AppearanceCustomization';
 import { NameSelection } from '@/components/character-creation/NameSelection';
 import { ReviewConfirm } from '@/components/character-creation/ReviewConfirm';
-import { DEFAULT_CUSTOMIZATION, CharacterCustomization } from '@/lib/characterData';
 
-const TOTAL_STEPS = 5;
+const TOTAL_STEPS = 4;
 
 export default function CharacterCreation() {
   const { data: profile } = useProfile();
@@ -26,7 +24,6 @@ export default function CharacterCreation() {
   const [selectedRace, setSelectedRace] = useState<string | null>(null);
   const [selectedGender, setSelectedGender] = useState<Gender>('male');
   const [selectedClass, setSelectedClass] = useState<string | null>(null);
-  const [customization, setCustomization] = useState<CharacterCustomization>(DEFAULT_CUSTOMIZATION);
   const [characterName, setCharacterName] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [initialized, setInitialized] = useState(false);
@@ -41,9 +38,6 @@ export default function CharacterCreation() {
       if (profile.race) setSelectedRace(profile.race);
       if (profile.class) setSelectedClass(profile.class);
       if (profile.character_name) setCharacterName(profile.character_name);
-      if (profile.customization) {
-        setCustomization(profile.customization as CharacterCustomization);
-      }
       setInitialized(true);
     }
   }, [profile, initialized]);
@@ -77,7 +71,7 @@ export default function CharacterCreation() {
             description: 'This name was just claimed. Please choose another.',
             variant: 'destructive',
           });
-          setStep(4);
+          setStep(3);
           setIsSubmitting(false);
           return;
         }
@@ -90,7 +84,6 @@ export default function CharacterCreation() {
           character_name: characterName.trim(),
           race: selectedRace,
           class: selectedClass,
-          customization: customization as unknown as Json,
           has_created_character: true,
         })
         .eq('id', user.id);
@@ -152,31 +145,21 @@ export default function CharacterCreation() {
         )}
 
         {step === 3 && (
-          <AppearanceCustomization
-            customization={customization}
-            onChange={setCustomization}
+          <NameSelection
+            name={characterName}
+            onNameChange={setCharacterName}
             onContinue={() => goToStep(4)}
             onBack={() => goToStep(2)}
           />
         )}
 
-        {step === 4 && (
-          <NameSelection
-            name={characterName}
-            onNameChange={setCharacterName}
-            onContinue={() => goToStep(5)}
-            onBack={() => goToStep(3)}
-          />
-        )}
-
-        {step === 5 && selectedRace && selectedClass && (
+        {step === 4 && selectedRace && selectedClass && (
           <ReviewConfirm
             name={characterName}
             raceId={selectedRace}
             classId={selectedClass}
-            customization={customization}
             onConfirm={handleSubmit}
-            onBack={() => goToStep(4)}
+            onBack={() => goToStep(3)}
             isLoading={isSubmitting}
           />
         )}

@@ -1,4 +1,4 @@
-import { RACES, CLASSES, CharacterCustomization } from '@/lib/characterData';
+import { RACES, CLASSES } from '@/lib/characterData';
 import { Button } from '@/components/ui/button';
 import { Loader2, Sparkles } from 'lucide-react';
 
@@ -6,7 +6,6 @@ interface ReviewConfirmProps {
   name: string;
   raceId: string;
   classId: string;
-  customization: CharacterCustomization;
   onConfirm: () => void;
   onBack: () => void;
   isLoading: boolean;
@@ -16,7 +15,6 @@ export function ReviewConfirm({
   name, 
   raceId, 
   classId, 
-  customization, 
   onConfirm, 
   onBack,
   isLoading 
@@ -40,9 +38,7 @@ export function ReviewConfirm({
         {/* Character Preview Card */}
         <div className="parchment-card p-6 text-center">
           {/* Avatar Preview */}
-          <div className="w-20 h-20 rounded-full mx-auto mb-4 border-4 border-secondary flex items-center justify-center"
-            style={{ backgroundColor: customization.skinTone }}
-          >
+          <div className="w-20 h-20 rounded-full mx-auto mb-4 border-4 border-secondary flex items-center justify-center bg-muted">
             <div className="text-2xl">{characterClass?.icon}</div>
           </div>
           
@@ -64,27 +60,6 @@ export function ReviewConfirm({
           <div className="flex justify-between items-center">
             <span className="text-muted-foreground">Class</span>
             <span className="font-display font-semibold">{characterClass?.name}</span>
-          </div>
-          <div className="border-t border-border pt-3 mt-3">
-            <p className="text-sm text-muted-foreground mb-2">Appearance</p>
-            <div className="flex items-center gap-2">
-              <div 
-                className="w-5 h-5 rounded-full border border-border" 
-                style={{ backgroundColor: customization.skinTone }}
-                title="Skin Tone"
-              />
-              <div 
-                className="w-5 h-5 rounded-full border border-border" 
-                style={{ backgroundColor: customization.hairColor }}
-                title="Hair Color"
-              />
-              <div 
-                className="w-5 h-5 rounded-full border border-border" 
-                style={{ backgroundColor: customization.eyeColor }}
-                title="Eye Color"
-              />
-              <span className="text-sm text-muted-foreground ml-2">{customization.hairStyle}</span>
-            </div>
           </div>
         </div>
 
