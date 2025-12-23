@@ -299,6 +299,13 @@ export type Database = {
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "user_equipment_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "public_profiles"
+            referencedColumns: ["id"]
+          },
         ]
       }
       user_quests: {
@@ -350,7 +357,44 @@ export type Database = {
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "user_quests_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "public_profiles"
+            referencedColumns: ["id"]
+          },
         ]
+      }
+      user_rate_limits: {
+        Row: {
+          completions_last_day: number | null
+          completions_last_hour: number | null
+          created_at: string | null
+          last_completion_at: string | null
+          last_upload_at: string | null
+          uploads_last_hour: number | null
+          user_id: string
+        }
+        Insert: {
+          completions_last_day?: number | null
+          completions_last_hour?: number | null
+          created_at?: string | null
+          last_completion_at?: string | null
+          last_upload_at?: string | null
+          uploads_last_hour?: number | null
+          user_id: string
+        }
+        Update: {
+          completions_last_day?: number | null
+          completions_last_hour?: number | null
+          created_at?: string | null
+          last_completion_at?: string | null
+          last_upload_at?: string | null
+          uploads_last_hour?: number | null
+          user_id?: string
+        }
+        Relationships: []
       }
       user_roles: {
         Row: {
@@ -375,9 +419,39 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      public_profiles: {
+        Row: {
+          character_name: string | null
+          class: string | null
+          created_at: string | null
+          id: string | null
+          level: number | null
+          race: string | null
+        }
+        Insert: {
+          character_name?: string | null
+          class?: string | null
+          created_at?: string | null
+          id?: string | null
+          level?: number | null
+          race?: string | null
+        }
+        Update: {
+          character_name?: string | null
+          class?: string | null
+          created_at?: string | null
+          id?: string | null
+          level?: number | null
+          race?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
+      check_completion_rate_limit: {
+        Args: { _user_id: string }
+        Returns: boolean
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
