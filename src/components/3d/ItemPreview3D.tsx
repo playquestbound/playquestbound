@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { Suspense, useRef, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { useGLTF, Environment, Float, MeshReflectorMaterial } from '@react-three/drei';
