@@ -257,18 +257,18 @@ export function RacePreview3D({ raceId, gender, className = "w-full h-64" }: Rac
         camera={{ position: [0, 0, 3], fov: 40 }}
         shadows
       >
-        <ambientLight intensity={0.2} />
+        <ambientLight intensity={0.4} />
         <directionalLight 
           position={[5, 5, 5]} 
-          intensity={0.5} 
+          intensity={0.8} 
           castShadow 
         />
-        <pointLight position={[-5, 5, -5]} intensity={0.2} color="#d4af37" />
+        <pointLight position={[-5, 5, -5]} intensity={0.4} color="#d4af37" />
         
         {/* Top spotlight for dramatic top-down lighting */}
         <spotLight 
           position={[0, 6, 1]} 
-          intensity={0.8} 
+          intensity={1.2} 
           angle={0.5}
           penumbra={0.8}
           color="#ffffff"
@@ -276,11 +276,11 @@ export function RacePreview3D({ raceId, gender, className = "w-full h-64" }: Rac
         />
         
         {/* Front fill light */}
-        <pointLight position={[0, 1, 4]} intensity={0.4} color="#ffffff" />
+        <pointLight position={[0, 1, 4]} intensity={0.7} color="#ffffff" />
         
         {/* Rim lights for edge highlight - boosted */}
-        <pointLight position={[-2, 1, -2]} intensity={0.5} color="#4a90d9" />
-        <pointLight position={[2, 1, -2]} intensity={0.5} color="#d4af37" />
+        <pointLight position={[-2, 1, -2]} intensity={0.7} color="#4a90d9" />
+        <pointLight position={[2, 1, -2]} intensity={0.7} color="#d4af37" />
         
         {/* Dynamic orbiting light */}
         <DynamicLight />
