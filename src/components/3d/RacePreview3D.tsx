@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Suspense, useRef, useEffect, useState, Component, ReactNode } from 'react';
+import { Suspense, useRef, useEffect, Component, ReactNode } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, useGLTF, Environment, ContactShadows } from '@react-three/drei';
 import { Group, AnimationMixer, LoopRepeat } from 'three';
@@ -173,33 +173,13 @@ function PlaceholderCharacter({ raceId }: { raceId: string | null }) {
 
 interface AnimatedModelProps {
   url: string;
-  onError?: () => void;
+  raceId: string | null;
 }
 
-function AnimatedModel({ url, onError }: AnimatedModelProps) {
-  const [hasError, setHasError] = useState(false);
+function AnimatedModelInner({ url }: { url: string }) {
+  const { scene, animations } = useGLTF(url);
   const ref = useRef<Group>(null);
   const mixerRef = useRef<AnimationMixer | null>(null);
-  
-  // Preload and catch errors
-  useEffect(() => {
-    useGLTF.preload(url);
-  }, [url]);
-  
-  let scene: Group | null = null;
-  let animations: any[] = [];
-  
-  try {
-    const result = useGLTF(url);
-    scene = result.scene;
-    animations = result.animations;
-  } catch (error) {
-    if (!hasError) {
-      setHasError(true);
-      onError?.();
-    }
-    return null;
-  }
   
   useEffect(() => {
     if (animations.length > 0 && scene) {
@@ -218,9 +198,15 @@ function AnimatedModel({ url, onError }: AnimatedModelProps) {
     mixerRef.current?.update(delta);
   });
   
-  if (!scene) return null;
-  
   return <primitive ref={ref} object={scene.clone()} scale={1} />;
+}
+
+function AnimatedModel({ url, raceId }: AnimatedModelProps) {
+  return (
+    <ModelErrorBoundary fallback={<PlaceholderCharacter raceId={raceId} />}>
+      <AnimatedModelInner url={url} />
+    </ModelErrorBoundary>
+  );
 }
 
 function LoadingSpinner() {
@@ -267,17 +253,15 @@ export function RacePreview3D({ raceId, gender, className = "w-full h-64" }: Rac
         />
         
         <Suspense fallback={<LoadingSpinner />}>
-          <ModelErrorBoundary fallback={<PlaceholderCharacter raceId={raceId} />}>
-            {raceId ? (
-              modelUrl ? (
-                <AnimatedModel url={modelUrl} onError={() => console.warn('Failed to load model:', modelUrl)} />
-              ) : (
-                <PlaceholderCharacter raceId={raceId} />
-              )
+          {raceId ? (
+            modelUrl ? (
+              <AnimatedModel url={modelUrl} raceId={raceId} />
             ) : (
-              <LoadingSpinner />
-            )}
-          </ModelErrorBoundary>
+              <PlaceholderCharacter raceId={raceId} />
+            )
+          ) : (
+            <LoadingSpinner />
+          )}
           <Environment preset="studio" />
         </Suspense>
         
