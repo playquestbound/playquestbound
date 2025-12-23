@@ -22,6 +22,7 @@ import Store from "./pages/Store";
 import Discover from "./pages/Discover";
 import NotFound from "./pages/NotFound";
 import QuestManagement from "./pages/admin/QuestManagement";
+import ModelManagement from "./pages/admin/ModelManagement";
 
 const queryClient = new QueryClient();
 
@@ -49,6 +50,7 @@ function AppContent() {
         <Route path="/store" element={<Store />} />
         <Route path="/discover" element={<Discover />} />
         <Route path="/admin/quests" element={<ProtectedRoute requireAdmin><QuestManagement /></ProtectedRoute>} />
+        <Route path="/admin/models" element={<ProtectedRoute requireAdmin><ModelManagement /></ProtectedRoute>} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       {showNav && <BottomNav />}
