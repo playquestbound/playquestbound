@@ -212,7 +212,7 @@ export default function Profile() {
             {/* Center Character - 3D Model */}
             <div className="flex items-center justify-center py-4">
               <div 
-                className="w-48 h-72 rounded-lg flex items-center justify-center relative overflow-hidden"
+                className="w-40 h-56 rounded-lg flex items-center justify-center relative overflow-hidden"
                 style={{
                   background: 'radial-gradient(ellipse at center, rgba(212,168,87,0.1) 0%, transparent 70%)',
                 }}
