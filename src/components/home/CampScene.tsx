@@ -38,7 +38,7 @@ export function CampScene({ characterRace }: CampSceneProps) {
       </div>
 
       {/* Character 3D placeholder - positioned in the clearing */}
-      <div className="absolute inset-0 flex items-end justify-center pb-16">
+      <div className="absolute inset-0 flex items-center justify-center">
         <div className="w-48 h-64">
           <CharacterProfile3D
             raceId={characterRace}
