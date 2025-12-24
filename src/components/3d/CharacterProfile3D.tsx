@@ -82,7 +82,7 @@ function PlaceholderCharacter({ raceId }: { raceId: string | null }) {
   const skinColor = getRaceColor();
   
   return (
-    <group ref={ref} scale={1.32}>
+    <group ref={ref} scale={1.1}>
       {/* Simple placeholder body */}
       <mesh position={[0, 0, 0]}>
         <capsuleGeometry args={[0.3, 0.8, 8, 16]} />
@@ -97,7 +97,7 @@ function PlaceholderCharacter({ raceId }: { raceId: string | null }) {
 }
 
 function AnimatedModel({ url, raceId }: { url: string; raceId: string | null }) {
-  const scale = raceId === 'dwarf' ? 0.66 : 1.12;
+  const scale = raceId === 'dwarf' ? 0.55 : 0.95;
   const positionY = raceId === 'dwarf' ? -0.3 : 0;
   
   return (
