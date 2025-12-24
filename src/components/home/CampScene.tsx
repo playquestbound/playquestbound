@@ -44,6 +44,7 @@ export function CampScene({ characterRace }: CampSceneProps) {
             raceId={characterRace}
             gender={gender}
             className="w-full h-full"
+            variant="forest"
           />
         </div>
       </div>
