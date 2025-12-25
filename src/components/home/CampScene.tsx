@@ -1,29 +1,40 @@
-import { Suspense, useRef } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
-import { Environment, ContactShadows } from '@react-three/drei';
-import { Group } from 'three';
+import { useState } from 'react';
+import { Switch } from '@/components/ui/switch';
 import qbLogo from '@/assets/qb-logo.png';
-import campBg from '@/assets/camp-bg.jpg';
-import { CharacterProfile3D } from '@/components/3d/CharacterProfile3D';
-import { useProfile } from '@/hooks/useProfile';
-import { Gender } from '@/lib/races';
 
 interface CampSceneProps {
   characterRace: string;
 }
 
 export function CampScene({ characterRace }: CampSceneProps) {
-  const { data: profile } = useProfile();
-  const gender = (profile?.customization as { gender?: Gender })?.gender || 'male';
+  const [useAltScene, setUseAltScene] = useState(false);
 
   return (
     <div className="flex-1 relative overflow-hidden">
-      {/* Background image */}
-      <img
-        src={campBg}
-        alt="Forest camp background"
+      {/* Background video */}
+      <video
+        key={useAltScene ? 'alt' : 'main'}
+        autoPlay
+        loop
+        muted
+        playsInline
         className="absolute inset-0 w-full h-full object-cover"
-      />
+      >
+        <source 
+          src={useAltScene ? "/videos/camp-alt.mp4" : "/videos/camp-bg.mp4"} 
+          type="video/mp4" 
+        />
+      </video>
+
+      {/* Scene Toggle */}
+      <div className="absolute top-2 right-3 z-20 flex items-center gap-2 bg-black/50 backdrop-blur-sm rounded-full px-3 py-1.5">
+        <span className="text-xs text-white/70 font-medium">Scene</span>
+        <Switch 
+          checked={useAltScene} 
+          onCheckedChange={setUseAltScene}
+          className="data-[state=checked]:bg-amber-600"
+        />
+      </div>
 
       {/* Logo at top center */}
       <div className="absolute top-2 left-1/2 -translate-x-1/2 z-10">
@@ -37,17 +48,6 @@ export function CampScene({ characterRace }: CampSceneProps) {
         />
       </div>
 
-      {/* Character 3D placeholder - positioned in the clearing */}
-      <div className="absolute inset-0 flex items-center justify-center">
-        <div className="w-48 h-64">
-          <CharacterProfile3D
-            raceId={characterRace}
-            gender={gender}
-            className="w-full h-full"
-            variant="forest"
-          />
-        </div>
-      </div>
     </div>
   );
 }

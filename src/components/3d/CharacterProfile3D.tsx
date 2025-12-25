@@ -10,7 +10,6 @@ interface CharacterProfile3DProps {
   raceId: string | null;
   gender: Gender;
   className?: string;
-  variant?: 'default' | 'forest';
 }
 
 // Error boundary for model loading
@@ -129,9 +128,8 @@ function LoadingSpinner() {
   );
 }
 
-export function CharacterProfile3D({ raceId, gender, className = "w-full h-full", variant = 'default' }: CharacterProfile3DProps) {
+export function CharacterProfile3D({ raceId, gender, className = "w-full h-full" }: CharacterProfile3DProps) {
   const modelUrl = useRaceModelUrl(raceId, gender);
-  const isForest = variant === 'forest';
   
   return (
     <div className={className}>
@@ -139,64 +137,29 @@ export function CharacterProfile3D({ raceId, gender, className = "w-full h-full"
         camera={{ position: [0, 0.3, 3.2], fov: 35 }}
         shadows
       >
-        {isForest ? (
-          <>
-            {/* Forest lighting - warm golden hour sunlight */}
-            <ambientLight intensity={0.6} color="#ffd89b" />
-            
-            {/* Main sun light from upper right - matching the background */}
-            <directionalLight 
-              position={[3, 4, 2]} 
-              intensity={1.2} 
-              color="#ffb347"
-              castShadow 
-            />
-            
-            {/* Key light from front with warm tone */}
-            <spotLight 
-              position={[0, 3, 4]} 
-              intensity={0.8} 
-              angle={0.6}
-              penumbra={0.8}
-              color="#ffe4b5"
-            />
-            
-            {/* Fill light - soft green from forest */}
-            <pointLight position={[-2, 1, 2]} intensity={0.3} color="#90a955" />
-            
-            {/* Warm fill from right */}
-            <pointLight position={[2, 0.5, 2]} intensity={0.4} color="#ffa500" />
-            
-            {/* Subtle rim light */}
-            <pointLight position={[0, 2, -2]} intensity={0.3} color="#ffe4c4" />
-          </>
-        ) : (
-          <>
-            {/* Default lighting - front-facing setup */}
-            <ambientLight intensity={0.5} />
-            <directionalLight 
-              position={[2, 3, 5]} 
-              intensity={0.8} 
-              castShadow 
-            />
-            
-            {/* Key light from front */}
-            <spotLight 
-              position={[0, 4, 4]} 
-              intensity={1} 
-              angle={0.5}
-              penumbra={0.8}
-              color="#ffffff"
-            />
-            
-            {/* Fill lights */}
-            <pointLight position={[-2, 1, 2]} intensity={0.4} color="#4a90d9" />
-            <pointLight position={[2, 1, 2]} intensity={0.4} color="#d4af37" />
-            
-            {/* Rim light from behind */}
-            <pointLight position={[0, 2, -2]} intensity={0.6} color="#ffffff" />
-          </>
-        )}
+        {/* Lighting - front-facing setup */}
+        <ambientLight intensity={0.5} />
+        <directionalLight 
+          position={[2, 3, 5]} 
+          intensity={0.8} 
+          castShadow 
+        />
+        
+        {/* Key light from front */}
+        <spotLight 
+          position={[0, 4, 4]} 
+          intensity={1} 
+          angle={0.5}
+          penumbra={0.8}
+          color="#ffffff"
+        />
+        
+        {/* Fill lights */}
+        <pointLight position={[-2, 1, 2]} intensity={0.4} color="#4a90d9" />
+        <pointLight position={[2, 1, 2]} intensity={0.4} color="#d4af37" />
+        
+        {/* Rim light from behind */}
+        <pointLight position={[0, 2, -2]} intensity={0.6} color="#ffffff" />
         
         <Suspense fallback={<LoadingSpinner />}>
           {raceId ? (
@@ -208,15 +171,14 @@ export function CharacterProfile3D({ raceId, gender, className = "w-full h-full"
           ) : (
             <PlaceholderCharacter raceId={null} />
           )}
-          <Environment preset={isForest ? "forest" : "night"} />
+          <Environment preset="night" />
         </Suspense>
         
         <ContactShadows 
           position={[0, -0.8, 0]} 
-          opacity={isForest ? 0.3 : 0.4} 
+          opacity={0.4} 
           scale={2} 
-          blur={2}
-          color={isForest ? "#4a3520" : undefined}
+          blur={2} 
         />
       </Canvas>
     </div>
