@@ -70,6 +70,7 @@ export type Database = {
           id: string
           level: number
           race: string | null
+          subscription_tier: string
           updated_at: string
           xp: number
         }
@@ -83,6 +84,7 @@ export type Database = {
           id: string
           level?: number
           race?: string | null
+          subscription_tier?: string
           updated_at?: string
           xp?: number
         }
@@ -96,6 +98,7 @@ export type Database = {
           id?: string
           level?: number
           race?: string | null
+          subscription_tier?: string
           updated_at?: string
           xp?: number
         }
