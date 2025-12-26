@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
-import { Crown, Sparkles, Clock, Check, Flame, Timer, Coins } from 'lucide-react';
+import { Crown, Sparkles, Clock, Check, Flame, Timer, Coins, Lock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { useProfile } from '@/hooks/useProfile';
 import { toast } from '@/hooks/use-toast';
+import fujiJingasaImg from '@/assets/fuji-jingasa.jpg';
 
 const SUBSCRIPTION_TIERS = [
   {
@@ -32,13 +33,14 @@ const SUBSCRIPTION_TIERS = [
 const LIMITED_ITEMS = [
   {
     id: '1',
-    name: 'Frost Crown',
-    description: 'A crown forged from eternal ice',
+    name: 'FUJI JINGASA',
+    description: 'Unlocked by completing the Fuji Legendary Quest',
     rarity: 'legendary',
-    price: 500,
-    endTime: Date.now() + 2 * 24 * 60 * 60 * 1000 + 14 * 60 * 60 * 1000,
-    imageEmoji: '👑',
+    price: 0,
+    endTime: Date.now() + 999 * 24 * 60 * 60 * 1000,
+    image: fujiJingasaImg,
     slot: 'head',
+    questLocked: true,
   },
   {
     id: '2',
@@ -233,8 +235,17 @@ export default function Store() {
                           className={`${rarity.bg} ${rarity.border} border overflow-hidden shadow-lg ${rarity.glow}`}
                         >
                           <div className="flex">
-                            <div className="w-24 h-24 flex items-center justify-center text-4xl bg-black/20">
-                              {item.imageEmoji}
+                            <div className="w-24 h-24 flex items-center justify-center text-4xl bg-black/20 relative">
+                              {item.image ? (
+                                <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                              ) : (
+                                item.imageEmoji
+                              )}
+                              {item.questLocked && (
+                                <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+                                  <Lock className="w-6 h-6 text-amber-400" />
+                                </div>
+                              )}
                             </div>
                             <CardContent className="flex-1 p-3 flex flex-col justify-between">
                               <div>
@@ -253,15 +264,23 @@ export default function Store() {
                                 <p className="text-xs text-muted-foreground mt-1">{item.description}</p>
                               </div>
                               <div className="flex items-center justify-between mt-2">
-                                <span className={`font-bold ${canAfford ? 'text-yellow-500' : 'text-red-400'}`}>
-                                  🪙 {item.price}
-                                </span>
+                                {item.questLocked ? (
+                                  <span className="text-xs text-amber-400 flex items-center gap-1">
+                                    <Lock className="w-3 h-3" />
+                                    Quest Reward
+                                  </span>
+                                ) : (
+                                  <span className={`font-bold ${canAfford ? 'text-yellow-500' : 'text-red-400'}`}>
+                                    🪙 {item.price}
+                                  </span>
+                                )}
                                 <Button 
                                   size="sm" 
                                   onClick={() => handlePurchase(item)}
-                                  className={canAfford ? 'bg-primary' : 'bg-muted text-muted-foreground'}
+                                  disabled={item.questLocked}
+                                  className={item.questLocked ? 'bg-muted text-muted-foreground' : canAfford ? 'bg-primary' : 'bg-muted text-muted-foreground'}
                                 >
-                                  {canAfford ? 'Buy Now' : 'Need Gold'}
+                                  {item.questLocked ? 'Locked' : canAfford ? 'Buy Now' : 'Need Gold'}
                                 </Button>
                               </div>
                             </CardContent>
@@ -293,7 +312,16 @@ export default function Store() {
                         className={`${rarity.bg} ${rarity.border} border overflow-hidden shadow-lg ${rarity.glow}`}
                       >
                         <div className="aspect-square flex items-center justify-center text-5xl bg-black/20 relative">
-                          {item.imageEmoji}
+                          {item.image ? (
+                            <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                          ) : (
+                            item.imageEmoji
+                          )}
+                          {item.questLocked && (
+                            <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+                              <Lock className="w-8 h-8 text-amber-400" />
+                            </div>
+                          )}
                           <Badge 
                             className={`absolute top-2 right-2 ${rarity.text} bg-black/50 border-none text-xs`}
                           >
@@ -304,21 +332,31 @@ export default function Store() {
                           <h3 className="font-semibold text-sm text-foreground truncate">{item.name}</h3>
                           <p className="text-xs text-muted-foreground line-clamp-1">{item.description}</p>
                           <div className="flex items-center justify-between">
-                            <span className={`font-bold text-sm ${canAfford ? 'text-yellow-500' : 'text-red-400'}`}>
-                              🪙 {item.price}
-                            </span>
-                            <span className="text-xs text-muted-foreground flex items-center gap-1">
-                              <Clock className="w-3 h-3" />
-                              {timeLeft.text}
-                            </span>
+                            {item.questLocked ? (
+                              <span className="text-xs text-amber-400 flex items-center gap-1">
+                                <Lock className="w-3 h-3" />
+                                Quest
+                              </span>
+                            ) : (
+                              <span className={`font-bold text-sm ${canAfford ? 'text-yellow-500' : 'text-red-400'}`}>
+                                🪙 {item.price}
+                              </span>
+                            )}
+                            {!item.questLocked && (
+                              <span className="text-xs text-muted-foreground flex items-center gap-1">
+                                <Clock className="w-3 h-3" />
+                                {timeLeft.text}
+                              </span>
+                            )}
                           </div>
                           <Button 
                             size="sm" 
                             className="w-full" 
-                            variant={canAfford ? 'default' : 'secondary'}
+                            variant={item.questLocked ? 'secondary' : canAfford ? 'default' : 'secondary'}
                             onClick={() => handlePurchase(item)}
+                            disabled={item.questLocked}
                           >
-                            {canAfford ? 'Purchase' : 'Need Gold'}
+                            {item.questLocked ? 'Locked' : canAfford ? 'Purchase' : 'Need Gold'}
                           </Button>
                         </CardContent>
                       </Card>
