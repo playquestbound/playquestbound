@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { useProfile } from '@/hooks/useProfile';
 import { toast } from '@/hooks/use-toast';
 import fujiJingasaImg from '@/assets/fuji-jingasa.jpg';
+import baseBootsImg from '@/assets/base-boots.jpg';
 
 const SUBSCRIPTION_TIERS = [
   {
@@ -40,6 +41,18 @@ const LIMITED_ITEMS = [
     endTime: Date.now() + 999 * 24 * 60 * 60 * 1000,
     image: fujiJingasaImg,
     slot: 'head',
+    questLocked: true,
+    featured: true,
+  },
+  {
+    id: '1b',
+    name: 'BASE BOOTS',
+    description: 'Unlocked by reaching Base Camp on Mt. Everest',
+    rarity: 'legendary',
+    price: 0,
+    endTime: Date.now() + 999 * 24 * 60 * 60 * 1000,
+    image: baseBootsImg,
+    slot: 'feet',
     questLocked: true,
     featured: true,
   },
