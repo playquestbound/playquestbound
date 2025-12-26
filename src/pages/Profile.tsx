@@ -12,20 +12,15 @@ import { getXpProgress, formatNumber } from '@/lib/levelSystem';
 import { toast } from '@/hooks/use-toast';
 import { 
   LogOut, 
-  User,
-  Sword,
-  Shield,
-  Crown,
-  Shirt,
-  CircleDot,
-  Footprints,
-  Gem,
   Backpack,
   Settings,
-  ChevronDown,
   BookOpen,
   Pencil,
-  ShieldCheck
+  ShieldCheck,
+  Sparkles,
+  Swords,
+  Footprints,
+  Shield
 } from 'lucide-react';
 import { useIsAdmin } from '@/hooks/useAdminQuests';
 
@@ -34,34 +29,7 @@ interface Customization {
   hairStyle?: string;
   hairColor?: string;
   eyeColor?: string;
-}
-
-// Equipment slot component
-function EquipmentSlot({ icon: Icon, label, item, position }: { 
-  icon: typeof Sword; 
-  label: string; 
-  item?: string;
-  position: 'left' | 'right';
-}) {
-  return (
-    <div 
-      className={`flex items-center gap-2 ${position === 'right' ? 'flex-row-reverse' : ''}`}
-    >
-      <div 
-        className="w-12 h-12 rounded border-2 flex items-center justify-center transition-all hover:border-amber-500/70 cursor-pointer"
-        style={{
-          background: 'linear-gradient(180deg, #2a2318 0%, #1a1510 100%)',
-          borderColor: item ? '#6b5a3c' : '#3d3428',
-          boxShadow: item ? 'inset 0 0 8px rgba(212,168,87,0.2)' : 'inset 0 2px 4px rgba(0,0,0,0.5)',
-        }}
-      >
-        <Icon className={`w-5 h-5 ${item ? 'text-amber-500' : 'text-white/30'}`} />
-      </div>
-      <span className={`text-[10px] ${item ? 'text-parchment-light' : 'text-white/40'}`}>
-        {item || label}
-      </span>
-    </div>
-  );
+  gender?: string;
 }
 
 export default function Profile() {
@@ -89,15 +57,11 @@ export default function Profile() {
   const xpProgress = profile ? getXpProgress(profile.xp, profile.level) : { percentage: 0, current: 0, required: 0 };
   const questsCompleted = completedQuests?.length || 0;
   const totalKmsRun = 0; // TODO: Calculate from run data
+  const gearScore = 0; // TODO: Calculate from equipped items
   const customization = profile?.customization as Customization | null;
 
   return (
-    <div 
-      className="min-h-screen pb-24 overflow-hidden"
-      style={{
-        background: 'linear-gradient(180deg, #0d0d0d 0%, #1a1510 50%, #0d0d0d 100%)',
-      }}
-    >
+    <div className="min-h-screen pb-24 bg-background">
       {/* Header */}
       <div className="relative px-4 pt-4">
         <div className="flex items-center justify-between">
@@ -106,27 +70,27 @@ export default function Profile() {
               <Button 
                 size="icon" 
                 variant="ghost"
-                className="w-10 h-10 rounded-full"
+                className="w-10 h-10 rounded-full text-muted-foreground hover:text-foreground"
                 onClick={() => navigate('/admin/quests')}
               >
-                <ShieldCheck className="w-5 h-5 text-amber-500" />
+                <ShieldCheck className="w-5 h-5" />
               </Button>
             )}
             <Button 
               size="icon" 
               variant="ghost"
-              className="w-10 h-10 rounded-full"
+              className="w-10 h-10 rounded-full text-muted-foreground hover:text-foreground"
               onClick={() => navigate('/journal')}
             >
-              <BookOpen className="w-5 h-5 text-white/70" />
+              <BookOpen className="w-5 h-5" />
             </Button>
             <Button 
               size="icon" 
               variant="ghost"
-              className="w-10 h-10 rounded-full"
+              className="w-10 h-10 rounded-full text-muted-foreground hover:text-foreground"
               onClick={() => navigate('/settings')}
             >
-              <Settings className="w-5 h-5 text-white/70" />
+              <Settings className="w-5 h-5" />
             </Button>
           </div>
           
@@ -134,176 +98,200 @@ export default function Profile() {
             <Button 
               size="icon" 
               variant="ghost"
-              className="w-10 h-10 rounded-full"
+              className="w-10 h-10 rounded-full text-muted-foreground hover:text-foreground"
               onClick={() => navigate('/create-character')}
             >
-              <Pencil className="w-5 h-5 text-white/70" />
+              <Pencil className="w-5 h-5" />
             </Button>
             <Button 
               size="icon" 
               variant="ghost"
-              className="w-10 h-10 rounded-full"
+              className="w-10 h-10 rounded-full text-muted-foreground hover:text-foreground"
               onClick={handleLogout}
             >
-              <LogOut className="w-5 h-5 text-white/70" />
+              <LogOut className="w-5 h-5" />
             </Button>
           </div>
         </div>
       </div>
 
       {profile && (
-        <div className="px-4 space-y-4">
-          {/* Character Name Header */}
-          <div className="text-center">
-            {/* Avatar circle */}
+        <div className="px-4 pt-6">
+          {/* Player Card */}
+          <div className="relative mx-auto max-w-sm">
+            {/* Card Container */}
             <div 
-              className="w-16 h-16 mx-auto rounded-full border-2 flex items-center justify-center mb-2"
+              className="relative rounded-2xl overflow-hidden border border-border/50"
               style={{
-                background: 'linear-gradient(180deg, #2a2318 0%, #1a1510 100%)',
-                borderColor: '#6b5a3c',
+                background: 'linear-gradient(180deg, hsl(0 0% 12%) 0%, hsl(0 0% 8%) 100%)',
+                boxShadow: '0 8px 32px hsl(0 0% 0% / 0.5), inset 0 1px 0 hsl(0 0% 20% / 0.3)',
               }}
             >
-              <User className="w-8 h-8 text-amber-500/70" />
-            </div>
-            
-            <h1 
-              className="font-display text-xl font-bold text-parchment-light"
-              style={{ textShadow: '0 2px 4px rgba(0,0,0,0.8)' }}
-            >
-              {profile.character_name || 'Adventurer'}
-            </h1>
-            
-            <p 
-              className="text-sm text-amber-500"
-              style={{ textShadow: '0 0 8px rgba(212,168,87,0.3)' }}
-            >
-              Level {profile.level} {getRaceName(profile.race || 'human')} {profile.class ? profile.class.charAt(0).toUpperCase() + profile.class.slice(1) : ''}
-            </p>
-
-            {/* Title selector */}
-            <button 
-              className="mt-2 flex items-center gap-1 mx-auto text-xs text-white/50 hover:text-white/70 transition-colors"
-            >
-              <ChevronDown className="w-3 h-3" />
-              <span>Select a Title</span>
-            </button>
-          </div>
-
-          {/* Main Character Display with Equipment Slots */}
-          <div className="relative py-4">
-            {/* Left Equipment Slots */}
-            <div className="absolute left-0 top-1/2 -translate-y-1/2 space-y-3 z-10">
-              <EquipmentSlot icon={Crown} label="Head" position="left" />
-              <EquipmentSlot icon={Gem} label="Neck" position="left" />
-              <EquipmentSlot icon={Shirt} label="Chest" position="left" />
-              <EquipmentSlot icon={CircleDot} label="Hands" position="left" />
-              <EquipmentSlot icon={Footprints} label="Feet" position="left" />
-            </div>
-
-            {/* Right Equipment Slots */}
-            <div className="absolute right-0 top-1/2 -translate-y-1/2 space-y-3 z-10">
-              <EquipmentSlot icon={Sword} label="Main Hand" position="right" />
-              <EquipmentSlot icon={Shield} label="Off Hand" position="right" />
-              <EquipmentSlot icon={Gem} label="Ring 1" position="right" />
-              <EquipmentSlot icon={Gem} label="Ring 2" position="right" />
-              <EquipmentSlot icon={Gem} label="Trinket" position="right" />
-            </div>
-
-            {/* Center Character - 3D Model */}
-            <div className="flex items-center justify-center py-4">
-              <div 
-                className="w-40 h-72 rounded-lg flex items-center justify-center relative overflow-hidden"
-                style={{
-                  background: 'radial-gradient(ellipse at center, rgba(212,168,87,0.1) 0%, transparent 70%)',
-                }}
-              >
-                <CharacterProfile3D 
-                  raceId={profile.race || 'human'} 
-                  gender={(customization as any)?.gender as Gender || 'male'}
-                  className="w-full h-full"
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Stats Panel */}
-          <div 
-            className="rounded-lg p-4"
-            style={{
-              background: 'linear-gradient(180deg, #2a2318 0%, #1a1510 100%)',
-              border: '2px solid #3d3428',
-              boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.5)',
-            }}
-          >
-            {/* Stats Grid */}
-            <div className="grid grid-cols-2 gap-x-6 gap-y-2">
-              <div className="flex justify-between">
-                <span className="text-amber-600 text-sm">Quests Done</span>
-                <span className="text-parchment-light text-sm font-bold">{questsCompleted}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-amber-600 text-sm">Total XP</span>
-                <span className="text-parchment-light text-sm font-bold">{formatNumber(profile.xp)}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-amber-600 text-sm">Kms Run</span>
-                <span className="text-parchment-light text-sm font-bold">{totalKmsRun}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-amber-600 text-sm">Gold</span>
-                <span className="text-amber-400 text-sm font-bold">{formatNumber(profile.gold)}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-amber-600 text-sm">Level</span>
-                <span className="text-parchment-light text-sm font-bold">{profile.level}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-amber-600 text-sm">Gear Score</span>
-                <span className="text-parchment-light text-sm font-bold">0</span>
-              </div>
-            </div>
-
-            {/* XP Progress */}
-            <div className="mt-4 pt-3 border-t border-white/10">
-              <div className="flex justify-between text-xs mb-1">
-                <span className="text-white/50">Level {profile.level} Progress</span>
-                <span className="text-amber-500">{Math.round(xpProgress.percentage)}%</span>
-              </div>
-              <div 
-                className="h-2 rounded-full overflow-hidden"
-                style={{
-                  background: '#1a1510',
-                  border: '1px solid #3d3428',
-                }}
-              >
+              {/* Top Section - Level & XP */}
+              <div className="relative px-4 pt-4 pb-3">
+                {/* Level Badge - Top Left */}
                 <div 
-                  className="h-full rounded-full transition-all duration-500"
+                  className="absolute top-3 left-3 w-12 h-12 rounded-xl flex flex-col items-center justify-center"
                   style={{
-                    width: `${xpProgress.percentage}%`,
-                    background: 'linear-gradient(180deg, #d4a857 0%, #b8903d 100%)',
-                    boxShadow: '0 0 8px rgba(212,168,87,0.5)',
+                    background: 'linear-gradient(135deg, hsl(150 60% 40%) 0%, hsl(150 50% 25%) 100%)',
+                    boxShadow: '0 4px 12px hsl(150 60% 30% / 0.4), inset 0 1px 0 hsl(150 60% 60% / 0.3)',
+                  }}
+                >
+                  <span className="text-xs font-bold text-white/70">LVL</span>
+                  <span className="text-lg font-display font-bold text-white">{profile.level}</span>
+                </div>
+
+                {/* XP Progress - Center */}
+                <div className="mx-auto max-w-[180px] pt-1">
+                  <div className="flex items-center justify-center gap-1 mb-1">
+                    <Sparkles className="w-3 h-3 text-purple-400" />
+                    <span className="text-xs font-medium text-purple-400">
+                      {formatNumber(xpProgress.current)} / {formatNumber(xpProgress.required)} XP
+                    </span>
+                  </div>
+                  <div 
+                    className="h-2 rounded-full overflow-hidden"
+                    style={{
+                      background: 'hsl(0 0% 15%)',
+                      boxShadow: 'inset 0 1px 2px hsl(0 0% 0% / 0.5)',
+                    }}
+                  >
+                    <div 
+                      className="h-full rounded-full transition-all duration-500"
+                      style={{
+                        width: `${xpProgress.percentage}%`,
+                        background: 'linear-gradient(90deg, hsl(270 60% 50%) 0%, hsl(280 70% 60%) 100%)',
+                        boxShadow: '0 0 8px hsl(270 60% 50% / 0.6)',
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Character Title Banner */}
+              <div 
+                className="relative py-2 text-center"
+                style={{
+                  background: 'linear-gradient(90deg, transparent 0%, hsl(270 40% 25% / 0.5) 20%, hsl(270 40% 25% / 0.5) 80%, transparent 100%)',
+                }}
+              >
+                <span className="text-xs font-display font-semibold tracking-wider uppercase text-purple-300/80">
+                  {profile.class ? `${profile.class.charAt(0).toUpperCase() + profile.class.slice(1)}` : 'Adventurer'}
+                </span>
+              </div>
+
+              {/* Character Display Area */}
+              <div 
+                className="relative h-72 flex items-center justify-center overflow-hidden"
+                style={{
+                  background: 'radial-gradient(ellipse at center bottom, hsl(270 30% 15% / 0.4) 0%, transparent 70%)',
+                }}
+              >
+                {/* Decorative Frame */}
+                <div 
+                  className="absolute inset-4 rounded-xl border border-border/30 pointer-events-none"
+                  style={{
+                    background: 'radial-gradient(ellipse at center, hsl(0 0% 10% / 0.3) 0%, transparent 70%)',
                   }}
                 />
+                
+                {/* 3D Character */}
+                <div className="relative w-48 h-full">
+                  <CharacterProfile3D 
+                    raceId={profile.race || 'human'} 
+                    gender={(customization?.gender as Gender) || 'male'}
+                    className="w-full h-full"
+                  />
+                </div>
               </div>
-              <p className="text-[10px] text-white/40 mt-1 text-center">
-                {formatNumber(xpProgress.current)} / {formatNumber(xpProgress.required)} XP to level {profile.level + 1}
-              </p>
+
+              {/* Character Name Plate */}
+              <div 
+                className="relative py-3 text-center"
+                style={{
+                  background: 'linear-gradient(180deg, hsl(0 0% 6%) 0%, hsl(0 0% 10%) 100%)',
+                  borderTop: '1px solid hsl(0 0% 15%)',
+                  borderBottom: '1px solid hsl(0 0% 15%)',
+                }}
+              >
+                <h1 
+                  className="font-display text-xl font-bold tracking-wide text-foreground"
+                  style={{ textShadow: '0 2px 8px hsl(0 0% 0% / 0.5)' }}
+                >
+                  {profile.character_name || 'Adventurer'}
+                </h1>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  {getRaceName(profile.race || 'human')}
+                </p>
+              </div>
+
+              {/* Stats Row */}
+              <div 
+                className="grid grid-cols-3 divide-x divide-border/30"
+                style={{
+                  background: 'linear-gradient(180deg, hsl(0 0% 8%) 0%, hsl(0 0% 5%) 100%)',
+                }}
+              >
+                {/* Quests Done */}
+                <div className="py-4 text-center">
+                  <div 
+                    className="w-10 h-10 mx-auto mb-2 rounded-full flex items-center justify-center"
+                    style={{
+                      background: 'linear-gradient(135deg, hsl(35 70% 45%) 0%, hsl(25 60% 30%) 100%)',
+                      boxShadow: '0 4px 12px hsl(35 70% 30% / 0.4), inset 0 1px 0 hsl(45 80% 60% / 0.3)',
+                    }}
+                  >
+                    <Swords className="w-5 h-5 text-white" />
+                  </div>
+                  <p className="text-xl font-display font-bold text-foreground">{questsCompleted}</p>
+                  <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Quests</p>
+                </div>
+
+                {/* Kms Run */}
+                <div className="py-4 text-center">
+                  <div 
+                    className="w-10 h-10 mx-auto mb-2 rounded-full flex items-center justify-center"
+                    style={{
+                      background: 'linear-gradient(135deg, hsl(200 70% 45%) 0%, hsl(210 60% 30%) 100%)',
+                      boxShadow: '0 4px 12px hsl(200 70% 30% / 0.4), inset 0 1px 0 hsl(200 80% 60% / 0.3)',
+                    }}
+                  >
+                    <Footprints className="w-5 h-5 text-white" />
+                  </div>
+                  <p className="text-xl font-display font-bold text-foreground">{totalKmsRun}</p>
+                  <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Kms Run</p>
+                </div>
+
+                {/* Gear Score */}
+                <div className="py-4 text-center">
+                  <div 
+                    className="w-10 h-10 mx-auto mb-2 rounded-full flex items-center justify-center"
+                    style={{
+                      background: 'linear-gradient(135deg, hsl(280 60% 50%) 0%, hsl(290 50% 35%) 100%)',
+                      boxShadow: '0 4px 12px hsl(280 60% 35% / 0.4), inset 0 1px 0 hsl(280 70% 65% / 0.3)',
+                    }}
+                  >
+                    <Shield className="w-5 h-5 text-white" />
+                  </div>
+                  <p className="text-xl font-display font-bold text-foreground">{gearScore}</p>
+                  <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Gear Score</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Equipment Bag Button */}
+            <div className="mt-6">
+              <EquipmentDrawer>
+                <Button 
+                  variant="outline"
+                  className="w-full border-border/50 bg-card/50 hover:bg-card text-foreground"
+                >
+                  <Backpack className="w-4 h-4 mr-2" />
+                  View Equipment Bag
+                </Button>
+              </EquipmentDrawer>
             </div>
           </div>
-
-          {/* Equipment Bag Button */}
-          <EquipmentDrawer>
-            <Button 
-              className="w-full"
-              style={{
-                background: 'linear-gradient(180deg, #4a3d2a 0%, #2a2318 100%)',
-                border: '2px solid #6b5a3c',
-              }}
-            >
-              <Backpack className="w-4 h-4 mr-2" />
-              View Equipment Bag
-            </Button>
-          </EquipmentDrawer>
         </div>
       )}
     </div>
