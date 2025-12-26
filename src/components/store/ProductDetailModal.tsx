@@ -38,7 +38,7 @@ function RotatingModel({ url }: { url: string }) {
     <primitive
       ref={modelRef}
       object={scene}
-      scale={2.5}
+      scale={1.25}
       position={[0, -0.5, 0]}
     />
   );
