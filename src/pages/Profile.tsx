@@ -15,6 +15,7 @@ import {
   Backpack,
   Settings,
   BookOpen,
+  Users,
   Pencil,
   ShieldCheck
 } from 'lucide-react';
@@ -356,7 +357,7 @@ export default function Profile() {
             </div>
 
             {/* Equipment Bag Button */}
-            <div className="mt-6">
+            <div className="mt-6 space-y-3">
               <EquipmentDrawer>
                 <Button 
                   className="w-full font-display tracking-wider"
@@ -371,6 +372,32 @@ export default function Profile() {
                   Equipment Bag
                 </Button>
               </EquipmentDrawer>
+
+              {/* Guilds Button - Coming Soon */}
+              <Button 
+                className="w-full font-display tracking-wider relative"
+                disabled
+                style={{
+                  background: 'linear-gradient(180deg, hsl(25 20% 15%) 0%, hsl(20 15% 10%) 100%)',
+                  border: '2px solid hsl(35 30% 25%)',
+                  color: 'hsl(40 30% 50%)',
+                  boxShadow: '0 4px 12px hsl(0 0% 0% / 0.4)',
+                  opacity: 0.7,
+                }}
+              >
+                <Users className="w-4 h-4 mr-2" />
+                Guilds
+                <span 
+                  className="absolute -top-2 -right-2 px-2 py-0.5 text-[10px] font-bold rounded-full"
+                  style={{
+                    background: 'linear-gradient(135deg, hsl(270 50% 40%) 0%, hsl(280 45% 30%) 100%)',
+                    border: '1px solid hsl(270 40% 50%)',
+                    color: 'hsl(270 60% 85%)',
+                  }}
+                >
+                  SOON
+                </span>
+              </Button>
             </div>
           </div>
         </div>
