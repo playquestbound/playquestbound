@@ -167,10 +167,10 @@ export default function Store() {
     });
   };
 
-  // Featured item first, then sort by time remaining
-  const featuredItem = LIMITED_ITEMS.find(item => item.featured);
+  // Featured items first, then sort by time remaining
+  const featuredItems = LIMITED_ITEMS.filter(item => item.featured);
   const otherItems = LIMITED_ITEMS.filter(item => !item.featured).sort((a, b) => a.endTime - b.endTime);
-  const sortedItems = featuredItem ? [featuredItem, ...otherItems] : otherItems;
+  const sortedItems = [...featuredItems, ...otherItems];
 
   return (
     <div className="min-h-screen bg-background flex flex-col pb-20">
