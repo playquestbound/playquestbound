@@ -14,20 +14,23 @@ const SUBSCRIPTION_TIERS = [
     name: 'Free',
     price: '$0',
     period: '/forever',
-    features: ['5 Active Quests', 'Basic Character Customization', 'Community Leaderboard'],
+    tier: 'free',
+    features: ['1 Active Quest', 'Basic Character Customization', 'Community Leaderboard'],
     current: true,
   },
   {
     name: 'Adventurer',
     price: '$4.99',
     period: '/month',
-    features: ['10 Active Quests', 'Exclusive Cosmetics', 'Priority Quest Access', 'Ad-Free Experience'],
+    tier: 'adventurer',
+    features: ['5 Active Quests', 'Exclusive Cosmetics', 'Priority Quest Access', 'Ad-Free Experience'],
     popular: true,
   },
   {
     name: 'Legend',
     price: '$9.99',
     period: '/month',
+    tier: 'legend',
     features: ['Unlimited Active Quests', 'All Exclusive Cosmetics', 'Early Access Features', 'Custom Quest Creation', 'Legend Badge'],
   },
 ];
@@ -380,51 +383,54 @@ export default function Store() {
             <p className="text-sm text-muted-foreground text-center mb-6">
               Upgrade your adventure with premium features
             </p>
-            {SUBSCRIPTION_TIERS.map((tier) => (
-              <Card
-                key={tier.name}
-                className={`relative overflow-hidden ${
-                  tier.popular ? 'border-primary ring-1 ring-primary' : 'border-border/50'
-                }`}
-              >
-                {tier.popular && (
-                  <div className="absolute top-0 right-0 bg-primary text-primary-foreground text-xs px-3 py-1 rounded-bl-lg font-medium">
-                    Popular
-                  </div>
-                )}
-                <CardHeader className="pb-2">
-                  <CardTitle className="flex items-center gap-2 font-cinzel">
-                    {tier.name}
-                    {tier.current && (
-                      <Badge variant="outline" className="text-xs">
-                        Current
-                      </Badge>
-                    )}
-                  </CardTitle>
-                  <CardDescription>
-                    <span className="text-2xl font-bold text-foreground">{tier.price}</span>
-                    <span className="text-muted-foreground">{tier.period}</span>
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-2 mb-4">
-                    {tier.features.map((feature) => (
-                      <li key={feature} className="flex items-center gap-2 text-sm">
-                        <Check className="w-4 h-4 text-primary" />
-                        {feature}
-                      </li>
-                    ))}
-                  </ul>
-                  <Button
-                    className="w-full"
-                    variant={tier.current ? 'outline' : tier.popular ? 'default' : 'secondary'}
-                    disabled={tier.current}
-                  >
-                    {tier.current ? 'Current Plan' : 'Subscribe'}
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
+            {SUBSCRIPTION_TIERS.map((tier) => {
+              const isCurrentTier = (profile?.subscription_tier || 'free') === tier.tier;
+              return (
+                <Card
+                  key={tier.name}
+                  className={`relative overflow-hidden ${
+                    tier.popular ? 'border-primary ring-1 ring-primary' : 'border-border/50'
+                  }`}
+                >
+                  {tier.popular && (
+                    <div className="absolute top-0 right-0 bg-primary text-primary-foreground text-xs px-3 py-1 rounded-bl-lg font-medium">
+                      Popular
+                    </div>
+                  )}
+                  <CardHeader className="pb-2">
+                    <CardTitle className="flex items-center gap-2 font-cinzel">
+                      {tier.name}
+                      {isCurrentTier && (
+                        <Badge variant="outline" className="text-xs">
+                          Current
+                        </Badge>
+                      )}
+                    </CardTitle>
+                    <CardDescription>
+                      <span className="text-2xl font-bold text-foreground">{tier.price}</span>
+                      <span className="text-muted-foreground">{tier.period}</span>
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <ul className="space-y-2 mb-4">
+                      {tier.features.map((feature) => (
+                        <li key={feature} className="flex items-center gap-2 text-sm">
+                          <Check className="w-4 h-4 text-primary" />
+                          {feature}
+                        </li>
+                      ))}
+                    </ul>
+                    <Button
+                      className="w-full"
+                      variant={isCurrentTier ? 'outline' : tier.popular ? 'default' : 'secondary'}
+                      disabled={isCurrentTier}
+                    >
+                      {isCurrentTier ? 'Current Plan' : 'Subscribe'}
+                    </Button>
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
         )}
       </div>

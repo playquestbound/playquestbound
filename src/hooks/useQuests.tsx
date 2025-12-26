@@ -201,6 +201,48 @@ export function useCompletedQuests() {
   });
 }
 
+// Quest limits by subscription tier
+const QUEST_LIMITS: Record<string, number> = {
+  free: 1,
+  adventurer: 5,
+  legend: Infinity,
+};
+
+export function useQuestLimit() {
+  const { user } = useAuth();
+
+  return useQuery({
+    queryKey: ['quest-limit', user?.id],
+    queryFn: async () => {
+      if (!user) return { limit: 1, activeCount: 0, tier: 'free' };
+
+      // Get user's subscription tier
+      const { data: profile, error: profileError } = await supabase
+        .from('profiles')
+        .select('subscription_tier')
+        .eq('id', user.id)
+        .single();
+
+      if (profileError) throw profileError;
+
+      const tier = profile?.subscription_tier || 'free';
+      const limit = QUEST_LIMITS[tier] || 1;
+
+      // Get count of active quests
+      const { count, error: countError } = await supabase
+        .from('user_quests')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', user.id)
+        .eq('status', 'active');
+
+      if (countError) throw countError;
+
+      return { limit, activeCount: count || 0, tier };
+    },
+    enabled: !!user,
+  });
+}
+
 export function useAcceptQuest() {
   const queryClient = useQueryClient();
   const { user } = useAuth();
@@ -208,6 +250,27 @@ export function useAcceptQuest() {
   return useMutation({
     mutationFn: async (questId: string) => {
       if (!user) throw new Error('Not authenticated');
+
+      // Check quest limit before accepting
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('subscription_tier')
+        .eq('id', user.id)
+        .single();
+
+      const tier = profile?.subscription_tier || 'free';
+      const limit = QUEST_LIMITS[tier] || 1;
+
+      // Get current active quest count
+      const { count } = await supabase
+        .from('user_quests')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', user.id)
+        .eq('status', 'active');
+
+      if ((count || 0) >= limit) {
+        throw new Error(`Quest limit reached. ${tier === 'free' ? 'Upgrade to accept more quests!' : 'You have reached your quest limit.'}`);
+      }
 
       const { data, error } = await supabase
         .from('user_quests')
@@ -225,6 +288,7 @@ export function useAcceptQuest() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['active-quests'] });
       queryClient.invalidateQueries({ queryKey: ['available-quests'] });
+      queryClient.invalidateQueries({ queryKey: ['quest-limit'] });
     },
   });
 }
@@ -284,6 +348,7 @@ export function useCompleteQuest() {
       queryClient.invalidateQueries({ queryKey: ['completed-quests'] });
       queryClient.invalidateQueries({ queryKey: ['available-quests'] });
       queryClient.invalidateQueries({ queryKey: ['profile'] });
+      queryClient.invalidateQueries({ queryKey: ['quest-limit'] });
     },
   });
 }

@@ -15,6 +15,7 @@ export interface Profile {
   gold: number;
   level: number;
   has_created_character: boolean;
+  subscription_tier: string;
   created_at: string;
   updated_at: string;
 }
