@@ -7,6 +7,7 @@ import { useProfile } from '@/hooks/useProfile';
 import { toast } from '@/hooks/use-toast';
 import fujiJingasaImg from '@/assets/fuji-jingasa.jpg';
 import baseBootsImg from '@/assets/base-boots.jpg';
+import ProductDetailModal from '@/components/store/ProductDetailModal';
 
 const SUBSCRIPTION_TIERS = [
   {
@@ -142,6 +143,7 @@ export default function Store() {
   const [activeTab, setActiveTab] = useState<'cosmetics' | 'subscription'>('cosmetics');
   const { data: profile } = useProfile();
   const [, setTick] = useState(0);
+  const [selectedItem, setSelectedItem] = useState<typeof LIMITED_ITEMS[0] | null>(null);
 
   // Update countdown every minute
   useEffect(() => {
@@ -248,7 +250,8 @@ export default function Store() {
                       return (
                         <Card 
                           key={item.id} 
-                          className={`${rarity.bg} ${rarity.border} border overflow-hidden shadow-lg ${rarity.glow}`}
+                          className={`${rarity.bg} ${rarity.border} border overflow-hidden shadow-lg ${rarity.glow} cursor-pointer hover:scale-[1.02] transition-transform`}
+                          onClick={() => setSelectedItem(item)}
                         >
                           <div className="flex">
                             <div className="w-24 h-24 flex items-center justify-center text-4xl bg-black/20 relative">
@@ -320,7 +323,8 @@ export default function Store() {
                     return (
                       <Card 
                         key={item.id} 
-                        className={`${rarity.bg} ${rarity.border} border overflow-hidden shadow-lg ${rarity.glow}`}
+                        className={`${rarity.bg} ${rarity.border} border overflow-hidden shadow-lg ${rarity.glow} cursor-pointer hover:scale-[1.02] transition-transform`}
+                        onClick={() => setSelectedItem(item)}
                       >
                         <div className="aspect-square flex items-center justify-center text-5xl bg-black/20 relative">
                           {item.image ? (
@@ -424,6 +428,14 @@ export default function Store() {
           </div>
         )}
       </div>
+
+      {/* Product Detail Modal */}
+      {selectedItem && (
+        <ProductDetailModal 
+          item={selectedItem} 
+          onClose={() => setSelectedItem(null)} 
+        />
+      )}
     </div>
   );
 }
