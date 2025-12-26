@@ -36,6 +36,20 @@ export default function RunTracker() {
   
   const watchIdRef = useRef<number | null>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  
+  // Use refs to track current state for GPS callback (avoids stale closure)
+  const isRunningRef = useRef(isRunning);
+  const isPausedRef = useRef(isPaused);
+  const lastPositionRef = useRef<Position | null>(null);
+  
+  // Keep refs in sync with state
+  useEffect(() => {
+    isRunningRef.current = isRunning;
+  }, [isRunning]);
+  
+  useEffect(() => {
+    isPausedRef.current = isPaused;
+  }, [isPaused]);
 
   const XP_PER_KM = 10;
 
@@ -65,21 +79,24 @@ export default function RunTracker() {
     setCurrentPosition(newPos);
     setLocationError(null);
 
-    if (isRunning && !isPaused) {
-      setPositions((prev) => {
-        if (prev.length > 0) {
-          const lastPos = prev[prev.length - 1];
-          const dist = calculateDistance(lastPos, newPos);
-          // Only add if moved more than 5 meters (to filter GPS noise)
-          if (dist > 5) {
-            setDistance((d) => d + dist);
-            return [...prev, newPos];
-          }
+    // Use refs to get current state (avoids stale closure issue)
+    if (isRunningRef.current && !isPausedRef.current) {
+      const lastPos = lastPositionRef.current;
+      if (lastPos) {
+        const dist = calculateDistance(lastPos, newPos);
+        // Only add if moved more than 3 meters (to filter GPS noise)
+        if (dist > 3) {
+          setDistance((d) => d + dist);
+          setPositions((prev) => [...prev, newPos]);
+          lastPositionRef.current = newPos;
         }
-        return prev.length === 0 ? [newPos] : prev;
-      });
+      } else {
+        // First position after starting
+        lastPositionRef.current = newPos;
+        setPositions([newPos]);
+      }
     }
-  }, [isRunning, isPaused]);
+  }, []);
 
   const handlePositionError = (error: GeolocationPositionError) => {
     setLocationError(error.message);
@@ -105,6 +122,7 @@ export default function RunTracker() {
     setPositions([]);
     setDistance(0);
     setDuration(0);
+    lastPositionRef.current = null; // Reset last position
 
     watchIdRef.current = navigator.geolocation.watchPosition(
       handlePositionUpdate,
