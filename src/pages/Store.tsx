@@ -41,6 +41,7 @@ const LIMITED_ITEMS = [
     image: fujiJingasaImg,
     slot: 'head',
     questLocked: true,
+    featured: true,
   },
   {
     id: '2',
@@ -153,8 +154,10 @@ export default function Store() {
     });
   };
 
-  // Sort items by time remaining (most urgent first)
-  const sortedItems = [...LIMITED_ITEMS].sort((a, b) => a.endTime - b.endTime);
+  // Featured item first, then sort by time remaining
+  const featuredItem = LIMITED_ITEMS.find(item => item.featured);
+  const otherItems = LIMITED_ITEMS.filter(item => !item.featured).sort((a, b) => a.endTime - b.endTime);
+  const sortedItems = featuredItem ? [featuredItem, ...otherItems] : otherItems;
 
   return (
     <div className="min-h-screen bg-background flex flex-col pb-20">
@@ -241,17 +244,12 @@ export default function Store() {
                               ) : (
                                 item.imageEmoji
                               )}
-                              {item.questLocked && (
-                                <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-                                  <Lock className="w-6 h-6 text-amber-400" />
-                                </div>
-                              )}
                             </div>
                             <CardContent className="flex-1 p-3 flex flex-col justify-between">
                               <div>
                                 <div className="flex items-start justify-between gap-2">
                                   <div>
-                                    <Badge className={`${rarity.text} bg-transparent border ${rarity.border} text-xs px-1.5`}>
+                                    <Badge className={`${item.rarity === 'legendary' ? 'text-amber-200 bg-gradient-to-r from-amber-600 via-yellow-500 to-amber-600 border-none animate-pulse shadow-lg shadow-amber-500/50' : `${rarity.text} bg-transparent border ${rarity.border}`} text-xs px-1.5`}>
                                       {item.rarity}
                                     </Badge>
                                     <h3 className="font-semibold text-foreground mt-1">{item.name}</h3>
@@ -317,13 +315,8 @@ export default function Store() {
                           ) : (
                             item.imageEmoji
                           )}
-                          {item.questLocked && (
-                            <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-                              <Lock className="w-8 h-8 text-amber-400" />
-                            </div>
-                          )}
                           <Badge 
-                            className={`absolute top-2 right-2 ${rarity.text} bg-black/50 border-none text-xs`}
+                            className={`absolute top-2 right-2 ${item.rarity === 'legendary' ? 'text-amber-200 bg-gradient-to-r from-amber-600 via-yellow-500 to-amber-600 border-none animate-pulse shadow-lg shadow-amber-500/50' : `${rarity.text} bg-black/50 border-none`} text-xs`}
                           >
                             {item.rarity}
                           </Badge>
