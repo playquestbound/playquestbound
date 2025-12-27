@@ -50,7 +50,7 @@ const categoryConfig: Record<string, { label: string; icon: React.ReactNode; cla
     className: 'bg-primary/20 text-primary border-primary/50',
   },
   grand: {
-    label: 'Legendary Challenge',
+    label: 'Legendary Quest',
     icon: <Crown className="w-3 h-3" />,
     className: 'grand-quest-badge',
   },
