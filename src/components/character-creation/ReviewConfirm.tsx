@@ -84,31 +84,32 @@ export function ReviewConfirm({
         </div>
       </div>
 
-      <div className="flex gap-3 mt-4 px-6">
+      <div className="flex flex-col gap-3 mt-4 px-6">
         <Button
           variant="outline"
           size="lg"
-          className="flex-1"
+          className="w-full"
           onClick={onBack}
           disabled={isLoading}
         >
           Back
         </Button>
-        <SchematicButton
-          size="lg"
-          className="flex-1"
-          onClick={onConfirm}
-          disabled={isLoading}
-        >
-          {isLoading ? (
-            <>
-              <Loader2 className="w-4 h-4 animate-spin mr-2" />
-              Creating...
-            </>
-          ) : (
-            'Begin Adventure'
-          )}
-        </SchematicButton>
+        <div className="flex justify-center">
+          <SchematicButton
+            size="lg"
+            onClick={onConfirm}
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                Creating...
+              </>
+            ) : (
+              'Begin Adventure'
+            )}
+          </SchematicButton>
+        </div>
       </div>
     </div>
   );

@@ -103,23 +103,24 @@ export function NameSelection({ name, onNameChange, onContinue, onBack }: NameSe
         </div>
       </div>
 
-      <div className="flex gap-3 mt-4 px-6">
+      <div className="flex flex-col gap-3 mt-4 px-6">
         <Button
           variant="outline"
           size="lg"
-          className="flex-1"
+          className="w-full"
           onClick={onBack}
         >
           Back
         </Button>
-        <SchematicButton
-          size="lg"
-          className="flex-1"
-          disabled={!canContinue || isChecking}
-          onClick={onContinue}
-        >
-          Continue
-        </SchematicButton>
+        <div className="flex justify-center">
+          <SchematicButton
+            size="lg"
+            disabled={!canContinue || isChecking}
+            onClick={onContinue}
+          >
+            Continue
+          </SchematicButton>
+        </div>
       </div>
     </div>
   );
