@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';
-import { Compass } from 'lucide-react';
+
 import qbLogo from '@/assets/qb-logo.png';
 
 interface CampSceneProps {
@@ -61,7 +61,6 @@ export function CampScene({ characterRace }: CampSceneProps) {
             textShadow: '0 0 10px rgba(255,255,255,0.8), 0 0 20px rgba(255,255,255,0.5)',
           }}
         >
-          <Compass className="w-5 h-5 mr-2" style={{ filter: 'drop-shadow(0 0 6px rgba(255,255,255,0.8))' }} />
           EXPLORE
         </Button>
       </div>
