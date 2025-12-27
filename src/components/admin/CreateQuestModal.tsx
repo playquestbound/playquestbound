@@ -32,7 +32,7 @@ const QUEST_CATEGORIES = [
 ];
 
 const NICHES = [
-  { value: "", label: "None" },
+  { value: "none", label: "None" },
   { value: "running", label: "Running" },
   { value: "hiking", label: "Hiking" },
   { value: "urban", label: "Urban" },
@@ -41,7 +41,7 @@ const NICHES = [
 ];
 
 const CLASSES = [
-  { value: "", label: "None (All Classes)" },
+  { value: "none", label: "None (All Classes)" },
   { value: "warrior", label: "Warrior" },
   { value: "mage", label: "Mage" },
   { value: "rogue", label: "Rogue" },
@@ -244,8 +244,8 @@ export function CreateQuestModal({ open, onOpenChange, onSubmit, isLoading }: Cr
             <div>
               <Label>Niche</Label>
               <Select
-                value={formData.niche || ""}
-                onValueChange={(value) => setFormData(prev => ({ ...prev, niche: value || null }))}
+                value={formData.niche || "none"}
+                onValueChange={(value) => setFormData(prev => ({ ...prev, niche: value === "none" ? null : value }))}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select niche" />
@@ -261,8 +261,8 @@ export function CreateQuestModal({ open, onOpenChange, onSubmit, isLoading }: Cr
             <div>
               <Label>Class Affinity</Label>
               <Select
-                value={formData.class_affinity || ""}
-                onValueChange={(value) => setFormData(prev => ({ ...prev, class_affinity: value || null }))}
+                value={formData.class_affinity || "none"}
+                onValueChange={(value) => setFormData(prev => ({ ...prev, class_affinity: value === "none" ? null : value }))}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select class" />
