@@ -45,12 +45,14 @@ export function RunProvider({ children }: { children: ReactNode }) {
   const [positions, setPositions] = useState<Position[]>([]);
   const [currentPosition, setCurrentPosition] = useState<Position | null>(null);
   const [locationError, setLocationError] = useState<string | null>(null);
+  const [totalXpAwarded, setTotalXpAwarded] = useState(0);
 
   const watchIdRef = useRef<number | null>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const isRunningRef = useRef(isRunning);
   const isPausedRef = useRef(isPaused);
   const lastPositionRef = useRef<Position | null>(null);
+  const lastXpDistanceRef = useRef(0); // Track distance at which XP was last awarded
 
   useEffect(() => {
     isRunningRef.current = isRunning;
@@ -90,7 +92,25 @@ export function RunProvider({ children }: { children: ReactNode }) {
       if (lastPos) {
         const dist = calculateDistance(lastPos, newPos);
         if (dist > 3) {
-          setDistance((d) => d + dist);
+          setDistance((d) => {
+            const newDistance = d + dist;
+            
+            // Check if we've crossed a 100m threshold
+            const lastXpDistance = lastXpDistanceRef.current;
+            const xpThresholdsCrossed = Math.floor(newDistance / 100) - Math.floor(lastXpDistance / 100);
+            
+            if (xpThresholdsCrossed > 0) {
+              // Award XP for each 100m crossed (100 XP per km = 10 XP per 100m)
+              const xpToAward = xpThresholdsCrossed * 10;
+              lastXpDistanceRef.current = newDistance;
+              
+              // Update stats in background
+              updateStats.mutateAsync({ xpGain: xpToAward, goldGain: 0 }).catch(console.error);
+              setTotalXpAwarded((prev) => prev + xpToAward);
+            }
+            
+            return newDistance;
+          });
           setPositions((prev) => [...prev, newPos]);
           lastPositionRef.current = newPos;
         }
@@ -99,7 +119,7 @@ export function RunProvider({ children }: { children: ReactNode }) {
         setPositions([newPos]);
       }
     }
-  }, []);
+  }, [updateStats]);
 
   const handlePositionError = (error: GeolocationPositionError) => {
     setLocationError(error.message);
@@ -120,7 +140,9 @@ export function RunProvider({ children }: { children: ReactNode }) {
     setPositions([]);
     setDistance(0);
     setDuration(0);
+    setTotalXpAwarded(0);
     lastPositionRef.current = null;
+    lastXpDistanceRef.current = 0;
 
     watchIdRef.current = navigator.geolocation.watchPosition(
       handlePositionUpdate,
@@ -167,10 +189,23 @@ export function RunProvider({ children }: { children: ReactNode }) {
     }
 
     const distanceKm = distance / 1000;
-    const earnedXp = Math.floor(distanceKm * XP_PER_KM);
     const pace = duration > 0 && distanceKm > 0 ? duration / 60 / distanceKm : 0;
+    
+    // Calculate any remaining XP not yet awarded (for partial 100m segments)
+    const remainingDistance = distance - lastXpDistanceRef.current;
+    const remainingXp = Math.floor((remainingDistance / 1000) * XP_PER_KM);
+    const finalTotalXp = totalXpAwarded + remainingXp;
+    
+    // Award remaining XP if any
+    if (remainingXp > 0) {
+      try {
+        await updateStats.mutateAsync({ xpGain: remainingXp, goldGain: 0 });
+      } catch (error) {
+        console.error('Failed to award remaining XP:', error);
+      }
+    }
 
-    // Save to journal
+    // Save to journal with total XP earned
     if (user) {
       try {
         const { error: journalError } = await supabase
@@ -183,7 +218,7 @@ export function RunProvider({ children }: { children: ReactNode }) {
             distance_km: distanceKm,
             duration_seconds: duration,
             avg_pace: pace > 0 ? pace : null,
-            xp_earned: earnedXp,
+            xp_earned: finalTotalXp,
             gold_earned: 0,
             route_data: positions.length > 0 ? { positions } : null,
           } as any);
@@ -196,26 +231,10 @@ export function RunProvider({ children }: { children: ReactNode }) {
       }
     }
 
-    if (earnedXp > 0) {
-      try {
-        await updateStats.mutateAsync({ xpGain: earnedXp, goldGain: 0 });
-        toast({
-          title: 'Exploration Complete!',
-          description: `You explored ${distanceKm.toFixed(2)} km and earned ${earnedXp} XP! Saved to journal.`,
-        });
-      } catch (error) {
-        toast({
-          title: 'Error',
-          description: 'Failed to save your progress',
-          variant: 'destructive',
-        });
-      }
-    } else {
-      toast({
-        title: 'Exploration Complete',
-        description: 'Keep going to earn XP! (10 XP per km)',
-      });
-    }
+    toast({
+      title: 'Exploration Complete!',
+      description: `You explored ${distanceKm.toFixed(2)} km and earned ${finalTotalXp} XP! Saved to journal.`,
+    });
 
     setIsRunning(false);
     setIsPaused(false);
