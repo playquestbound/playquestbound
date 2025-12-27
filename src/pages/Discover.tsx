@@ -151,7 +151,19 @@ export default function Discover() {
   const nearestItem = mockUnlockables.sort((a, b) => a.distance - b.distance)[0];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#0d0d0d] via-[#2a2a2a] to-[#1a1a1a] pb-24">
+    <div className="min-h-screen bg-gradient-to-b from-[#0d0d0d] via-[#2a2a2a] to-[#1a1a1a] pb-24 relative">
+      {/* Coming Soon Overlay */}
+      <div className="absolute inset-0 z-50 bg-black/80 backdrop-blur-sm flex flex-col items-center justify-center">
+        <div className="text-center px-6">
+          <div className="w-20 h-20 rounded-full bg-gold/20 flex items-center justify-center mx-auto mb-6 animate-pulse">
+            <MapPin className="w-10 h-10 text-gold" />
+          </div>
+          <h2 className="font-display text-3xl text-gold mb-3">Coming Soon</h2>
+          <p className="text-muted-foreground max-w-xs mx-auto">
+            Discover exclusive items in the real world. This feature is currently under development.
+          </p>
+        </div>
+      </div>
       <header className="px-4 pt-6 pb-4">
         <h1 className="font-display text-2xl text-gold">Discover</h1>
         <p className="text-muted-foreground text-sm">Find exclusive items in the real world</p>
