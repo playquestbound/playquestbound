@@ -2,6 +2,8 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useUpdateStats } from '@/hooks/useProfile';
+import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
 import { 
   ArrowLeft, 
@@ -24,6 +26,7 @@ interface Position {
 
 export default function RunTracker() {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const updateStats = useUpdateStats();
   
   const [isRunning, setIsRunning] = useState(false);
@@ -171,13 +174,40 @@ export default function RunTracker() {
 
     const distanceKm = distance / 1000;
     const earnedXp = Math.floor(distanceKm * XP_PER_KM);
+    const pace = duration > 0 && distanceKm > 0 ? duration / 60 / distanceKm : 0;
+
+    // Save to journal
+    if (user) {
+      try {
+        const { error: journalError } = await supabase
+          .from('journal_entries')
+          .insert({
+            user_id: user.id,
+            entry_type: 'run',
+            title: `${distanceKm.toFixed(2)} km Run`,
+            description: `Completed a ${distanceKm.toFixed(2)} km run in ${Math.floor(duration / 60)}:${(duration % 60).toString().padStart(2, '0')}`,
+            distance_km: distanceKm,
+            duration_seconds: duration,
+            avg_pace: pace > 0 ? pace : null,
+            xp_earned: earnedXp,
+            gold_earned: 0,
+            route_data: positions.length > 0 ? { positions } : null,
+          } as any);
+
+        if (journalError) {
+          console.error('Failed to save journal entry:', journalError);
+        }
+      } catch (err) {
+        console.error('Journal save error:', err);
+      }
+    }
 
     if (earnedXp > 0) {
       try {
         await updateStats.mutateAsync({ xpGain: earnedXp, goldGain: 0 });
         toast({
           title: 'Run Complete!',
-          description: `You ran ${distanceKm.toFixed(2)} km and earned ${earnedXp} XP!`,
+          description: `You ran ${distanceKm.toFixed(2)} km and earned ${earnedXp} XP! Saved to journal.`,
         });
       } catch (error) {
         toast({
