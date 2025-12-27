@@ -213,7 +213,7 @@ export default function Quests() {
                       <div className="flex items-center gap-2">
                         <Crown className="w-5 h-5 text-yellow-500" />
                         <h2 className="font-display font-bold text-lg bg-gradient-to-r from-yellow-400 to-amber-500 text-transparent bg-clip-text">
-                          Legendary Challenges
+                          Legendary Quests
                         </h2>
                       </div>
                       {groupedQuests.grand.length > 3 && (
