@@ -31,7 +31,7 @@ interface RunContextType extends RunState {
 
 const RunContext = createContext<RunContextType | null>(null);
 
-const XP_PER_KM = 10;
+const XP_PER_KM = 100;
 
 export function RunProvider({ children }: { children: ReactNode }) {
   const navigate = useNavigate();
