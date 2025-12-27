@@ -238,3 +238,60 @@ export function useBulkArchiveQuests() {
     },
   });
 }
+
+export interface CreateQuestData {
+  title: string;
+  description: string;
+  quest_type: string;
+  quest_category: string;
+  niche: string | null;
+  class_affinity: string | null;
+  xp_reward: number;
+  gold_reward: number;
+  difficulty: string;
+  tier: string;
+  is_funded_eligible: boolean;
+  requires_manual_review: boolean;
+  verification_config: {
+    requires_gps: boolean;
+    requires_video: boolean;
+    challenges: string[];
+  };
+}
+
+export function useCreateQuest() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (questData: CreateQuestData) => {
+      const { data, error } = await supabase
+        .from('quests')
+        .insert({
+          title: questData.title,
+          description: questData.description,
+          quest_type: questData.quest_type,
+          quest_category: questData.quest_category,
+          niche: questData.niche || null,
+          class_affinity: questData.class_affinity || null,
+          xp_reward: questData.xp_reward,
+          gold_reward: questData.gold_reward,
+          difficulty: questData.difficulty,
+          tier: questData.tier,
+          is_funded_eligible: questData.is_funded_eligible,
+          requires_manual_review: questData.requires_manual_review,
+          verification_config: questData.verification_config,
+          status: 'draft',
+          is_active: false,
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-quests'] });
+      queryClient.invalidateQueries({ queryKey: ['quest-stats'] });
+    },
+  });
+}

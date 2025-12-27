@@ -13,8 +13,10 @@ import {
   useArchiveQuest,
   useBulkPublishQuests,
   useBulkArchiveQuests,
+  useCreateQuest,
   type AdminQuest,
   type QuestFilters,
+  type CreateQuestData,
 } from "@/hooks/useAdminQuests";
 import { useCancelSchedule } from "@/hooks/useScheduledQuests";
 import { QuestFilters as QuestFiltersComponent } from "@/components/admin/QuestFilters";
@@ -23,7 +25,8 @@ import { QuestPreviewModal } from "@/components/admin/QuestPreviewModal";
 import { ConfirmPublishModal } from "@/components/admin/ConfirmPublishModal";
 import { ScheduleQuestModal } from "@/components/admin/ScheduleQuestModal";
 import { QuickPublishPanel } from "@/components/admin/QuickPublishPanel";
-import { ArrowLeft, Play, Archive, Loader2, RefreshCw, Box } from "lucide-react";
+import { CreateQuestModal } from "@/components/admin/CreateQuestModal";
+import { ArrowLeft, Play, Archive, Loader2, RefreshCw, Box, Plus } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -50,6 +53,7 @@ export default function QuestManagement() {
   const [previewQuest, setPreviewQuest] = useState<AdminQuest | null>(null);
   const [publishQuest, setPublishQuest] = useState<AdminQuest | null>(null);
   const [scheduleQuest, setScheduleQuest] = useState<AdminQuest | null>(null);
+  const [showCreateModal, setShowCreateModal] = useState(false);
 
   // Queries
   const { data: quests = [], isLoading: questsLoading, refetch: refetchQuests } = useAdminQuests(filters);
@@ -62,6 +66,7 @@ export default function QuestManagement() {
   const cancelScheduleMutation = useCancelSchedule();
   const bulkPublishMutation = useBulkPublishQuests();
   const bulkArchiveMutation = useBulkArchiveQuests();
+  const createMutation = useCreateQuest();
 
   // Check for scheduled quests on load
   useEffect(() => {
@@ -281,6 +286,23 @@ export default function QuestManagement() {
     }
   };
 
+  const handleCreateQuest = async (questData: CreateQuestData) => {
+    try {
+      await createMutation.mutateAsync(questData);
+      toast({
+        title: "Quest Created",
+        description: `"${questData.title}" has been created as a draft.`,
+      });
+      setShowCreateModal(false);
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to create quest. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
@@ -328,8 +350,9 @@ export default function QuestManagement() {
                 )}
                 Check Scheduled
               </Button>
-              <Button disabled className="opacity-50">
-                Create Quest (Coming Soon)
+              <Button onClick={() => setShowCreateModal(true)}>
+                <Plus className="mr-2 h-4 w-4" />
+                Create Quest
               </Button>
             </div>
           </div>
@@ -443,6 +466,13 @@ export default function QuestManagement() {
           onOpenChange={(open) => !open && setScheduleQuest(null)}
           onConfirm={handleScheduleConfirm}
           isLoading={scheduleMutation.isPending}
+        />
+
+        <CreateQuestModal
+          open={showCreateModal}
+          onOpenChange={setShowCreateModal}
+          onSubmit={handleCreateQuest}
+          isLoading={createMutation.isPending}
         />
       </div>
     </div>
