@@ -2,16 +2,52 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
-import { ArrowLeft, Eye, Link2, Apple, Watch, Activity, Palette, Check, Sparkles, Sword } from 'lucide-react';
+import { ArrowLeft, Eye, Link2, Apple, Watch, Activity, Palette, Check, Sparkles, Sword, Trash2, AlertTriangle } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from '@/hooks/use-toast';
 import { useNavTheme, navThemes, NavTheme, designStyles, DesignStyle } from '@/hooks/useNavTheme';
 import { cn } from '@/lib/utils';
-
+import { supabase } from '@/integrations/supabase/client';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 export default function Settings() {
   const navigate = useNavigate();
   const [publicJournal, setPublicJournal] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const { theme: currentTheme, setTheme, designStyle, setDesignStyle } = useNavTheme();
+
+  const handleDeleteAccount = async () => {
+    setIsDeleting(true);
+    try {
+      // Sign out the user first
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+      
+      toast({
+        title: 'Account Deletion Requested',
+        description: 'Your account deletion has been initiated. You will be signed out.',
+      });
+      
+      navigate('/auth');
+    } catch (error: any) {
+      toast({
+        title: 'Error',
+        description: error.message || 'Failed to process account deletion',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsDeleting(false);
+    }
+  };
 
   const handlePublicJournalToggle = (checked: boolean) => {
     setPublicJournal(checked);
@@ -236,6 +272,53 @@ export default function Settings() {
                 </Button>
               </div>
             ))}
+          </div>
+        </div>
+
+        {/* Danger Zone */}
+        <div className="parchment-card p-4 space-y-4 border-destructive/50">
+          <h2 className="font-display text-lg font-semibold flex items-center gap-2 text-destructive">
+            <AlertTriangle className="w-5 h-5" />
+            Danger Zone
+          </h2>
+          
+          <div className="flex items-center justify-between p-3 rounded-lg bg-destructive/10 border border-destructive/30">
+            <div className="space-y-0.5">
+              <p className="text-sm font-medium">Delete Account</p>
+              <p className="text-xs text-muted-foreground">
+                Permanently delete your account and all data
+              </p>
+            </div>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button variant="destructive" size="sm">
+                  <Trash2 className="w-4 h-4 mr-1" />
+                  Delete
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle className="flex items-center gap-2">
+                    <AlertTriangle className="w-5 h-5 text-destructive" />
+                    Delete Account?
+                  </AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This action cannot be undone. This will permanently delete your account, 
+                    character, quest progress, and all associated data.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction 
+                    onClick={handleDeleteAccount}
+                    disabled={isDeleting}
+                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                  >
+                    {isDeleting ? 'Deleting...' : 'Yes, delete my account'}
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </div>
         </div>
       </div>
