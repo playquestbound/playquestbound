@@ -42,23 +42,24 @@ export function ClassSelection({ selectedClass, onSelect, onContinue, onBack }: 
       </div>
 
       {/* Navigation Buttons */}
-      <div className="flex gap-3 pt-3 flex-shrink-0 px-6">
+      <div className="flex flex-col gap-3 pt-3 flex-shrink-0 px-6">
         <Button
           variant="outline"
           size="lg"
-          className="flex-1"
+          className="w-full"
           onClick={onBack}
         >
           Back
         </Button>
-        <SchematicButton
-          size="lg"
-          className="flex-1"
-          disabled={!selectedClass}
-          onClick={onContinue}
-        >
-          Continue
-        </SchematicButton>
+        <div className="flex justify-center">
+          <SchematicButton
+            size="lg"
+            disabled={!selectedClass}
+            onClick={onContinue}
+          >
+            Continue
+          </SchematicButton>
+        </div>
       </div>
     </div>
   );
