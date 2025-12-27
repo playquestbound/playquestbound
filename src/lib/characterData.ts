@@ -47,40 +47,22 @@ export const CLASSES = [
     icon: '🏃',
   },
   {
-    id: 'trailblazer',
-    name: 'Trailblazer',
-    description: 'Hiker. Peaks and trails are your domain. Elevation is progress.',
+    id: 'exile',
+    name: 'Exile',
+    description: 'Hiker. Peaks and trails are your domain. You find freedom in the wilderness.',
     icon: '🥾',
   },
   {
-    id: 'wayfarer',
-    name: 'Wayfarer',
-    description: 'Traveler. New cities, new cultures. The world is your home.',
-    icon: '✈️',
-  },
-  {
-    id: 'forager',
-    name: 'Forager',
-    description: 'Food explorer. Every meal is an adventure. You eat with curiosity.',
-    icon: '🍜',
-  },
-  {
-    id: 'nightowl',
-    name: 'Nightowl',
-    description: 'Night explorer. You come alive after dark. City lights are your stars.',
-    icon: '🌙',
-  },
-  {
-    id: 'chronicler',
-    name: 'Chronicler',
-    description: 'Photographer. You capture moments. The world is your gallery.',
-    icon: '📸',
-  },
-  {
-    id: 'ironside',
-    name: 'Ironside',
-    description: 'Fitness warrior. The gym is your dungeon. Strength is your quest.',
+    id: 'stoneblood',
+    name: 'Stoneblood',
+    description: 'Strength seeker. The iron is your altar. Power flows through discipline.',
     icon: '💪',
+  },
+  {
+    id: 'bard',
+    name: 'Bard',
+    description: 'Storyteller. You capture moments and weave tales. The world is your canvas.',
+    icon: '📸',
   },
 ] as const;
 
