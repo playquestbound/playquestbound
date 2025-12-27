@@ -59,6 +59,51 @@ export type Database = {
         }
         Relationships: []
       }
+      journal_entries: {
+        Row: {
+          avg_pace: number | null
+          created_at: string
+          description: string | null
+          distance_km: number | null
+          duration_seconds: number | null
+          entry_type: string
+          gold_earned: number | null
+          id: string
+          route_data: Json | null
+          title: string
+          user_id: string
+          xp_earned: number | null
+        }
+        Insert: {
+          avg_pace?: number | null
+          created_at?: string
+          description?: string | null
+          distance_km?: number | null
+          duration_seconds?: number | null
+          entry_type?: string
+          gold_earned?: number | null
+          id?: string
+          route_data?: Json | null
+          title: string
+          user_id: string
+          xp_earned?: number | null
+        }
+        Update: {
+          avg_pace?: number | null
+          created_at?: string
+          description?: string | null
+          distance_km?: number | null
+          duration_seconds?: number | null
+          entry_type?: string
+          gold_earned?: number | null
+          id?: string
+          route_data?: Json | null
+          title?: string
+          user_id?: string
+          xp_earned?: number | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           character_name: string | null
