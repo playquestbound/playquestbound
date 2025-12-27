@@ -25,7 +25,7 @@ export function CampScene({ characterRace }: CampSceneProps) {
         className="absolute inset-0 w-full h-full object-cover"
       >
         <source 
-          src={useAltScene ? "/videos/camp-alt.mp4" : "/videos/camp-bg.mp4"} 
+          src={useAltScene ? "/videos/camp-alt.mp4" : "/videos/camp-main.mp4"} 
           type="video/mp4" 
         />
       </video>
