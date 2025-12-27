@@ -2,7 +2,7 @@ import { Home, User, Compass, ShoppingBag } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { useNavTheme } from '@/hooks/useNavTheme';
 import questSword from '@/assets/quest-sword.png';
-import exploreButton from '@/assets/explore-button.png';
+
 
 const navItems = [
   { to: '/', icon: Home, label: 'Home' },
@@ -74,26 +74,8 @@ export function BottomNav() {
     );
   };
 
-  const isOnQuests = location.pathname === '/quests';
-
   return (
     <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center">
-      {/* Floating Explore button - only visible on quests page */}
-      {isOnQuests && (
-        <Link
-          to="/run"
-          className="mb-2 transition-all duration-200 hover:scale-105 active:scale-95"
-        >
-          <img 
-            src={exploreButton} 
-            alt="Explore" 
-            className="h-12 w-auto object-contain"
-            style={{
-              filter: `drop-shadow(0 4px 12px ${config.glowColor})`,
-            }}
-          />
-        </Link>
-      )}
       
       <nav 
         className="flex items-center justify-evenly backdrop-blur-sm rounded-full px-2 py-2 overflow-visible min-w-[340px] sm:min-w-0"
