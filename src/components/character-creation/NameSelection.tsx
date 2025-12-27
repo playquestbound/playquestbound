@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
+import { SchematicButton } from '@/components/ui/SchematicButton';
 import { Input } from '@/components/ui/input';
 import { supabase } from '@/integrations/supabase/client';
 import { Loader2, CheckCircle, XCircle } from 'lucide-react';
@@ -102,7 +103,7 @@ export function NameSelection({ name, onNameChange, onContinue, onBack }: NameSe
         </div>
       </div>
 
-      <div className="flex gap-3 mt-4">
+      <div className="flex gap-3 mt-4 px-6">
         <Button
           variant="outline"
           size="lg"
@@ -111,15 +112,14 @@ export function NameSelection({ name, onNameChange, onContinue, onBack }: NameSe
         >
           Back
         </Button>
-        <Button
-          variant="gold"
+        <SchematicButton
           size="lg"
           className="flex-1"
           disabled={!canContinue || isChecking}
           onClick={onContinue}
         >
           Continue
-        </Button>
+        </SchematicButton>
       </div>
     </div>
   );

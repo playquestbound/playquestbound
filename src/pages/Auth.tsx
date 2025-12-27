@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
-import { Button } from '@/components/ui/button';
+import { SchematicButton } from '@/components/ui/SchematicButton';
 import { Input } from '@/components/ui/input';
 import { toast } from '@/hooks/use-toast';
 import { Loader2, Mail, Lock, Sword, User, Calendar } from 'lucide-react';
@@ -168,24 +168,23 @@ export default function Auth() {
             />
           </div>
 
-          <Button
-            type="submit"
-            className="w-full font-display font-bold"
-            style={{ 
-              backgroundColor: 'hsl(0 65% 25%)',
-              color: 'hsl(50 60% 85%)'
-            }}
-            disabled={isLoading}
-          >
-            {isLoading ? (
-              <>
-                <Loader2 className="w-4 h-4 animate-spin" />
-                {isLogin ? 'Entering...' : 'Creating...'}
-              </>
-            ) : (
-              isLogin ? 'Enter the Realm' : 'Create Account'
-            )}
-          </Button>
+          <div className="flex justify-center px-4">
+            <SchematicButton
+              type="submit"
+              size="lg"
+              className="w-full"
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  {isLogin ? 'Entering...' : 'Creating...'}
+                </>
+              ) : (
+                isLogin ? 'Enter the Realm' : 'Create Account'
+              )}
+            </SchematicButton>
+          </div>
         </form>
 
         <div className="mt-6 text-center">
