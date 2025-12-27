@@ -106,10 +106,12 @@ export type Database = {
       }
       profiles: {
         Row: {
+          birthday: string | null
           character_name: string | null
           class: string | null
           created_at: string
           customization: Json | null
+          full_name: string | null
           gold: number
           has_created_character: boolean
           id: string
@@ -120,10 +122,12 @@ export type Database = {
           xp: number
         }
         Insert: {
+          birthday?: string | null
           character_name?: string | null
           class?: string | null
           created_at?: string
           customization?: Json | null
+          full_name?: string | null
           gold?: number
           has_created_character?: boolean
           id: string
@@ -134,10 +138,12 @@ export type Database = {
           xp?: number
         }
         Update: {
+          birthday?: string | null
           character_name?: string | null
           class?: string | null
           created_at?: string
           customization?: Json | null
+          full_name?: string | null
           gold?: number
           has_created_character?: boolean
           id?: string
