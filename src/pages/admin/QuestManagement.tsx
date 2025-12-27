@@ -26,7 +26,7 @@ import { ConfirmPublishModal } from "@/components/admin/ConfirmPublishModal";
 import { ScheduleQuestModal } from "@/components/admin/ScheduleQuestModal";
 import { QuickPublishPanel } from "@/components/admin/QuickPublishPanel";
 import { CreateQuestModal } from "@/components/admin/CreateQuestModal";
-import { ArrowLeft, Play, Archive, Loader2, RefreshCw, Box, Plus } from "lucide-react";
+import { ArrowLeft, Play, Archive, Loader2, RefreshCw, Box, Plus, ClipboardCheck } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -329,6 +329,14 @@ export default function QuestManagement() {
             </div>
 
             <div className="flex gap-2 flex-wrap">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => navigate('/admin/submissions')}
+              >
+                <ClipboardCheck className="mr-2 h-4 w-4" />
+                Submissions
+              </Button>
               <Button
                 variant="outline"
                 size="sm"
