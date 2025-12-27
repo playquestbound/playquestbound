@@ -5,7 +5,9 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { AuthProvider } from "@/hooks/useAuth";
 import { NavThemeProvider } from "@/hooks/useNavTheme";
+import { RunProvider } from "@/hooks/useRunTracker";
 import { BottomNav } from "@/components/BottomNav";
+import { RunBanner } from "@/components/RunBanner";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
@@ -35,6 +37,7 @@ function AppContent() {
 
   return (
     <>
+      <RunBanner />
       <Routes>
         <Route path="/" element={<Index />} />
         <Route path="/auth" element={<Auth />} />
@@ -67,7 +70,9 @@ const App = () => {
             <Toaster />
             <Sonner />
             <BrowserRouter>
-              <AppContent />
+              <RunProvider>
+                <AppContent />
+              </RunProvider>
             </BrowserRouter>
           </TooltipProvider>
         </NavThemeProvider>

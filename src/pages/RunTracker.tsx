@@ -1,10 +1,7 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { useUpdateStats } from '@/hooks/useProfile';
-import { useAuth } from '@/hooks/useAuth';
-import { supabase } from '@/integrations/supabase/client';
-import { toast } from '@/hooks/use-toast';
+import { useRunTracker } from '@/hooks/useRunTracker';
 import { 
   ArrowLeft, 
   Play, 
@@ -18,236 +15,32 @@ import {
   Link2
 } from 'lucide-react';
 
-interface Position {
-  lat: number;
-  lng: number;
-  timestamp: number;
-}
-
 export default function RunTracker() {
   const navigate = useNavigate();
-  const { user } = useAuth();
-  const updateStats = useUpdateStats();
-  
-  const [isRunning, setIsRunning] = useState(false);
-  const [isPaused, setIsPaused] = useState(false);
-  const [distance, setDistance] = useState(0); // in meters
-  const [duration, setDuration] = useState(0); // in seconds
-  const [positions, setPositions] = useState<Position[]>([]);
-  const [currentPosition, setCurrentPosition] = useState<Position | null>(null);
-  const [locationError, setLocationError] = useState<string | null>(null);
-  
-  const watchIdRef = useRef<number | null>(null);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
-  
-  // Use refs to track current state for GPS callback (avoids stale closure)
-  const isRunningRef = useRef(isRunning);
-  const isPausedRef = useRef(isPaused);
-  const lastPositionRef = useRef<Position | null>(null);
-  
-  // Keep refs in sync with state
-  useEffect(() => {
-    isRunningRef.current = isRunning;
-  }, [isRunning]);
-  
-  useEffect(() => {
-    isPausedRef.current = isPaused;
-  }, [isPaused]);
+  const {
+    isRunning,
+    isPaused,
+    distance,
+    duration,
+    currentPosition,
+    locationError,
+    startTracking,
+    pauseTracking,
+    resumeTracking,
+    stopTracking,
+  } = useRunTracker();
 
   const XP_PER_KM = 10;
 
-  // Calculate distance between two coordinates using Haversine formula
-  const calculateDistance = (pos1: Position, pos2: Position): number => {
-    const R = 6371e3; // Earth's radius in meters
-    const φ1 = (pos1.lat * Math.PI) / 180;
-    const φ2 = (pos2.lat * Math.PI) / 180;
-    const Δφ = ((pos2.lat - pos1.lat) * Math.PI) / 180;
-    const Δλ = ((pos2.lng - pos1.lng) * Math.PI) / 180;
-
-    const a =
-      Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
-      Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-    return R * c;
-  };
-
-  const handlePositionUpdate = useCallback((position: GeolocationPosition) => {
-    const newPos: Position = {
-      lat: position.coords.latitude,
-      lng: position.coords.longitude,
-      timestamp: position.timestamp,
-    };
-
-    setCurrentPosition(newPos);
-    setLocationError(null);
-
-    // Use refs to get current state (avoids stale closure issue)
-    if (isRunningRef.current && !isPausedRef.current) {
-      const lastPos = lastPositionRef.current;
-      if (lastPos) {
-        const dist = calculateDistance(lastPos, newPos);
-        // Only add if moved more than 3 meters (to filter GPS noise)
-        if (dist > 3) {
-          setDistance((d) => d + dist);
-          setPositions((prev) => [...prev, newPos]);
-          lastPositionRef.current = newPos;
-        }
-      } else {
-        // First position after starting
-        lastPositionRef.current = newPos;
-        setPositions([newPos]);
-      }
-    }
-  }, []);
-
-  const handlePositionError = (error: GeolocationPositionError) => {
-    setLocationError(error.message);
-    toast({
-      title: 'Location Error',
-      description: error.message,
-      variant: 'destructive',
-    });
-  };
-
-  const startTracking = () => {
-    if (!navigator.geolocation) {
-      toast({
-        title: 'Not Supported',
-        description: 'Geolocation is not supported by your browser',
-        variant: 'destructive',
-      });
-      return;
-    }
-
-    setIsRunning(true);
-    setIsPaused(false);
-    setPositions([]);
-    setDistance(0);
-    setDuration(0);
-    lastPositionRef.current = null; // Reset last position
-
-    watchIdRef.current = navigator.geolocation.watchPosition(
-      handlePositionUpdate,
-      handlePositionError,
-      {
-        enableHighAccuracy: true,
-        timeout: 10000,
-        maximumAge: 0,
-      }
-    );
-
-    timerRef.current = setInterval(() => {
-      setDuration((d) => d + 1);
-    }, 1000);
-
-    toast({
-      title: 'Run Started',
-      description: 'GPS tracking active. Start moving!',
-    });
-  };
-
-  const pauseTracking = () => {
-    setIsPaused(true);
-    if (timerRef.current) {
-      clearInterval(timerRef.current);
-    }
-  };
-
-  const resumeTracking = () => {
-    setIsPaused(false);
-    timerRef.current = setInterval(() => {
-      setDuration((d) => d + 1);
-    }, 1000);
-  };
-
-  const stopTracking = async () => {
-    if (watchIdRef.current !== null) {
-      navigator.geolocation.clearWatch(watchIdRef.current);
-    }
-    if (timerRef.current) {
-      clearInterval(timerRef.current);
-    }
-
-    setIsRunning(false);
-    setIsPaused(false);
-
-    const distanceKm = distance / 1000;
-    const earnedXp = Math.floor(distanceKm * XP_PER_KM);
-    const pace = duration > 0 && distanceKm > 0 ? duration / 60 / distanceKm : 0;
-
-    // Save to journal
-    if (user) {
-      try {
-        const { error: journalError } = await supabase
-          .from('journal_entries')
-          .insert({
-            user_id: user.id,
-            entry_type: 'run',
-            title: `${distanceKm.toFixed(2)} km Run`,
-            description: `Completed a ${distanceKm.toFixed(2)} km run in ${Math.floor(duration / 60)}:${(duration % 60).toString().padStart(2, '0')}`,
-            distance_km: distanceKm,
-            duration_seconds: duration,
-            avg_pace: pace > 0 ? pace : null,
-            xp_earned: earnedXp,
-            gold_earned: 0,
-            route_data: positions.length > 0 ? { positions } : null,
-          } as any);
-
-        if (journalError) {
-          console.error('Failed to save journal entry:', journalError);
-        }
-      } catch (err) {
-        console.error('Journal save error:', err);
-      }
-    }
-
-    if (earnedXp > 0) {
-      try {
-        await updateStats.mutateAsync({ xpGain: earnedXp, goldGain: 0 });
-        toast({
-          title: 'Run Complete!',
-          description: `You ran ${distanceKm.toFixed(2)} km and earned ${earnedXp} XP! Saved to journal.`,
-        });
-      } catch (error) {
-        toast({
-          title: 'Error',
-          description: 'Failed to save your progress',
-          variant: 'destructive',
-        });
-      }
-    } else {
-      toast({
-        title: 'Run Complete',
-        description: 'Keep going to earn XP! (10 XP per km)',
-      });
-    }
-  };
-
   // Get initial position on mount
   useEffect(() => {
-    if (navigator.geolocation) {
+    if (navigator.geolocation && !currentPosition) {
       navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setCurrentPosition({
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
-            timestamp: position.timestamp,
-          });
-        },
-        handlePositionError
+        () => {},
+        () => {}
       );
     }
-
-    return () => {
-      if (watchIdRef.current !== null) {
-        navigator.geolocation.clearWatch(watchIdRef.current);
-      }
-      if (timerRef.current) {
-        clearInterval(timerRef.current);
-      }
-    };
-  }, []);
+  }, [currentPosition]);
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -262,7 +55,7 @@ export default function RunTracker() {
   const earnedXp = Math.floor(distanceKm * XP_PER_KM);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className={`min-h-screen bg-background ${isRunning ? 'pt-10' : ''}`}>
       {/* Header */}
       <div className="p-4 border-b border-border">
         <div className="flex items-center gap-3 max-w-lg mx-auto">
@@ -270,7 +63,6 @@ export default function RunTracker() {
             variant="ghost" 
             size="icon"
             onClick={() => navigate(-1)}
-            disabled={isRunning}
           >
             <ArrowLeft className="w-5 h-5" />
           </Button>
