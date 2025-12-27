@@ -1,5 +1,6 @@
 import { CLASSES } from '@/lib/characterData';
 import { Button } from '@/components/ui/button';
+import { SchematicButton } from '@/components/ui/SchematicButton';
 import { cn } from '@/lib/utils';
 
 interface ClassSelectionProps {
@@ -41,7 +42,7 @@ export function ClassSelection({ selectedClass, onSelect, onContinue, onBack }: 
       </div>
 
       {/* Navigation Buttons */}
-      <div className="flex gap-3 pt-3 flex-shrink-0">
+      <div className="flex gap-3 pt-3 flex-shrink-0 px-6">
         <Button
           variant="outline"
           size="lg"
@@ -50,15 +51,14 @@ export function ClassSelection({ selectedClass, onSelect, onContinue, onBack }: 
         >
           Back
         </Button>
-        <Button
-          variant="gold"
+        <SchematicButton
           size="lg"
           className="flex-1"
           disabled={!selectedClass}
           onClick={onContinue}
         >
           Continue
-        </Button>
+        </SchematicButton>
       </div>
     </div>
   );
