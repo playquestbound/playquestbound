@@ -244,7 +244,7 @@ export default function RunTracker() {
           >
             <ArrowLeft className="w-5 h-5" />
           </Button>
-          <h1 className="font-display text-xl font-bold">Run Tracker</h1>
+          <h1 className="font-display text-xl font-bold">Explore</h1>
         </div>
       </div>
 
