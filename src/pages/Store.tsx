@@ -157,18 +157,9 @@ export default function Store() {
   const userGold = profile?.gold || 0;
 
   const handlePurchase = (item: typeof LIMITED_ITEMS[0]) => {
-    if (userGold < item.price) {
-      toast({
-        title: "Not Enough Gold",
-        description: `You need ${item.price - userGold} more gold to purchase ${item.name}.`,
-        variant: "destructive",
-      });
-      return;
-    }
-    
     toast({
       title: "Coming Soon!",
-      description: "Item purchases will be available soon.",
+      description: "Item purchases will be available in a future update.",
     });
   };
 
@@ -287,17 +278,17 @@ export default function Store() {
                                     Quest Reward
                                   </span>
                                 ) : (
-                                  <span className={`font-bold ${canAfford ? 'text-yellow-500' : 'text-red-400'}`}>
+                                  <span className="font-bold text-muted-foreground">
                                     🪙 {item.price}
                                   </span>
                                 )}
                                 <Button 
                                   size="sm" 
-                                  onClick={() => handlePurchase(item)}
-                                  disabled={item.questLocked}
-                                  className={item.questLocked ? 'bg-muted text-muted-foreground' : canAfford ? 'bg-primary' : 'bg-muted text-muted-foreground'}
+                                  onClick={(e) => { e.stopPropagation(); handlePurchase(item); }}
+                                  disabled
+                                  className="bg-muted text-muted-foreground"
                                 >
-                                  {item.questLocked ? 'Locked' : canAfford ? 'Buy Now' : 'Need Gold'}
+                                  Coming Soon
                                 </Button>
                               </div>
                             </CardContent>
@@ -351,7 +342,7 @@ export default function Store() {
                                 Quest
                               </span>
                             ) : (
-                              <span className={`font-bold text-sm ${canAfford ? 'text-yellow-500' : 'text-red-400'}`}>
+                              <span className="font-bold text-sm text-muted-foreground">
                                 🪙 {item.price}
                               </span>
                             )}
@@ -365,11 +356,11 @@ export default function Store() {
                           <Button 
                             size="sm" 
                             className="w-full" 
-                            variant={item.questLocked ? 'secondary' : canAfford ? 'default' : 'secondary'}
-                            onClick={() => handlePurchase(item)}
-                            disabled={item.questLocked}
+                            variant="secondary"
+                            onClick={(e) => { e.stopPropagation(); handlePurchase(item); }}
+                            disabled
                           >
-                            {item.questLocked ? 'Locked' : canAfford ? 'Purchase' : 'Need Gold'}
+                            Coming Soon
                           </Button>
                         </CardContent>
                       </Card>
