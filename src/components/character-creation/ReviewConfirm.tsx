@@ -1,5 +1,6 @@
 import { RACES, CLASSES } from '@/lib/characterData';
 import { Button } from '@/components/ui/button';
+import { SchematicButton } from '@/components/ui/SchematicButton';
 import { Loader2, Sparkles } from 'lucide-react';
 
 interface ReviewConfirmProps {
@@ -83,7 +84,7 @@ export function ReviewConfirm({
         </div>
       </div>
 
-      <div className="flex gap-3 mt-4">
+      <div className="flex gap-3 mt-4 px-6">
         <Button
           variant="outline"
           size="lg"
@@ -93,8 +94,7 @@ export function ReviewConfirm({
         >
           Back
         </Button>
-        <Button
-          variant="gold"
+        <SchematicButton
           size="lg"
           className="flex-1"
           onClick={onConfirm}
@@ -106,9 +106,9 @@ export function ReviewConfirm({
               Creating...
             </>
           ) : (
-            'Begin Your Adventure'
+            'Begin Adventure'
           )}
-        </Button>
+        </SchematicButton>
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { RACES, Gender } from '@/lib/races';
-import { Button } from '@/components/ui/button';
+import { SchematicButton } from '@/components/ui/SchematicButton';
 import { RacePreview3D } from '@/components/3d/RacePreview3D';
 import { cn } from '@/lib/utils';
 
@@ -95,15 +95,16 @@ export function RaceSelection({
       </div>
 
       {/* Continue Button - fixed at bottom */}
-      <Button
-        variant="gold"
-        size="lg"
-        className="w-full flex-shrink-0"
-        disabled={!selectedRace}
-        onClick={onContinue}
-      >
-        Continue
-      </Button>
+      <div className="flex-shrink-0 flex justify-center px-8">
+        <SchematicButton
+          size="lg"
+          className="w-full"
+          disabled={!selectedRace}
+          onClick={onContinue}
+        >
+          Continue
+        </SchematicButton>
+      </div>
     </div>
   );
 }
