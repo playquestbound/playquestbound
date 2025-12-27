@@ -1,21 +1,28 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLeaderboard } from '@/hooks/useProfile';
 import { useAuth } from '@/hooks/useAuth';
 import { LoadingScreen } from '@/components/LoadingScreen';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { getRaceEmoji } from '@/lib/races';
 import { formatNumber } from '@/lib/levelSystem';
-import { Trophy, Crown, Medal, Award, ArrowLeft } from 'lucide-react';
+import { Trophy, Crown, Medal, Award, ArrowLeft, Search } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export default function Leaderboard() {
   const navigate = useNavigate();
   const { data: leaderboard, isLoading } = useLeaderboard();
   const { user } = useAuth();
+  const [searchQuery, setSearchQuery] = useState('');
 
   if (isLoading) {
     return <LoadingScreen />;
   }
+
+  const filteredLeaderboard = leaderboard?.filter(entry => 
+    entry.character_name?.toLowerCase().includes(searchQuery.toLowerCase().trim())
+  ) || [];
 
   const getRankIcon = (rank: number) => {
     switch (rank) {
@@ -53,15 +60,29 @@ export default function Leaderboard() {
         </div>
 
         {/* Trophy Banner */}
-        <div className="text-center py-4">
-          <Trophy className="w-12 h-12 mx-auto mb-2 text-secondary" />
+        <div className="text-center py-2">
+          <Trophy className="w-10 h-10 mx-auto mb-2 text-secondary" />
+        </div>
+
+        {/* Search Bar */}
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <Input
+            placeholder="Search adventurers..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            maxLength={50}
+            className="pl-10"
+          />
         </div>
 
         {/* Leaderboard List */}
-        {leaderboard && leaderboard.length > 0 ? (
+        {filteredLeaderboard.length > 0 ? (
           <div className="space-y-2">
-            {leaderboard.map((entry, index) => {
-              const rank = index + 1;
+            {filteredLeaderboard.map((entry, index) => {
+              // Find original rank from full leaderboard
+              const originalRank = leaderboard?.findIndex(e => e.id === entry.id) ?? index;
+              const rank = originalRank + 1;
               const isCurrentUser = user?.id === entry.id;
               
               return (
@@ -113,9 +134,13 @@ export default function Leaderboard() {
         ) : (
           <div className="parchment-card p-8 text-center">
             <Trophy className="w-12 h-12 mx-auto mb-3 text-muted-foreground opacity-50" />
-            <h3 className="font-display font-semibold mb-2">No Champions Yet</h3>
+            <h3 className="font-display font-semibold mb-2">
+              {searchQuery ? 'No Adventurers Found' : 'No Champions Yet'}
+            </h3>
             <p className="text-sm text-muted-foreground">
-              Be the first to complete quests and claim glory!
+              {searchQuery 
+                ? `No results for "${searchQuery}"`
+                : 'Be the first to complete quests and claim glory!'}
             </p>
           </div>
         )}
