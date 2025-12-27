@@ -17,7 +17,8 @@ import {
   BookOpen,
   Users,
   Pencil,
-  ShieldCheck
+  ShieldCheck,
+  Trophy
 } from 'lucide-react';
 import { useIsAdmin } from '@/hooks/useAdminQuests';
 
@@ -381,6 +382,16 @@ export default function Profile() {
                 >
                   SOON
                 </span>
+              </Button>
+
+              {/* Leaderboard Button */}
+              <Button 
+                variant="outline"
+                className="w-full font-display tracking-wider border-secondary/30 bg-secondary/5 text-foreground hover:bg-secondary/10"
+                onClick={() => navigate('/leaderboard')}
+              >
+                <Trophy className="w-4 h-4 mr-2 text-secondary" />
+                World Leaderboard
               </Button>
             </div>
           </div>
