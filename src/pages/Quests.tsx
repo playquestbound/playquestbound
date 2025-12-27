@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useQuestsGroupedByTier, useActiveQuests, useAcceptQuest, useAbandonQuest, UserQuest, Quest, QuestFilters } from '@/hooks/useQuests';
 import { QuestCard } from '@/components/QuestCard';
 import { QuestDetailModal } from '@/components/QuestDetailModal';
@@ -14,6 +15,7 @@ import { useProfile } from '@/hooks/useProfile';
 const MAX_ACTIVE_QUESTS = 5;
 
 export default function Quests() {
+  const navigate = useNavigate();
   const { data: profile } = useProfile();
   const userClass = profile?.class || null;
   
@@ -100,6 +102,20 @@ export default function Quests() {
         <div className="text-center py-4">
           <Scroll className="w-10 h-10 mx-auto mb-2 text-secondary" />
           <h1 className="font-display text-2xl font-bold">Quest Board</h1>
+        </div>
+
+        {/* Explore Button */}
+        <div className="flex justify-center">
+          <Button
+            onClick={() => navigate('/run')}
+            className="px-6 py-3 text-sm font-display tracking-widest bg-black text-white border-2 border-white/30 rounded-full hover:bg-black/90 transition-all duration-300"
+            style={{
+              boxShadow: '0 0 20px 8px rgba(255,255,255,0.3), 0 0 40px 16px rgba(255,255,255,0.15), inset 0 0 20px rgba(255,255,255,0.1)',
+              textShadow: '0 0 10px rgba(255,255,255,0.8), 0 0 20px rgba(255,255,255,0.5)',
+            }}
+          >
+            EXPLORE
+          </Button>
         </div>
 
         {/* Tabs */}
