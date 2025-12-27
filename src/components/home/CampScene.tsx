@@ -52,7 +52,7 @@ export function CampScene({ characterRace }: CampSceneProps) {
         />
       </div>
       {/* Explore Button */}
-      <div className="absolute bottom-24 left-1/2 -translate-x-1/2 z-20">
+      <div className="absolute bottom-32 left-1/2 -translate-x-1/2 z-20">
         <Button
           onClick={() => navigate('/run')}
           className="px-6 py-3 text-sm font-display tracking-widest bg-black text-white border-2 border-white/30 rounded-full hover:bg-black/90 transition-all duration-300"
