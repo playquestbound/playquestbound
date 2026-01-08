@@ -312,9 +312,8 @@ export function VideoStep({ questId, onComplete, onBack }: VideoStepProps) {
                   <RotateCcw className="mr-2 h-4 w-4" />
                   Retake
                 </Button>
-                <Button onClick={uploadVideo} className="flex-1">
-                  <CheckCircle className="mr-2 h-4 w-4" />
-                  Use This Video
+                <Button onClick={uploadVideo} className="flex-1" variant="secondary">
+                  Next
                 </Button>
               </div>
             </div>
