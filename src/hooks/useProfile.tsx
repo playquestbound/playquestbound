@@ -16,6 +16,7 @@ export interface Profile {
   level: number;
   has_created_character: boolean;
   subscription_tier: string;
+  active_title_id: string | null;
   created_at: string;
   updated_at: string;
 }

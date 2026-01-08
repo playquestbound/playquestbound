@@ -153,8 +153,8 @@ export default function PlayerProfile() {
                 </div>
               </div>
 
-              {/* Class/Title badge - Top right - Muted blue/grey */}
-              <div className="absolute top-5 right-4 z-20 flex flex-col items-end gap-1">
+              {/* Class badge - Top right - Muted blue/grey */}
+              <div className="absolute top-5 right-4 z-20">
                 <div 
                   className="px-3 py-1 rounded-full text-xs font-display font-semibold tracking-wider uppercase"
                   style={{
@@ -166,19 +166,6 @@ export default function PlayerProfile() {
                 >
                   {profile.class ? profile.class.charAt(0).toUpperCase() + profile.class.slice(1) : 'Adventurer'}
                 </div>
-                {(profile as any).active_title && (
-                  <div 
-                    className="px-2.5 py-0.5 rounded-full text-[10px] font-display font-semibold tracking-wider"
-                    style={{
-                      background: 'linear-gradient(135deg, hsl(45 80% 45%) 0%, hsl(35 70% 35%) 100%)',
-                      border: '1px solid hsl(45 60% 50%)',
-                      color: 'hsl(45 90% 95%)',
-                      boxShadow: '0 2px 8px hsl(45 60% 20% / 0.6)',
-                    }}
-                  >
-                    {(profile as any).active_title}
-                  </div>
-                )}
               </div>
 
               {/* Character portrait area */}
@@ -238,10 +225,20 @@ export default function PlayerProfile() {
                 </div>
               </div>
 
-              {/* Race subtitle */}
-              <p className="text-center text-xs text-muted-foreground font-display tracking-widest uppercase mb-3">
-                {getRaceName(profile.race || 'human')}
-              </p>
+              {/* Race & Title subtitle */}
+              <div className="text-center mb-3">
+                <p className="text-xs text-muted-foreground font-display tracking-widest uppercase">
+                  {getRaceName(profile.race || 'human')}
+                </p>
+                {(profile as any).active_title && (
+                  <p 
+                    className="text-xs font-display font-semibold tracking-wider mt-0.5"
+                    style={{ color: 'hsl(45 80% 55%)' }}
+                  >
+                    "{(profile as any).active_title}"
+                  </p>
+                )}
+              </div>
 
               {/* XP Progress bar */}
               <div className="px-6 mb-4">
