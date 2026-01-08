@@ -106,6 +106,7 @@ export type Database = {
       }
       profiles: {
         Row: {
+          active_title_id: string | null
           birthday: string | null
           character_name: string | null
           class: string | null
@@ -122,6 +123,7 @@ export type Database = {
           xp: number
         }
         Insert: {
+          active_title_id?: string | null
           birthday?: string | null
           character_name?: string | null
           class?: string | null
@@ -138,6 +140,7 @@ export type Database = {
           xp?: number
         }
         Update: {
+          active_title_id?: string | null
           birthday?: string | null
           character_name?: string | null
           class?: string | null
@@ -153,7 +156,15 @@ export type Database = {
           updated_at?: string
           xp?: number
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "profiles_active_title_id_fkey"
+            columns: ["active_title_id"]
+            isOneToOne: false
+            referencedRelation: "titles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       quest_completions: {
         Row: {
@@ -343,6 +354,38 @@ export type Database = {
         }
         Relationships: []
       }
+      titles: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+          quest_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+          quest_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+          quest_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "titles_quest_id_fkey"
+            columns: ["quest_id"]
+            isOneToOne: false
+            referencedRelation: "quests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_equipment: {
         Row: {
           equipped: boolean
@@ -500,6 +543,52 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      user_titles: {
+        Row: {
+          earned_at: string
+          id: string
+          is_active: boolean
+          title_id: string
+          user_id: string
+        }
+        Insert: {
+          earned_at?: string
+          id?: string
+          is_active?: boolean
+          title_id: string
+          user_id: string
+        }
+        Update: {
+          earned_at?: string
+          id?: string
+          is_active?: boolean
+          title_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_titles_title_id_fkey"
+            columns: ["title_id"]
+            isOneToOne: false
+            referencedRelation: "titles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_titles_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_titles_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "public_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
