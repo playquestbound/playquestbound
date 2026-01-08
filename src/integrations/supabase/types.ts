@@ -594,6 +594,7 @@ export type Database = {
     Views: {
       public_profiles: {
         Row: {
+          active_title: string | null
           character_name: string | null
           class: string | null
           created_at: string | null
@@ -601,24 +602,6 @@ export type Database = {
           level: number | null
           race: string | null
           xp: number | null
-        }
-        Insert: {
-          character_name?: string | null
-          class?: string | null
-          created_at?: string | null
-          id?: string | null
-          level?: number | null
-          race?: string | null
-          xp?: number | null
-        }
-        Update: {
-          character_name?: string | null
-          class?: string | null
-          created_at?: string | null
-          id?: string | null
-          level?: number | null
-          race?: string | null
-          xp?: number | null
         }
         Relationships: []
       }
