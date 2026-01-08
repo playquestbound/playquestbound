@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Trophy, Sparkles, Star, Coins, ArrowUp } from "lucide-react";
+import { Trophy, Sparkles, Star, Coins, ArrowUp, Crown } from "lucide-react";
 
 interface CelebrationScreenProps {
   questTitle: string;
@@ -8,6 +8,7 @@ interface CelebrationScreenProps {
   goldEarned: number;
   leveledUp: boolean;
   newLevel: number;
+  titleEarned?: string;
   onContinue: () => void;
 }
 
@@ -17,11 +18,13 @@ export function CelebrationScreen({
   goldEarned,
   leveledUp,
   newLevel,
+  titleEarned,
   onContinue,
 }: CelebrationScreenProps) {
   const [displayXp, setDisplayXp] = useState(0);
   const [displayGold, setDisplayGold] = useState(0);
   const [showLevelUp, setShowLevelUp] = useState(false);
+  const [showTitle, setShowTitle] = useState(false);
 
   // Animate XP counter
   useEffect(() => {
@@ -42,11 +45,14 @@ export function CelebrationScreen({
         if (leveledUp) {
           setTimeout(() => setShowLevelUp(true), 300);
         }
+        if (titleEarned) {
+          setTimeout(() => setShowTitle(true), leveledUp ? 800 : 300);
+        }
       }
     }, interval);
 
     return () => clearInterval(timer);
-  }, [xpEarned, goldEarned, leveledUp]);
+  }, [xpEarned, goldEarned, leveledUp, titleEarned]);
 
   return (
     <div className="p-6 py-8 flex flex-col items-center space-y-6 relative overflow-hidden">
@@ -117,6 +123,20 @@ export function CelebrationScreen({
               <p className="text-sm text-green-300">You are now Level {newLevel}</p>
             </div>
             <ArrowUp className="h-6 w-6 text-green-400" />
+          </div>
+        </div>
+      )}
+
+      {/* Title Earned Banner */}
+      {showTitle && titleEarned && (
+        <div className="w-full p-4 bg-gradient-to-r from-amber-500/20 via-yellow-400/30 to-amber-500/20 border border-amber-400/50 rounded-lg animate-in fade-in slide-in-from-bottom-4 duration-500 z-10">
+          <div className="flex items-center justify-center gap-3">
+            <Crown className="h-6 w-6 text-amber-400" />
+            <div className="text-center">
+              <p className="text-lg font-bold text-amber-400">TITLE EARNED!</p>
+              <p className="text-sm text-amber-300">"{titleEarned}"</p>
+            </div>
+            <Crown className="h-6 w-6 text-amber-400" />
           </div>
         </div>
       )}

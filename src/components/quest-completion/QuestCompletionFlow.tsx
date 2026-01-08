@@ -11,6 +11,7 @@ import { useProfile } from "@/hooks/useProfile";
 import { supabase } from "@/integrations/supabase/client";
 import { useQueryClient } from "@tanstack/react-query";
 import { calculateLevel } from "@/lib/levelSystem";
+import { useAwardTitle, useSetActiveTitle } from "@/hooks/useTitles";
 
 export type CompletionStep = "location" | "video" | "challenge" | "submitting" | "celebration";
 
@@ -39,6 +40,8 @@ export function QuestCompletionFlow({ userQuest, open, onOpenChange }: QuestComp
   const { user } = useAuth();
   const { data: profile } = useProfile();
   const queryClient = useQueryClient();
+  const awardTitle = useAwardTitle();
+  const setActiveTitle = useSetActiveTitle();
   
   const [step, setStep] = useState<CompletionStep>("location");
   const [data, setData] = useState<CompletionData>({
@@ -46,7 +49,7 @@ export function QuestCompletionFlow({ userQuest, open, onOpenChange }: QuestComp
     videoUrl: null,
     challengeConfirmed: false,
   });
-  const [rewards, setRewards] = useState<{ xp: number; gold: number; leveledUp: boolean; newLevel: number } | null>(null);
+  const [rewards, setRewards] = useState<{ xp: number; gold: number; leveledUp: boolean; newLevel: number; titleEarned?: string } | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [challenge, setChallenge] = useState<string>("");
 
@@ -143,18 +146,35 @@ export function QuestCompletionFlow({ userQuest, open, onOpenChange }: QuestComp
 
       if (statsError) throw statsError;
 
-      // 4. Invalidate queries
+      // 4. Check if this quest awards a title
+      let titleEarned: string | undefined;
+      const { data: questTitle } = await supabase
+        .from("titles")
+        .select("id, name")
+        .eq("quest_id", quest.id)
+        .maybeSingle();
+
+      if (questTitle) {
+        await awardTitle.mutateAsync(questTitle.id);
+        await setActiveTitle.mutateAsync(questTitle.id);
+        titleEarned = questTitle.name;
+      }
+
+      // 5. Invalidate queries
       queryClient.invalidateQueries({ queryKey: ["active-quests"] });
       queryClient.invalidateQueries({ queryKey: ["completed-quests"] });
       queryClient.invalidateQueries({ queryKey: ["available-quests"] });
       queryClient.invalidateQueries({ queryKey: ["profile"] });
+      queryClient.invalidateQueries({ queryKey: ["user-titles"] });
+      queryClient.invalidateQueries({ queryKey: ["active-title"] });
 
-      // 5. Show celebration
+      // 6. Show celebration
       setRewards({
         xp: quest.xp_reward,
         gold: quest.gold_reward,
         leveledUp,
         newLevel,
+        titleEarned,
       });
       setStep("celebration");
     } catch (err) {
@@ -211,6 +231,7 @@ export function QuestCompletionFlow({ userQuest, open, onOpenChange }: QuestComp
             goldEarned={rewards.gold}
             leveledUp={rewards.leveledUp}
             newLevel={rewards.newLevel}
+            titleEarned={rewards.titleEarned}
             onContinue={handleClose}
           />
         )}
