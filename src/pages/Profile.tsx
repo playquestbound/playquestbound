@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { useProfile } from '@/hooks/useProfile';
 import { useCompletedQuests } from '@/hooks/useQuests';
 import { useAuth } from '@/hooks/useAuth';
+import { useActiveTitle } from '@/hooks/useTitles';
 import { LoadingScreen } from '@/components/LoadingScreen';
 import { Button } from '@/components/ui/button';
 import { EquipmentDrawer } from '@/components/profile/EquipmentDrawer';
@@ -33,6 +34,7 @@ interface Customization {
 export default function Profile() {
   const { data: profile, isLoading: profileLoading } = useProfile();
   const { data: completedQuests, isLoading: questsLoading } = useCompletedQuests();
+  const { data: activeTitle } = useActiveTitle();
   const { data: isAdmin } = useIsAdmin();
   const { signOut } = useAuth();
   const navigate = useNavigate();
@@ -181,7 +183,7 @@ export default function Profile() {
                 </div>
 
                 {/* Class/Title badge - Top right - Muted blue/grey */}
-                <div className="absolute top-5 right-4 z-20">
+                <div className="absolute top-5 right-4 z-20 flex flex-col items-end gap-1">
                   <div 
                     className="px-3 py-1 rounded-full text-xs font-display font-semibold tracking-wider uppercase"
                     style={{
@@ -193,6 +195,19 @@ export default function Profile() {
                   >
                     {profile.class ? profile.class.charAt(0).toUpperCase() + profile.class.slice(1) : 'Adventurer'}
                   </div>
+                  {activeTitle && (
+                    <div 
+                      className="px-2.5 py-0.5 rounded-full text-[10px] font-display font-semibold tracking-wider"
+                      style={{
+                        background: 'linear-gradient(135deg, hsl(45 80% 45%) 0%, hsl(35 70% 35%) 100%)',
+                        border: '1px solid hsl(45 60% 50%)',
+                        color: 'hsl(45 90% 95%)',
+                        boxShadow: '0 2px 8px hsl(45 60% 20% / 0.6)',
+                      }}
+                    >
+                      {activeTitle}
+                    </div>
+                  )}
                 </div>
 
                 {/* Character portrait area */}
