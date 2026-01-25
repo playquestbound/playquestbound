@@ -149,7 +149,7 @@ export default function Landing() {
       <FeatureSection
         tagline="Quest"
         headline="Turn life into adventure"
-        description="Each quest you complete and every mile you track helps you level up and earn real rewards."
+        description="Receive your quests, track your progress, earn gear, gold and glory!"
         features={[
           { badge: 'New', title: 'Daily Quests', description: 'Complete bite-sized challenges every day to build momentum and earn XP.' },
           { badge: 'New', title: 'Track Your Progress', description: 'Watch your character grow stronger as you complete more quests over time.' },
