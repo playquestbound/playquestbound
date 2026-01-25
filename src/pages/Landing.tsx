@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { ChevronRight } from 'lucide-react';
+import { Check, X } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { z } from 'zod';
@@ -10,11 +10,14 @@ import qbLogo from '@/assets/qb-logo.png';
 
 const emailSchema = z.string().email('Please enter a valid email address');
 
+type TabId = 'quest' | 'explore' | 'compete';
+
 export default function Landing() {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState<TabId>('quest');
 
   const handleWaitlistSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -62,131 +65,198 @@ export default function Landing() {
     }
   };
 
+  const tabs: { id: TabId; label: string }[] = [
+    { id: 'quest', label: 'Quest' },
+    { id: 'explore', label: 'Explore' },
+    { id: 'compete', label: 'Compete' },
+  ];
+
   return (
-    <div className="min-h-screen font-tech">
-      {/* Hero Section - Dark with video background */}
-      <section className="relative min-h-screen bg-stone-950 overflow-hidden">
-        {/* Video Background */}
-        <div className="absolute inset-0 z-0">
-          <video
-            autoPlay
-            loop
-            muted
-            playsInline
-            className="w-full h-full object-cover opacity-60"
+    <div className="min-h-screen bg-white font-tech">
+      {/* Navigation */}
+      <nav className="flex items-center justify-between px-6 py-5 bg-white">
+        <img src={qbLogo} alt="Questbound" className="h-8 w-auto" />
+        <div className="flex items-center gap-6">
+          <button 
+            onClick={() => navigate('/auth')}
+            className="text-stone-600 hover:text-stone-900 text-sm tracking-wide transition-colors font-tech"
           >
-            <source src="/videos/camp-main.mp4" type="video/mp4" />
-          </video>
-          <div className="absolute inset-0 bg-gradient-to-b from-stone-950/40 via-transparent to-stone-950" />
+            Sign In
+          </button>
         </div>
+      </nav>
 
-        {/* Navigation */}
-        <nav className="relative z-20 flex items-center justify-between px-6 py-5">
-          <img src={qbLogo} alt="Questbound" className="h-8 w-auto" />
-          <div className="flex items-center gap-6">
-            <button 
-              onClick={() => navigate('/auth')}
-              className="text-stone-300 hover:text-white text-sm tracking-wide transition-colors"
-            >
-              Sign In
-            </button>
+      {/* Hero Section */}
+      <section className="bg-white pt-16 pb-8 px-6">
+        <div className="max-w-4xl mx-auto text-center">
+          {/* Hero Image Placeholder */}
+          <div className="relative w-full max-w-2xl mx-auto h-64 md:h-80 mb-8">
+            <div className="absolute inset-0 bg-stone-100 rounded-2xl flex items-center justify-center">
+              <span className="text-stone-400 text-sm font-tech">Hero Image</span>
+            </div>
           </div>
-        </nav>
 
-        {/* Hero Content */}
-        <div className="relative z-10 flex flex-col items-center justify-center text-center px-6 pt-12 pb-32">
-          {/* Headline with mixed typography */}
-          <h1 className="text-5xl md:text-7xl lg:text-8xl text-white leading-[1.1] mb-6 font-tech">
-            <span className="block font-light tracking-tight">This App</span>
-            <span className="block italic text-amber-200">is Adventure</span>
+          {/* Headline */}
+          <h1 className="text-4xl md:text-5xl lg:text-6xl text-stone-900 leading-tight mb-4 font-tech font-bold tracking-tight">
+            The best of Questbound.<br />
+            Built for your goals.
           </h1>
 
           {/* Subtitle */}
-          <p className="text-stone-300 text-base md:text-lg max-w-md mb-12 font-light">
-            Turn your daily runs into epic quests with the first fitness app that rewards real-world adventure.
+          <p className="text-stone-600 text-lg md:text-xl max-w-xl mx-auto mb-8 font-tech font-light">
+            Say hello to epic quests, real rewards and endless adventure.
           </p>
 
-          {/* Hero Image Placeholder - Replace with your asset */}
-          <div className="relative w-64 h-80 md:w-80 md:h-96 mb-16">
-            <div className="absolute inset-0 bg-gradient-to-br from-amber-500/20 to-orange-500/10 rounded-2xl border border-amber-500/30 flex items-center justify-center">
-              <span className="text-stone-400 text-sm">Hero Image</span>
-            </div>
-            {/* Glow effect */}
-            <div className="absolute -inset-4 bg-amber-500/10 rounded-3xl blur-2xl -z-10" />
-          </div>
+          {/* CTA Button */}
+          <Button
+            onClick={() => navigate('/auth')}
+            className="h-12 px-8 bg-orange-500 hover:bg-orange-600 text-white font-tech font-medium tracking-wide rounded-full text-base"
+          >
+            Dive into your Adventure
+          </Button>
+        </div>
+      </section>
 
-          {/* As Seen In */}
-          <div className="flex flex-col items-center gap-4">
-            <span className="text-stone-500 text-xs uppercase tracking-widest">As Seen In</span>
-            <div className="flex items-center gap-8 opacity-60">
-              {/* Placeholder logos - replace with actual brand images */}
-              <span className="text-stone-400 text-sm font-medium">Brand 1</span>
-              <span className="text-stone-400 text-sm font-medium">Brand 2</span>
-              <span className="text-stone-400 text-sm font-medium">Brand 3</span>
-              <span className="text-stone-400 text-sm font-medium">Brand 4</span>
-            </div>
+      {/* Category Tabs */}
+      <section className="bg-white py-8 px-6 border-b border-stone-200">
+        <div className="flex items-center justify-center gap-12">
+          {tabs.map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`text-sm md:text-base font-tech font-medium tracking-wide uppercase transition-colors pb-2 border-b-2 ${
+                activeTab === tab.id
+                  ? 'text-stone-900 border-stone-900'
+                  : 'text-stone-400 border-transparent hover:text-stone-600'
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+      </section>
+
+      {/* Section Header */}
+      <section className="bg-white py-16 px-6">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl text-stone-900 leading-tight mb-4 font-tech font-bold">
+            Everything you need, all in one place
+          </h2>
+        </div>
+      </section>
+
+      {/* Feature Section 1 */}
+      <FeatureSection
+        tagline="Quest"
+        headline="Turn fitness into adventure"
+        description="Each quest you complete and every mile you track helps you level up and earn real rewards."
+        features={[
+          { badge: 'New', title: 'Daily Quests', description: 'Complete bite-sized challenges every day to build momentum and earn XP.' },
+          { badge: 'New', title: 'Track Your Progress', description: 'Watch your character grow stronger as you complete more quests over time.' },
+          { title: 'Earn Real Rewards', description: 'Turn your fitness achievements into gold coins redeemable for gear and perks.' },
+        ]}
+        ctaText="Start questing"
+        onCtaClick={() => navigate('/auth')}
+      />
+
+      {/* Feature Section 2 */}
+      <FeatureSection
+        tagline="Explore"
+        headline="Discover new adventures"
+        description="Find new routes and challenges that take you beyond your comfort zone."
+        features={[
+          { badge: 'New', title: 'Location-Based Quests', description: 'Discover quests tied to real-world locations and landmarks near you.' },
+          { badge: 'New', title: 'Seasonal Events', description: 'Join limited-time events with exclusive rewards and community challenges.' },
+          { title: 'Community Routes', description: 'Explore paths created and rated by fellow adventurers in your area.' },
+        ]}
+        ctaText="Start exploring"
+        onCtaClick={() => navigate('/auth')}
+      />
+
+      {/* Feature Section 3 */}
+      <FeatureSection
+        tagline="Compete"
+        headline="Bring out your best with challenges"
+        description="Chase personal bests, compete with friends, or climb the global leaderboards."
+        features={[
+          { title: 'Climb the Leaderboards', description: 'See how you rank against other adventurers in your area and globally.' },
+          { title: 'Challenge Your Friends', description: 'Create custom challenges and invite your friends to compete.' },
+          { title: 'Earn Legendary Titles', description: 'Complete epic quests to unlock rare titles and show off your achievements.' },
+        ]}
+        ctaText="Start competing"
+        onCtaClick={() => navigate('/auth')}
+      />
+
+      {/* Comparison Table */}
+      <section className="bg-white py-16 px-6">
+        <div className="max-w-3xl mx-auto">
+          <h2 className="text-3xl md:text-4xl text-stone-900 text-center mb-12 font-tech font-bold">
+            And by everything, we mean everything
+          </h2>
+
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b border-stone-200">
+                  <th className="text-left py-4 pr-4 font-tech font-medium text-stone-500 text-sm">Feature</th>
+                  <th className="text-center py-4 px-4 font-tech font-medium text-stone-500 text-sm">Free</th>
+                  <th className="text-center py-4 pl-4 font-tech font-medium text-stone-500 text-sm">Premium</th>
+                </tr>
+              </thead>
+              <tbody className="font-tech text-sm">
+                <ComparisonRow feature="Record your activities" free={true} premium={true} />
+                <ComparisonRow feature="Complete daily quests" free={true} premium={true} />
+                <ComparisonRow feature="Track XP and level up" free={true} premium={true} />
+                <ComparisonRow feature="Access all quest types" free={false} premium={true} />
+                <ComparisonRow feature="Earn bonus gold rewards" free={false} premium={true} />
+                <ComparisonRow feature="Exclusive gear and titles" free={false} premium={true} />
+                <ComparisonRow feature="Priority quest access" free={false} premium={true} />
+                <ComparisonRow feature="Compete on leaderboards" free={false} premium={true} />
+              </tbody>
+            </table>
           </div>
         </div>
       </section>
 
-      {/* Second Section - Light/Cream */}
-      <section className="bg-white py-24 px-6">
-        <div className="max-w-3xl mx-auto text-center">
-          {/* Headline */}
-          <h2 className="text-4xl md:text-5xl lg:text-6xl text-stone-900 leading-tight mb-6 font-light font-tech">
-            The App That<br />
-            Keeps You Moving
+      {/* Final CTA Section */}
+      <section className="bg-white py-16 px-6 border-t border-stone-200">
+        <div className="max-w-2xl mx-auto text-center">
+          {/* Optional small image placeholder */}
+          <div className="w-32 h-32 mx-auto mb-8 bg-stone-100 rounded-xl flex items-center justify-center">
+            <span className="text-stone-400 text-xs font-tech">Badge</span>
+          </div>
+
+          <h2 className="text-2xl md:text-3xl text-stone-900 mb-4 font-tech font-bold">
+            Every quest completed brings you closer to greatness. Welcome to the adventure.
           </h2>
 
-          {/* Description */}
-          <p className="text-stone-600 text-base md:text-lg max-w-xl mx-auto mb-10 font-light">
-            The first fitness app that rewards all your healthy actions and includes amazing benefits from your favorite brands, too!
+          <p className="text-stone-500 text-sm mb-8 font-tech">
+            Join thousands of adventurers already on their quest.
           </p>
 
-          {/* CTAs */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-4">
-            <form onSubmit={handleWaitlistSubmit} className="flex flex-col sm:flex-row gap-3 w-full max-w-md">
-              <Input
-                type="email"
-                placeholder="Enter your email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="flex-1 h-12 bg-white border-stone-300 text-stone-900 placeholder:text-stone-400 focus:border-amber-500 font-tech rounded-full px-5"
-              />
-              <Button
-                type="submit"
-                disabled={isLoading}
-                className="h-12 px-8 bg-emerald-700 hover:bg-emerald-600 text-white font-medium tracking-wide rounded-full"
-              >
-                {isLoading ? 'Joining...' : 'Reserve'}
-              </Button>
-            </form>
+          {/* Waitlist Form */}
+          <form onSubmit={handleWaitlistSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+            <Input
+              type="email"
+              placeholder="Enter your email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="flex-1 h-12 bg-white border-stone-300 text-stone-900 placeholder:text-stone-400 focus:border-orange-500 font-tech rounded-full px-5"
+            />
             <Button
-              variant="outline"
-              onClick={() => navigate('/auth')}
-              className="h-12 px-8 border-stone-400 text-stone-700 hover:bg-stone-100 font-medium tracking-wide rounded-full"
+              type="submit"
+              disabled={isLoading}
+              className="h-12 px-8 bg-orange-500 hover:bg-orange-600 text-white font-tech font-medium tracking-wide rounded-full"
             >
-              Explore
+              {isLoading ? 'Joining...' : 'Get Early Access'}
             </Button>
-          </div>
-
-          {/* Disclaimer */}
-          <p className="text-stone-400 text-xs mb-16">
-            *Available on iOS and Android soon
-          </p>
-
-          {/* Stats */}
-          <div className="grid grid-cols-3 gap-8 max-w-xl mx-auto">
-            <StatItem value="100+" label="Epic Quests" />
-            <StatItem value="10x" label="XP Rewards" />
-            <StatItem value="Free" label="To Start" />
-          </div>
+          </form>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-stone-950 py-8 px-6 text-center">
-        <p className="text-stone-500 text-sm">
+      <footer className="bg-stone-900 py-8 px-6 text-center">
+        <p className="text-stone-400 text-sm font-tech">
           © 2025 Questbound. All rights reserved.
         </p>
       </footer>
@@ -194,15 +264,95 @@ export default function Landing() {
   );
 }
 
-function StatItem({ value, label }: { value: string; label: string }) {
+type FeatureItem = {
+  badge?: string;
+  title: string;
+  description: string;
+};
+
+type FeatureSectionProps = {
+  tagline: string;
+  headline: string;
+  description: string;
+  features: FeatureItem[];
+  ctaText: string;
+  onCtaClick: () => void;
+};
+
+function FeatureSection({ tagline, headline, description, features, ctaText, onCtaClick }: FeatureSectionProps) {
   return (
-    <div className="text-center">
-      <div className="text-4xl md:text-5xl font-light text-stone-900 mb-2 tracking-tight">
-        {value}
+    <section className="bg-white py-16 px-6 border-t border-stone-100">
+      <div className="max-w-6xl mx-auto">
+        {/* Section Header */}
+        <div className="text-center mb-12">
+          <span className="text-orange-500 text-sm font-tech font-medium uppercase tracking-widest mb-2 block">
+            {tagline}
+          </span>
+          <h3 className="text-2xl md:text-3xl lg:text-4xl text-stone-900 mb-4 font-tech font-bold">
+            {headline}
+          </h3>
+          <p className="text-stone-600 text-base md:text-lg max-w-2xl mx-auto font-tech font-light">
+            {description}
+          </p>
+        </div>
+
+        {/* Feature Cards */}
+        <div className="grid md:grid-cols-3 gap-8 mb-12">
+          {features.map((feature, index) => (
+            <div key={index} className="text-center">
+              {/* Image Placeholder */}
+              <div className="aspect-[4/3] bg-stone-100 rounded-xl mb-4 flex items-center justify-center">
+                <span className="text-stone-400 text-xs font-tech">Feature Image</span>
+              </div>
+              
+              {feature.badge && (
+                <span className="inline-block bg-orange-100 text-orange-600 text-xs font-tech font-medium px-2 py-1 rounded mb-2">
+                  {feature.badge}
+                </span>
+              )}
+              
+              <h4 className="text-lg text-stone-900 mb-2 font-tech font-semibold">
+                {feature.title}
+              </h4>
+              <p className="text-stone-600 text-sm font-tech font-light">
+                {feature.description}
+              </p>
+            </div>
+          ))}
+        </div>
+
+        {/* Section CTA */}
+        <div className="text-center">
+          <Button
+            onClick={onCtaClick}
+            className="h-11 px-6 bg-orange-500 hover:bg-orange-600 text-white font-tech font-medium tracking-wide rounded-full"
+          >
+            {ctaText}
+          </Button>
+        </div>
       </div>
-      <div className="text-sm text-stone-500 font-light">
-        {label}
-      </div>
-    </div>
+    </section>
+  );
+}
+
+function ComparisonRow({ feature, free, premium }: { feature: string; free: boolean; premium: boolean }) {
+  return (
+    <tr className="border-b border-stone-100">
+      <td className="py-4 pr-4 text-stone-700">{feature}</td>
+      <td className="py-4 px-4 text-center">
+        {free ? (
+          <Check className="w-5 h-5 text-green-500 mx-auto" />
+        ) : (
+          <X className="w-5 h-5 text-stone-300 mx-auto" />
+        )}
+      </td>
+      <td className="py-4 pl-4 text-center">
+        {premium ? (
+          <Check className="w-5 h-5 text-green-500 mx-auto" />
+        ) : (
+          <X className="w-5 h-5 text-stone-300 mx-auto" />
+        )}
+      </td>
+    </tr>
   );
 }
