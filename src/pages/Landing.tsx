@@ -166,7 +166,7 @@ export default function Landing() {
       <FeatureSection
         tagline="Earn"
         headline="Discover legendary Quests"
-        description="Find new routes and challenges that take you beyond your comfort zone."
+        description="Legendary quests will bring you real gold (real money) to complete certain quests! Be a worthy adventurer and the grand wizard will bring you high level Quests to earn real money to complete!"
         features={[
           { badge: 'New', title: 'Location-Based Quests', description: 'Discover quests tied to real-world locations and landmarks near you.' },
           { badge: 'New', title: 'Seasonal Events', description: 'Join limited-time events with exclusive rewards and community challenges.' },
