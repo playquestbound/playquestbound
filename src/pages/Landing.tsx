@@ -303,9 +303,9 @@ function FeatureSection({ tagline, headline, description, features, ctaText, onC
           {features.map((feature, index) => (
             <div key={index} className="text-center">
               {/* Feature Image */}
-              <div className="aspect-[4/3] bg-stone-100 rounded-xl mb-4 flex items-center justify-center overflow-hidden">
+              <div className="aspect-[4/3] bg-stone-900 rounded-xl mb-4 flex items-center justify-center overflow-hidden">
                 {feature.image ? (
-                  <img src={feature.image} alt={feature.title} className="w-full h-full object-cover" />
+                  <img src={feature.image} alt={feature.title} className="w-full h-full object-contain" />
                 ) : (
                   <span className="text-stone-400 text-xs font-tech">Feature Image</span>
                 )}
