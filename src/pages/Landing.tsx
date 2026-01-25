@@ -98,7 +98,7 @@ export default function Landing() {
           {/* Headline with mixed typography */}
           <h1 className="text-5xl md:text-7xl lg:text-8xl text-white leading-[1.1] mb-6">
             <span className="block font-light tracking-tight">This App</span>
-            <span className="block font-display italic text-amber-200">is Adventure</span>
+            <span className="block italic text-amber-200">is Adventure</span>
           </h1>
 
           {/* Subtitle */}
@@ -130,10 +130,10 @@ export default function Landing() {
       </section>
 
       {/* Second Section - Light/Cream */}
-      <section className="bg-amber-50 py-24 px-6">
+      <section className="bg-white py-24 px-6">
         <div className="max-w-3xl mx-auto text-center">
           {/* Headline */}
-          <h2 className="text-4xl md:text-5xl lg:text-6xl text-stone-900 leading-tight mb-6 font-display">
+          <h2 className="text-4xl md:text-5xl lg:text-6xl text-stone-900 leading-tight mb-6 font-light">
             The App That<br />
             Keeps You Moving
           </h2>
