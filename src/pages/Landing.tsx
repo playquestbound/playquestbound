@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Sparkles, Sword, Shield, Trophy, ChevronRight } from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { z } from 'zod';
@@ -63,118 +63,146 @@ export default function Landing() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-amber-950/90 via-orange-950/80 to-stone-950 text-stone-100 overflow-hidden relative font-tech">
-      {/* Video Background */}
-      <div className="absolute inset-0 z-0">
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="w-full h-full object-cover opacity-50"
-        >
-          <source src="/videos/camp-main.mp4" type="video/mp4" />
-        </video>
-        <div className="absolute inset-0 bg-gradient-to-b from-amber-900/40 via-orange-900/30 to-stone-950/90" />
-      </div>
-
-      {/* Content */}
-      <div className="relative z-10 flex flex-col min-h-screen">
-        {/* Header */}
-        <header className="p-6 flex justify-between items-center">
-          <img src={qbLogo} alt="Questbound" className="h-10 w-auto" />
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => navigate('/auth')}
-            className="border-amber-400/40 text-amber-100 hover:bg-amber-500/20 hover:border-amber-400/60 font-tech"
+    <div className="min-h-screen font-tech">
+      {/* Hero Section - Dark with video background */}
+      <section className="relative min-h-screen bg-stone-950 overflow-hidden">
+        {/* Video Background */}
+        <div className="absolute inset-0 z-0">
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="w-full h-full object-cover opacity-60"
           >
-            Sign In
-          </Button>
-        </header>
+            <source src="/videos/camp-main.mp4" type="video/mp4" />
+          </video>
+          <div className="absolute inset-0 bg-gradient-to-b from-stone-950/40 via-transparent to-stone-950" />
+        </div>
 
-        {/* Hero Section */}
-        <main className="flex-1 flex flex-col items-center justify-center px-6 pb-24">
-          <div className="max-w-lg text-center space-y-8">
-            {/* Badge */}
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-500/20 border border-amber-400/40 text-amber-300 text-sm font-medium tracking-wide">
-              <Sparkles className="w-4 h-4" />
-              Coming Soon
+        {/* Navigation */}
+        <nav className="relative z-20 flex items-center justify-between px-6 py-5">
+          <img src={qbLogo} alt="Questbound" className="h-8 w-auto" />
+          <div className="flex items-center gap-6">
+            <button 
+              onClick={() => navigate('/auth')}
+              className="text-stone-300 hover:text-white text-sm tracking-wide transition-colors"
+            >
+              Sign In
+            </button>
+          </div>
+        </nav>
+
+        {/* Hero Content */}
+        <div className="relative z-10 flex flex-col items-center justify-center text-center px-6 pt-12 pb-32">
+          {/* Headline with mixed typography */}
+          <h1 className="text-5xl md:text-7xl lg:text-8xl text-white leading-[1.1] mb-6">
+            <span className="block font-light tracking-tight">This App</span>
+            <span className="block font-display italic text-amber-200">is Adventure</span>
+          </h1>
+
+          {/* Subtitle */}
+          <p className="text-stone-300 text-base md:text-lg max-w-md mb-12 font-light">
+            Turn your daily runs into epic quests with the first fitness app that rewards real-world adventure.
+          </p>
+
+          {/* Hero Image Placeholder - Replace with your asset */}
+          <div className="relative w-64 h-80 md:w-80 md:h-96 mb-16">
+            <div className="absolute inset-0 bg-gradient-to-br from-amber-500/20 to-orange-500/10 rounded-2xl border border-amber-500/30 flex items-center justify-center">
+              <span className="text-stone-400 text-sm">Hero Image</span>
             </div>
+            {/* Glow effect */}
+            <div className="absolute -inset-4 bg-amber-500/10 rounded-3xl blur-2xl -z-10" />
+          </div>
 
-            {/* Headline */}
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight tracking-tight">
-              Turn Your Runs Into{' '}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-400">Epic Quests</span>
-            </h1>
+          {/* As Seen In */}
+          <div className="flex flex-col items-center gap-4">
+            <span className="text-stone-500 text-xs uppercase tracking-widest">As Seen In</span>
+            <div className="flex items-center gap-8 opacity-60">
+              {/* Placeholder logos - replace with actual brand images */}
+              <span className="text-stone-400 text-sm font-medium">Brand 1</span>
+              <span className="text-stone-400 text-sm font-medium">Brand 2</span>
+              <span className="text-stone-400 text-sm font-medium">Brand 3</span>
+              <span className="text-stone-400 text-sm font-medium">Brand 4</span>
+            </div>
+          </div>
+        </div>
+      </section>
 
-            {/* Subheadline */}
-            <p className="text-lg md:text-xl text-stone-300 leading-relaxed font-light">
-              Questbound transforms your daily runs into adventures. Complete quests, earn rewards, and level up your character in the real world.
-            </p>
+      {/* Second Section - Light/Cream */}
+      <section className="bg-amber-50 py-24 px-6">
+        <div className="max-w-3xl mx-auto text-center">
+          {/* Headline */}
+          <h2 className="text-4xl md:text-5xl lg:text-6xl text-stone-900 leading-tight mb-6 font-display">
+            The App That<br />
+            Keeps You Moving
+          </h2>
 
-            {/* Waitlist Form */}
-            <form onSubmit={handleWaitlistSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+          {/* Description */}
+          <p className="text-stone-600 text-base md:text-lg max-w-xl mx-auto mb-10 font-light">
+            The first fitness app that rewards all your healthy actions and includes amazing benefits from your favorite brands, too!
+          </p>
+
+          {/* CTAs */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-4">
+            <form onSubmit={handleWaitlistSubmit} className="flex flex-col sm:flex-row gap-3 w-full max-w-md">
               <Input
                 type="email"
                 placeholder="Enter your email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="flex-1 h-12 bg-stone-900/60 border-amber-500/30 text-stone-100 placeholder:text-stone-400 focus:border-amber-400 font-tech"
+                className="flex-1 h-12 bg-white border-stone-300 text-stone-900 placeholder:text-stone-400 focus:border-amber-500 font-tech rounded-full px-5"
               />
               <Button
                 type="submit"
                 disabled={isLoading}
-                className="h-12 px-6 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-stone-950 font-semibold tracking-wide shadow-lg shadow-amber-500/25"
+                className="h-12 px-8 bg-emerald-700 hover:bg-emerald-600 text-white font-medium tracking-wide rounded-full"
               >
-                {isLoading ? 'Joining...' : 'Join Waitlist'}
-                <ChevronRight className="w-4 h-4 ml-1" />
+                {isLoading ? 'Joining...' : 'Reserve'}
               </Button>
             </form>
-
-            {/* Social Proof */}
-            <p className="text-sm text-stone-400">
-              Join <span className="text-amber-400 font-medium">500+</span> adventurers waiting for launch
-            </p>
+            <Button
+              variant="outline"
+              onClick={() => navigate('/auth')}
+              className="h-12 px-8 border-stone-400 text-stone-700 hover:bg-stone-100 font-medium tracking-wide rounded-full"
+            >
+              Explore
+            </Button>
           </div>
 
-          {/* Features */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-16 max-w-3xl w-full">
-            <FeatureCard
-              icon={<Sword className="w-6 h-6 text-amber-400" />}
-              title="Complete Quests"
-              description="Daily and weekly challenges that reward your activity"
-            />
-            <FeatureCard
-              icon={<Shield className="w-6 h-6 text-orange-400" />}
-              title="Build Your Character"
-              description="Choose your race, class, and customize your hero"
-            />
-            <FeatureCard
-              icon={<Trophy className="w-6 h-6 text-yellow-400" />}
-              title="Earn Rewards"
-              description="Collect gold, XP, and exclusive titles"
-            />
-          </div>
-        </main>
+          {/* Disclaimer */}
+          <p className="text-stone-400 text-xs mb-16">
+            *Available on iOS and Android soon
+          </p>
 
-        {/* Footer */}
-        <footer className="p-6 text-center text-sm text-stone-500">
+          {/* Stats */}
+          <div className="grid grid-cols-3 gap-8 max-w-xl mx-auto">
+            <StatItem value="100+" label="Epic Quests" />
+            <StatItem value="10x" label="XP Rewards" />
+            <StatItem value="Free" label="To Start" />
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-stone-950 py-8 px-6 text-center">
+        <p className="text-stone-500 text-sm">
           © 2025 Questbound. All rights reserved.
-        </footer>
-      </div>
+        </p>
+      </footer>
     </div>
   );
 }
 
-function FeatureCard({ icon, title, description }: { icon: React.ReactNode; title: string; description: string }) {
+function StatItem({ value, label }: { value: string; label: string }) {
   return (
-    <div className="p-6 rounded-xl bg-stone-900/50 backdrop-blur-sm border border-amber-500/20 text-center space-y-3 hover:border-amber-400/40 transition-colors">
-      <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-amber-500/20 to-orange-500/10">
-        {icon}
+    <div className="text-center">
+      <div className="text-4xl md:text-5xl font-light text-stone-900 mb-2 tracking-tight">
+        {value}
       </div>
-      <h3 className="font-semibold text-stone-100 tracking-wide">{title}</h3>
-      <p className="text-sm text-stone-400 font-light">{description}</p>
+      <div className="text-sm text-stone-500 font-light">
+        {label}
+      </div>
     </div>
   );
 }
