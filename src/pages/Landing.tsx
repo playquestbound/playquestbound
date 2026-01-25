@@ -9,6 +9,7 @@ import { z } from 'zod';
 import qbLogo from '@/assets/qb-logo.png';
 import questFeatureImg from '@/assets/quest-feature.jpg';
 import progressFeatureImg from '@/assets/progress-feature.jpg';
+import rewardsFeatureImg from '@/assets/rewards-feature.jpg';
 
 const emailSchema = z.string().email('Please enter a valid email address');
 
@@ -155,7 +156,7 @@ export default function Landing() {
         features={[
           { badge: 'New', title: 'Receive Your Quest', description: "Each day you will receive big or small quests, each class, location, quester will receive different quests depending on what's going on and where you are!", image: questFeatureImg },
           { badge: 'New', title: 'Track Your Progress', description: 'Watch your character grow stronger as you complete more quests over time.', image: progressFeatureImg },
-          { title: 'Earn Real Rewards', description: 'Main and side quests will reward you with Gold, XP, Items or real money!' },
+          { title: 'Earn Real Rewards', description: 'Main and side quests will reward you with Gold, XP, Items or real money!', image: rewardsFeatureImg },
         ]}
         ctaText="Start questing"
         onCtaClick={() => navigate('/auth')}
