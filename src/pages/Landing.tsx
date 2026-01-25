@@ -140,7 +140,7 @@ export default function Landing() {
       <section className="bg-white py-16 px-6">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl md:text-4xl lg:text-5xl text-stone-900 leading-tight mb-4 font-tech font-bold">
-            Everything you need, all in one place
+            Main quests, Side quests, they are a real thing now.
           </h2>
         </div>
       </section>
