@@ -23,6 +23,7 @@ import RunTracker from "./pages/RunTracker";
 import Store from "./pages/Store";
 import Discover from "./pages/Discover";
 import NotFound from "./pages/NotFound";
+import Landing from "./pages/Landing";
 import QuestManagement from "./pages/admin/QuestManagement";
 import ModelManagement from "./pages/admin/ModelManagement";
 import SubmissionsReview from "./pages/admin/SubmissionsReview";
@@ -30,7 +31,7 @@ import SubmissionsReview from "./pages/admin/SubmissionsReview";
 const queryClient = new QueryClient();
 
 // Pages where we don't show the bottom nav
-const hiddenNavRoutes = ['/auth', '/create-character'];
+const hiddenNavRoutes = ['/auth', '/create-character', '/landing'];
 
 function AppContent() {
   const location = useLocation();
@@ -41,6 +42,7 @@ function AppContent() {
       <RunBanner />
       <Routes>
         <Route path="/" element={<Index />} />
+        <Route path="/landing" element={<Landing />} />
         <Route path="/auth" element={<Auth />} />
         <Route path="/create-character" element={<CharacterCreation />} />
         <Route path="/quests" element={<Quests />} />
