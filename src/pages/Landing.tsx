@@ -7,6 +7,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { z } from 'zod';
 import qbLogo from '@/assets/qb-logo.png';
+import questFeatureImg from '@/assets/quest-feature.jpg';
 
 const emailSchema = z.string().email('Please enter a valid email address');
 
@@ -151,7 +152,7 @@ export default function Landing() {
         headline="Turn life into adventure"
         description="Receive your quests, track your progress, earn gear, gold and glory!"
         features={[
-          { badge: 'New', title: 'Daily Quests', description: 'Complete bite-sized challenges every day to build momentum and earn XP.' },
+          { badge: 'New', title: 'Daily Quests', description: 'Complete bite-sized challenges every day to build momentum and earn XP.', image: questFeatureImg },
           { badge: 'New', title: 'Track Your Progress', description: 'Watch your character grow stronger as you complete more quests over time.' },
           { title: 'Earn Real Rewards', description: 'Turn your fitness achievements into gold coins redeemable for gear and perks.' },
         ]}
@@ -268,6 +269,7 @@ type FeatureItem = {
   badge?: string;
   title: string;
   description: string;
+  image?: string;
 };
 
 type FeatureSectionProps = {
@@ -300,9 +302,13 @@ function FeatureSection({ tagline, headline, description, features, ctaText, onC
         <div className="grid md:grid-cols-3 gap-8 mb-12">
           {features.map((feature, index) => (
             <div key={index} className="text-center">
-              {/* Image Placeholder */}
-              <div className="aspect-[4/3] bg-stone-100 rounded-xl mb-4 flex items-center justify-center">
-                <span className="text-stone-400 text-xs font-tech">Feature Image</span>
+              {/* Feature Image */}
+              <div className="aspect-[4/3] bg-stone-100 rounded-xl mb-4 flex items-center justify-center overflow-hidden">
+                {feature.image ? (
+                  <img src={feature.image} alt={feature.title} className="w-full h-full object-cover" />
+                ) : (
+                  <span className="text-stone-400 text-xs font-tech">Feature Image</span>
+                )}
               </div>
               
               {feature.badge && (
