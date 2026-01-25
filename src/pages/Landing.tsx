@@ -113,7 +113,7 @@ export default function Landing() {
           {/* CTA Button */}
           <Button
             onClick={() => navigate('/auth')}
-            className="h-12 px-8 bg-orange-500 hover:bg-orange-600 text-white font-tech font-medium tracking-wide rounded-full text-base"
+            className="h-12 px-8 bg-emerald-800 hover:bg-emerald-700 text-white font-tech font-medium tracking-wide rounded-full text-base shadow-[0_0_30px_8px_hsl(43_85%_55%/0.4)] hover:shadow-[0_0_40px_12px_hsl(43_85%_55%/0.6)] transition-all duration-300"
           >
             Dive into your Adventure
           </Button>
@@ -249,7 +249,7 @@ export default function Landing() {
             <Button
               type="submit"
               disabled={isLoading}
-              className="h-12 px-8 bg-orange-500 hover:bg-orange-600 text-white font-tech font-medium tracking-wide rounded-full"
+              className="h-12 px-8 bg-emerald-800 hover:bg-emerald-700 text-white font-tech font-medium tracking-wide rounded-full shadow-[0_0_30px_8px_hsl(43_85%_55%/0.4)] hover:shadow-[0_0_40px_12px_hsl(43_85%_55%/0.6)] transition-all duration-300"
             >
               {isLoading ? 'Joining...' : 'Get Early Access'}
             </Button>
@@ -333,7 +333,7 @@ function FeatureSection({ tagline, headline, description, features, ctaText, onC
         <div className="text-center">
           <Button
             onClick={onCtaClick}
-            className="h-11 px-6 bg-orange-500 hover:bg-orange-600 text-white font-tech font-medium tracking-wide rounded-full"
+            className="h-11 px-6 bg-emerald-800 hover:bg-emerald-700 text-white font-tech font-medium tracking-wide rounded-full shadow-[0_0_30px_8px_hsl(43_85%_55%/0.4)] hover:shadow-[0_0_40px_12px_hsl(43_85%_55%/0.6)] transition-all duration-300"
           >
             {ctaText}
           </Button>
