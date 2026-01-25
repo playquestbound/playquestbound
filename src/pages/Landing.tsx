@@ -104,7 +104,7 @@ export default function Landing() {
 
           {/* Subtitle */}
           <p className="text-stone-600 text-lg md:text-xl max-w-xl mx-auto mb-8 font-tech font-light">
-            Say hello to epic quests, real rewards and endless adventure.
+            Earn glory and gold in real life quests.
           </p>
 
           {/* CTA Button */}
