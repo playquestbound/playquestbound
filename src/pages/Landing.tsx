@@ -170,7 +170,7 @@ export default function Landing() {
         features={[
           { badge: 'New', title: 'Location-Based Quests', description: 'Discover quests tied to real-world locations and landmarks near you.' },
           { badge: 'New', title: 'Seasonal Events', description: 'Join limited-time events with exclusive rewards and community challenges.' },
-          { title: 'Community Routes', description: 'Explore paths created and rated by fellow adventurers in your area.' },
+          { title: 'Explore XP', description: 'Explore paths created and rated by fellow adventurers in your area.' },
         ]}
         ctaText="Start exploring"
         onCtaClick={() => navigate('/auth')}
