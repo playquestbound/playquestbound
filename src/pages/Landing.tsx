@@ -178,7 +178,7 @@ export default function Landing() {
 
       {/* Feature Section 3 */}
       <FeatureSection
-        tagline="Compete"
+        tagline="Band Together"
         headline="Bring out your best with challenges"
         description="Chase personal bests, compete with friends, or climb the global leaderboards."
         features={[
