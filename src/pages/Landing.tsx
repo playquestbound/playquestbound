@@ -148,7 +148,7 @@ export default function Landing() {
       {/* Feature Section 1 */}
       <FeatureSection
         tagline="Quest"
-        headline="Turn fitness into adventure"
+        headline="Turn life into adventure"
         description="Each quest you complete and every mile you track helps you level up and earn real rewards."
         features={[
           { badge: 'New', title: 'Daily Quests', description: 'Complete bite-sized challenges every day to build momentum and earn XP.' },
