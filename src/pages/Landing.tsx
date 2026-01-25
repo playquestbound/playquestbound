@@ -98,8 +98,8 @@ export default function Landing() {
 
           {/* Headline */}
           <h1 className="text-4xl md:text-5xl lg:text-6xl text-stone-900 leading-tight mb-4 font-tech font-bold tracking-tight">
-            The best of Questbound.<br />
-            Built for your goals.
+            QUESTBOUND<br />
+            adventure is out there!
           </h1>
 
           {/* Subtitle */}
