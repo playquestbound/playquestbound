@@ -8,6 +8,7 @@ import { useToast } from '@/hooks/use-toast';
 import { z } from 'zod';
 import qbLogo from '@/assets/qb-logo.png';
 import questFeatureImg from '@/assets/quest-feature.jpg';
+import progressFeatureImg from '@/assets/progress-feature.jpg';
 
 const emailSchema = z.string().email('Please enter a valid email address');
 
@@ -153,7 +154,7 @@ export default function Landing() {
         description="Receive your quests, track your progress, earn gear, gold and glory!"
         features={[
           { badge: 'New', title: 'Receive Your Quest', description: "Each day you will receive big or small quests, each class, location, quester will receive different quests depending on what's going on and where you are!", image: questFeatureImg },
-          { badge: 'New', title: 'Track Your Progress', description: 'Watch your character grow stronger as you complete more quests over time.' },
+          { badge: 'New', title: 'Track Your Progress', description: 'Watch your character grow stronger as you complete more quests over time.', image: progressFeatureImg },
           { title: 'Earn Real Rewards', description: 'Main and side quests will reward you with Gold, XP, Items or real money!' },
         ]}
         ctaText="Start questing"
@@ -303,7 +304,7 @@ function FeatureSection({ tagline, headline, description, features, ctaText, onC
           {features.map((feature, index) => (
             <div key={index} className="text-center">
               {/* Feature Image */}
-              <div className="aspect-[4/3] bg-stone-900 rounded-xl mb-4 flex items-center justify-center overflow-hidden">
+              <div className="aspect-square bg-stone-900 rounded-xl mb-4 flex items-center justify-center overflow-hidden">
                 {feature.image ? (
                   <img src={feature.image} alt={feature.title} className="w-full h-full object-contain" />
                 ) : (
