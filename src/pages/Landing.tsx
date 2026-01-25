@@ -13,7 +13,7 @@ import rewardsFeatureImg from '@/assets/rewards-feature.jpg';
 
 const emailSchema = z.string().email('Please enter a valid email address');
 
-type TabId = 'quest' | 'explore' | 'compete';
+type TabId = 'quest' | 'earn' | 'compete';
 
 export default function Landing() {
   const navigate = useNavigate();
@@ -70,7 +70,7 @@ export default function Landing() {
 
   const tabs: { id: TabId; label: string }[] = [
     { id: 'quest', label: 'Quest' },
-    { id: 'explore', label: 'Explore' },
+    { id: 'earn', label: 'Earn' },
     { id: 'compete', label: 'Compete' },
   ];
 
