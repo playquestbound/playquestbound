@@ -165,7 +165,7 @@ export default function Landing() {
       {/* Feature Section 2 */}
       <FeatureSection
         tagline="Earn"
-        headline="Discover new adventures"
+        headline="Discover legendary Quests"
         description="Find new routes and challenges that take you beyond your comfort zone."
         features={[
           { badge: 'New', title: 'Location-Based Quests', description: 'Discover quests tied to real-world locations and landmarks near you.' },
