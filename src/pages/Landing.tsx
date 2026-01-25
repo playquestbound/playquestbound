@@ -96,7 +96,7 @@ export default function Landing() {
         {/* Hero Content */}
         <div className="relative z-10 flex flex-col items-center justify-center text-center px-6 pt-12 pb-32">
           {/* Headline with mixed typography */}
-          <h1 className="text-5xl md:text-7xl lg:text-8xl text-white leading-[1.1] mb-6">
+          <h1 className="text-5xl md:text-7xl lg:text-8xl text-white leading-[1.1] mb-6 font-tech">
             <span className="block font-light tracking-tight">This App</span>
             <span className="block italic text-amber-200">is Adventure</span>
           </h1>
@@ -133,7 +133,7 @@ export default function Landing() {
       <section className="bg-white py-24 px-6">
         <div className="max-w-3xl mx-auto text-center">
           {/* Headline */}
-          <h2 className="text-4xl md:text-5xl lg:text-6xl text-stone-900 leading-tight mb-6 font-light">
+          <h2 className="text-4xl md:text-5xl lg:text-6xl text-stone-900 leading-tight mb-6 font-light font-tech">
             The App That<br />
             Keeps You Moving
           </h2>
