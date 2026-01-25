@@ -152,7 +152,7 @@ export default function Landing() {
         headline="Turn life into adventure"
         description="Receive your quests, track your progress, earn gear, gold and glory!"
         features={[
-          { badge: 'New', title: 'Receive Your Quest', description: 'Complete bite-sized challenges every day to build momentum and earn XP.', image: questFeatureImg },
+          { badge: 'New', title: 'Receive Your Quest', description: "Each day you will receive big or small quests, each class, location, quester will receive different quests depending on what's going on and where you are!", image: questFeatureImg },
           { badge: 'New', title: 'Track Your Progress', description: 'Watch your character grow stronger as you complete more quests over time.' },
           { title: 'Earn Real Rewards', description: 'Turn your fitness achievements into gold coins redeemable for gear and perks.' },
         ]}
