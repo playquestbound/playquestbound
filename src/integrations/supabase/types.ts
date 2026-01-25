@@ -112,6 +112,7 @@ export type Database = {
           class: string | null
           created_at: string
           customization: Json | null
+          email: string | null
           full_name: string | null
           gold: number
           has_created_character: boolean
@@ -129,6 +130,7 @@ export type Database = {
           class?: string | null
           created_at?: string
           customization?: Json | null
+          email?: string | null
           full_name?: string | null
           gold?: number
           has_created_character?: boolean
@@ -146,6 +148,7 @@ export type Database = {
           class?: string | null
           created_at?: string
           customization?: Json | null
+          email?: string | null
           full_name?: string | null
           gold?: number
           has_created_character?: boolean
