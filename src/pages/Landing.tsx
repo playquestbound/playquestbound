@@ -154,7 +154,7 @@ export default function Landing() {
         features={[
           { badge: 'New', title: 'Receive Your Quest', description: "Each day you will receive big or small quests, each class, location, quester will receive different quests depending on what's going on and where you are!", image: questFeatureImg },
           { badge: 'New', title: 'Track Your Progress', description: 'Watch your character grow stronger as you complete more quests over time.' },
-          { title: 'Earn Real Rewards', description: 'Turn your fitness achievements into gold coins redeemable for gear and perks.' },
+          { title: 'Earn Real Rewards', description: 'Main and side quests will reward you with Gold, XP, Items or real money!' },
         ]}
         ctaText="Start questing"
         onCtaClick={() => navigate('/auth')}
