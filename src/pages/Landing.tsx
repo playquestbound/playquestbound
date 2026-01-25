@@ -164,7 +164,7 @@ export default function Landing() {
 
       {/* Feature Section 2 */}
       <FeatureSection
-        tagline="Explore"
+        tagline="Earn"
         headline="Discover new adventures"
         description="Find new routes and challenges that take you beyond your comfort zone."
         features={[
