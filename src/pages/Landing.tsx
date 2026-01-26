@@ -1,5 +1,4 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Check, X } from 'lucide-react';
@@ -16,11 +15,15 @@ const emailSchema = z.string().email('Please enter a valid email address');
 type TabId = 'quest' | 'earn' | 'compete';
 
 export default function Landing() {
-  const navigate = useNavigate();
   const { toast } = useToast();
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<TabId>('quest');
+  const waitlistRef = useRef<HTMLDivElement>(null);
+
+  const scrollToWaitlist = () => {
+    waitlistRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
 
   const handleWaitlistSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -81,10 +84,10 @@ export default function Landing() {
         <img src={qbLogo} alt="Questbound" className="h-8 w-auto" />
         <div className="flex items-center gap-6">
           <button 
-            onClick={() => navigate('/auth')}
+            onClick={scrollToWaitlist}
             className="text-stone-600 hover:text-stone-900 text-sm tracking-wide transition-colors font-tech"
           >
-            Sign In
+            Join Waitlist
           </button>
         </div>
       </nav>
@@ -112,7 +115,7 @@ export default function Landing() {
 
           {/* CTA Button */}
           <Button
-            onClick={() => navigate('/auth')}
+            onClick={scrollToWaitlist}
             className="h-12 px-8 bg-emerald-800 hover:bg-emerald-700 text-white font-tech font-medium tracking-wide rounded-full text-base shadow-[0_0_30px_8px_hsl(43_85%_55%/0.4)] hover:shadow-[0_0_40px_12px_hsl(43_85%_55%/0.6)] transition-all duration-300"
           >
             Dive into your Adventure
@@ -159,7 +162,7 @@ export default function Landing() {
           { title: 'Earn Real Rewards', description: 'Main and side quests will reward you with Gold, XP, Items or real money!', image: rewardsFeatureImg },
         ]}
         ctaText="Start questing"
-        onCtaClick={() => navigate('/auth')}
+        onCtaClick={scrollToWaitlist}
       />
 
       {/* Feature Section 2 */}
@@ -173,7 +176,7 @@ export default function Landing() {
           { title: 'Explore XP', description: 'Explore paths or run to gain XP and gold for your character.' },
         ]}
         ctaText="Start exploring"
-        onCtaClick={() => navigate('/auth')}
+        onCtaClick={scrollToWaitlist}
       />
 
       {/* Feature Section 3 */}
@@ -186,8 +189,8 @@ export default function Landing() {
           { title: 'Quest Together', description: 'Take on group quests that require teamwork—some challenges are too big for one hero alone!' },
           { title: 'Share the Rewards', description: 'Complete guild quests to earn bonus gold and XP that benefits everyone in your party.' },
         ]}
-        ctaText="Start competing"
-        onCtaClick={() => navigate('/auth')}
+        ctaText="Join the adventure"
+        onCtaClick={scrollToWaitlist}
       />
 
       {/* Comparison Table */}
@@ -222,7 +225,7 @@ export default function Landing() {
       </section>
 
       {/* Final CTA Section */}
-      <section className="bg-white py-16 px-6 border-t border-stone-200">
+      <section ref={waitlistRef} className="bg-white py-16 px-6 border-t border-stone-200">
         <div className="max-w-2xl mx-auto text-center">
           {/* Optional small image placeholder */}
           <div className="w-32 h-32 mx-auto mb-8 bg-stone-100 rounded-xl flex items-center justify-center">
