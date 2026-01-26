@@ -79,7 +79,7 @@ export default function Landing() {
     label: 'Earn'
   }, {
     id: 'compete',
-    label: 'Compete'
+    label: 'Guild'
   }];
   return <div className="min-h-screen bg-white font-tech">
       {/* Navigation */}
