@@ -182,9 +182,9 @@ export default function Landing() {
         headline="Create your Guild and Quest together!"
         description="Questing is better with friends, create your own Guilds, adventure together, earn gold together! Some Quests may need some extra hands!"
         features={[
-          { title: 'Climb the Leaderboards', description: 'See how you rank against other adventurers in your area and globally.' },
-          { title: 'Challenge Your Friends', description: 'Create custom challenges and invite your friends to compete.' },
-          { title: 'Earn Legendary Titles', description: 'Complete epic quests to unlock rare titles and show off your achievements.' },
+          { title: 'Create Your Guild', description: 'Form your own adventuring party, invite friends, and build your guild legacy together.' },
+          { title: 'Quest Together', description: 'Take on group quests that require teamwork—some challenges are too big for one hero alone!' },
+          { title: 'Share the Rewards', description: 'Complete guild quests to earn bonus gold and XP that benefits everyone in your party.' },
         ]}
         ctaText="Start competing"
         onCtaClick={() => navigate('/auth')}
