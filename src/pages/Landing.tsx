@@ -179,7 +179,7 @@ export default function Landing() {
       {/* Feature Section 3 */}
       <FeatureSection
         tagline="Band Together"
-        headline="Bring out your best with challenges"
+        headline="Create your Guild and Quest together!"
         description="Chase personal bests, compete with friends, or climb the global leaderboards."
         features={[
           { title: 'Climb the Leaderboards', description: 'See how you rank against other adventurers in your area and globally.' },
