@@ -180,7 +180,7 @@ export default function Landing() {
       <FeatureSection
         tagline="Band Together"
         headline="Create your Guild and Quest together!"
-        description="Chase personal bests, compete with friends, or climb the global leaderboards."
+        description="Questing is better with friends, create your own Guilds, adventure together, earn gold together! Some Quests may need some extra hands!"
         features={[
           { title: 'Climb the Leaderboards', description: 'See how you rank against other adventurers in your area and globally.' },
           { title: 'Challenge Your Friends', description: 'Create custom challenges and invite your friends to compete.' },
