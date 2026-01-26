@@ -19,10 +19,24 @@ export default function Landing() {
   const [isLoading, setIsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<TabId>('quest');
   const waitlistRef = useRef<HTMLDivElement>(null);
+  const questRef = useRef<HTMLDivElement>(null);
+  const earnRef = useRef<HTMLDivElement>(null);
+  const guildRef = useRef<HTMLDivElement>(null);
+
   const scrollToWaitlist = () => {
     waitlistRef.current?.scrollIntoView({
       behavior: 'smooth'
     });
+  };
+
+  const scrollToSection = (tabId: TabId) => {
+    const refs: Record<TabId, React.RefObject<HTMLDivElement>> = {
+      quest: questRef,
+      earn: earnRef,
+      compete: guildRef
+    };
+    refs[tabId].current?.scrollIntoView({ behavior: 'smooth' });
+    setActiveTab(tabId);
   };
   const handleWaitlistSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -123,7 +137,7 @@ export default function Landing() {
       {/* Category Tabs */}
       <section className="bg-white py-8 px-6 border-b border-stone-200">
         <div className="flex items-center justify-center gap-12">
-          {tabs.map(tab => <button key={tab.id} onClick={() => setActiveTab(tab.id)} className={`text-sm md:text-base font-tech font-medium tracking-wide uppercase transition-colors pb-2 border-b-2 ${activeTab === tab.id ? 'text-stone-900 border-stone-900' : 'text-stone-400 border-transparent hover:text-stone-600'}`}>
+          {tabs.map(tab => <button key={tab.id} onClick={() => scrollToSection(tab.id)} className={`text-sm md:text-base font-tech font-medium tracking-wide uppercase transition-colors pb-2 border-b-2 ${activeTab === tab.id ? 'text-stone-900 border-stone-900' : 'text-stone-400 border-transparent hover:text-stone-600'}`}>
               {tab.label}
             </button>)}
         </div>
@@ -139,7 +153,8 @@ export default function Landing() {
       </section>
 
       {/* Feature Section 1 */}
-      <FeatureSection tagline="Quest" headline="Turn life into adventure" description="Receive your quests, track your progress, earn gear, gold and glory!" features={[{
+      <div ref={questRef}>
+        <FeatureSection tagline="Quest" headline="Turn life into adventure" description="Receive your quests, track your progress, earn gear, gold and glory!" features={[{
       badge: 'New',
       title: 'Receive Your Quest',
       description: "Each day you will receive big or small quests, each class, location, quester will receive different quests depending on what's going on and where you are!",
@@ -154,9 +169,11 @@ export default function Landing() {
       description: 'Main and side quests will reward you with Gold, XP, Items or real money!',
       image: rewardsFeatureImg
     }]} ctaText="Start questing" onCtaClick={scrollToWaitlist} />
+      </div>
 
       {/* Feature Section 2 */}
-      <FeatureSection tagline="Earn" headline="Discover legendary Quests" description="Legendary quests will bring you real gold (real money) to complete certain quests! Be a worthy adventurer and the grand wizard will bring you high level Quests to earn real money to complete!" features={[{
+      <div ref={earnRef}>
+        <FeatureSection tagline="Earn" headline="Discover legendary Quests" description="Legendary quests will bring you real gold (real money) to complete certain quests! Be a worthy adventurer and the grand wizard will bring you high level Quests to earn real money to complete!" features={[{
       badge: 'New',
       title: 'Location-Based Quests',
       description: 'Discover quests tied to real-world locations and landmarks near you.'
@@ -168,9 +185,11 @@ export default function Landing() {
       title: 'Explore XP',
       description: 'Explore paths or run to gain XP and gold for your character.'
     }]} ctaText="Start exploring" onCtaClick={scrollToWaitlist} />
+      </div>
 
       {/* Feature Section 3 */}
-      <FeatureSection tagline="Band Together" headline="Create your Guild and Quest together!" description="Questing is better with friends, create your own Guilds, adventure together, earn gold together! Some Quests may need some extra hands!" features={[{
+      <div ref={guildRef}>
+        <FeatureSection tagline="Band Together" headline="Create your Guild and Quest together!" description="Questing is better with friends, create your own Guilds, adventure together, earn gold together! Some Quests may need some extra hands!" features={[{
       title: 'Create Your Guild',
       description: 'Form your own adventuring party, invite friends, and build your guild legacy together.'
     }, {
@@ -180,6 +199,7 @@ export default function Landing() {
       title: 'Share the Rewards',
       description: 'Complete guild quests to earn bonus gold and XP that benefits everyone in your party.'
     }]} ctaText="Join the adventure" onCtaClick={scrollToWaitlist} />
+      </div>
 
       {/* Comparison Table */}
       <section className="bg-white py-16 px-6">
