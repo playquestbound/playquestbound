@@ -9,46 +9,44 @@ import qbLogo from '@/assets/qb-logo.png';
 import questFeatureImg from '@/assets/quest-feature.jpg';
 import progressFeatureImg from '@/assets/progress-feature.jpg';
 import rewardsFeatureImg from '@/assets/rewards-feature.jpg';
-
 const emailSchema = z.string().email('Please enter a valid email address');
-
 type TabId = 'quest' | 'earn' | 'compete';
-
 export default function Landing() {
-  const { toast } = useToast();
+  const {
+    toast
+  } = useToast();
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<TabId>('quest');
   const waitlistRef = useRef<HTMLDivElement>(null);
-
   const scrollToWaitlist = () => {
-    waitlistRef.current?.scrollIntoView({ behavior: 'smooth' });
+    waitlistRef.current?.scrollIntoView({
+      behavior: 'smooth'
+    });
   };
-
   const handleWaitlistSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
     const result = emailSchema.safeParse(email);
     if (!result.success) {
       toast({
         title: "Invalid email",
         description: result.error.errors[0].message,
-        variant: "destructive",
+        variant: "destructive"
       });
       return;
     }
-
     setIsLoading(true);
     try {
-      const { error } = await supabase
-        .from('waitlist_emails')
-        .insert({ email: email.toLowerCase().trim() });
-
+      const {
+        error
+      } = await supabase.from('waitlist_emails').insert({
+        email: email.toLowerCase().trim()
+      });
       if (error) {
         if (error.code === '23505') {
           toast({
             title: "Already on the list!",
-            description: "You're already signed up for early access.",
+            description: "You're already signed up for early access."
           });
         } else {
           throw error;
@@ -56,7 +54,7 @@ export default function Landing() {
       } else {
         toast({
           title: "You're in!",
-          description: "We'll notify you when Questbound launches.",
+          description: "We'll notify you when Questbound launches."
         });
         setEmail('');
       }
@@ -64,29 +62,31 @@ export default function Landing() {
       toast({
         title: "Something went wrong",
         description: "Please try again later.",
-        variant: "destructive",
+        variant: "destructive"
       });
     } finally {
       setIsLoading(false);
     }
   };
-
-  const tabs: { id: TabId; label: string }[] = [
-    { id: 'quest', label: 'Quest' },
-    { id: 'earn', label: 'Earn' },
-    { id: 'compete', label: 'Compete' },
-  ];
-
-  return (
-    <div className="min-h-screen bg-white font-tech">
+  const tabs: {
+    id: TabId;
+    label: string;
+  }[] = [{
+    id: 'quest',
+    label: 'Quest'
+  }, {
+    id: 'earn',
+    label: 'Earn'
+  }, {
+    id: 'compete',
+    label: 'Compete'
+  }];
+  return <div className="min-h-screen bg-white font-tech">
       {/* Navigation */}
       <nav className="flex items-center justify-between px-6 py-5 bg-white">
         <img src={qbLogo} alt="Questbound" className="h-8 w-auto" />
         <div className="flex items-center gap-6">
-          <button 
-            onClick={scrollToWaitlist}
-            className="text-stone-600 hover:text-stone-900 text-sm tracking-wide transition-colors font-tech"
-          >
+          <button onClick={scrollToWaitlist} className="text-stone-600 hover:text-stone-900 text-sm tracking-wide transition-colors font-tech">
             Join Waitlist
           </button>
         </div>
@@ -114,10 +114,7 @@ export default function Landing() {
           </p>
 
           {/* CTA Button */}
-          <Button
-            onClick={scrollToWaitlist}
-            className="h-12 px-8 bg-emerald-800 hover:bg-emerald-700 text-white font-tech font-medium tracking-wide rounded-full text-base shadow-[0_0_30px_8px_hsl(43_85%_55%/0.4)] hover:shadow-[0_0_40px_12px_hsl(43_85%_55%/0.6)] transition-all duration-300"
-          >
+          <Button onClick={scrollToWaitlist} className="h-12 px-8 bg-emerald-800 hover:bg-emerald-700 text-white font-tech font-medium tracking-wide rounded-full text-base shadow-[0_0_30px_8px_hsl(43_85%_55%/0.4)] hover:shadow-[0_0_40px_12px_hsl(43_85%_55%/0.6)] transition-all duration-300">
             Dive into your Adventure
           </Button>
         </div>
@@ -126,19 +123,9 @@ export default function Landing() {
       {/* Category Tabs */}
       <section className="bg-white py-8 px-6 border-b border-stone-200">
         <div className="flex items-center justify-center gap-12">
-          {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`text-sm md:text-base font-tech font-medium tracking-wide uppercase transition-colors pb-2 border-b-2 ${
-                activeTab === tab.id
-                  ? 'text-stone-900 border-stone-900'
-                  : 'text-stone-400 border-transparent hover:text-stone-600'
-              }`}
-            >
+          {tabs.map(tab => <button key={tab.id} onClick={() => setActiveTab(tab.id)} className={`text-sm md:text-base font-tech font-medium tracking-wide uppercase transition-colors pb-2 border-b-2 ${activeTab === tab.id ? 'text-stone-900 border-stone-900' : 'text-stone-400 border-transparent hover:text-stone-600'}`}>
               {tab.label}
-            </button>
-          ))}
+            </button>)}
         </div>
       </section>
 
@@ -152,46 +139,47 @@ export default function Landing() {
       </section>
 
       {/* Feature Section 1 */}
-      <FeatureSection
-        tagline="Quest"
-        headline="Turn life into adventure"
-        description="Receive your quests, track your progress, earn gear, gold and glory!"
-        features={[
-          { badge: 'New', title: 'Receive Your Quest', description: "Each day you will receive big or small quests, each class, location, quester will receive different quests depending on what's going on and where you are!", image: questFeatureImg },
-          { badge: 'New', title: 'Track Your Progress', description: 'Watch your character grow stronger as you complete more quests over time.', image: progressFeatureImg },
-          { title: 'Earn Real Rewards', description: 'Main and side quests will reward you with Gold, XP, Items or real money!', image: rewardsFeatureImg },
-        ]}
-        ctaText="Start questing"
-        onCtaClick={scrollToWaitlist}
-      />
+      <FeatureSection tagline="Quest" headline="Turn life into adventure" description="Receive your quests, track your progress, earn gear, gold and glory!" features={[{
+      badge: 'New',
+      title: 'Receive Your Quest',
+      description: "Each day you will receive big or small quests, each class, location, quester will receive different quests depending on what's going on and where you are!",
+      image: questFeatureImg
+    }, {
+      badge: 'New',
+      title: 'Track Your Progress',
+      description: 'Watch your character grow stronger as you complete more quests over time.',
+      image: progressFeatureImg
+    }, {
+      title: 'Earn Real Rewards',
+      description: 'Main and side quests will reward you with Gold, XP, Items or real money!',
+      image: rewardsFeatureImg
+    }]} ctaText="Start questing" onCtaClick={scrollToWaitlist} />
 
       {/* Feature Section 2 */}
-      <FeatureSection
-        tagline="Earn"
-        headline="Discover legendary Quests"
-        description="Legendary quests will bring you real gold (real money) to complete certain quests! Be a worthy adventurer and the grand wizard will bring you high level Quests to earn real money to complete!"
-        features={[
-          { badge: 'New', title: 'Location-Based Quests', description: 'Discover quests tied to real-world locations and landmarks near you.' },
-          { badge: 'New', title: 'Seasonal Events', description: 'Join limited-time events with exclusive rewards and community challenges.' },
-          { title: 'Explore XP', description: 'Explore paths or run to gain XP and gold for your character.' },
-        ]}
-        ctaText="Start exploring"
-        onCtaClick={scrollToWaitlist}
-      />
+      <FeatureSection tagline="Earn" headline="Discover legendary Quests" description="Legendary quests will bring you real gold (real money) to complete certain quests! Be a worthy adventurer and the grand wizard will bring you high level Quests to earn real money to complete!" features={[{
+      badge: 'New',
+      title: 'Location-Based Quests',
+      description: 'Discover quests tied to real-world locations and landmarks near you.'
+    }, {
+      badge: 'New',
+      title: 'Seasonal Events',
+      description: 'Join limited-time events with exclusive rewards and community challenges.'
+    }, {
+      title: 'Explore XP',
+      description: 'Explore paths or run to gain XP and gold for your character.'
+    }]} ctaText="Start exploring" onCtaClick={scrollToWaitlist} />
 
       {/* Feature Section 3 */}
-      <FeatureSection
-        tagline="Band Together"
-        headline="Create your Guild and Quest together!"
-        description="Questing is better with friends, create your own Guilds, adventure together, earn gold together! Some Quests may need some extra hands!"
-        features={[
-          { title: 'Create Your Guild', description: 'Form your own adventuring party, invite friends, and build your guild legacy together.' },
-          { title: 'Quest Together', description: 'Take on group quests that require teamwork—some challenges are too big for one hero alone!' },
-          { title: 'Share the Rewards', description: 'Complete guild quests to earn bonus gold and XP that benefits everyone in your party.' },
-        ]}
-        ctaText="Join the adventure"
-        onCtaClick={scrollToWaitlist}
-      />
+      <FeatureSection tagline="Band Together" headline="Create your Guild and Quest together!" description="Questing is better with friends, create your own Guilds, adventure together, earn gold together! Some Quests may need some extra hands!" features={[{
+      title: 'Create Your Guild',
+      description: 'Form your own adventuring party, invite friends, and build your guild legacy together.'
+    }, {
+      title: 'Quest Together',
+      description: 'Take on group quests that require teamwork—some challenges are too big for one hero alone!'
+    }, {
+      title: 'Share the Rewards',
+      description: 'Complete guild quests to earn bonus gold and XP that benefits everyone in your party.'
+    }]} ctaText="Join the adventure" onCtaClick={scrollToWaitlist} />
 
       {/* Comparison Table */}
       <section className="bg-white py-16 px-6">
@@ -237,23 +225,13 @@ export default function Landing() {
           </h2>
 
           <p className="text-stone-500 text-sm mb-8 font-tech">
-            Join thousands of adventurers already on their quest.
+            Join thousands of adventurers waiting for their Quests     
           </p>
 
           {/* Waitlist Form */}
           <form onSubmit={handleWaitlistSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
-            <Input
-              type="email"
-              placeholder="Enter your email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="flex-1 h-12 bg-white border-stone-300 text-stone-900 placeholder:text-stone-400 focus:border-orange-500 font-tech rounded-full px-5"
-            />
-            <Button
-              type="submit"
-              disabled={isLoading}
-              className="h-12 px-8 bg-emerald-800 hover:bg-emerald-700 text-white font-tech font-medium tracking-wide rounded-full shadow-[0_0_30px_8px_hsl(43_85%_55%/0.4)] hover:shadow-[0_0_40px_12px_hsl(43_85%_55%/0.6)] transition-all duration-300"
-            >
+            <Input type="email" placeholder="Enter your email" value={email} onChange={e => setEmail(e.target.value)} className="flex-1 h-12 bg-white border-stone-300 text-stone-900 placeholder:text-stone-400 focus:border-orange-500 font-tech rounded-full px-5" />
+            <Button type="submit" disabled={isLoading} className="h-12 px-8 bg-emerald-800 hover:bg-emerald-700 text-white font-tech font-medium tracking-wide rounded-full shadow-[0_0_30px_8px_hsl(43_85%_55%/0.4)] hover:shadow-[0_0_40px_12px_hsl(43_85%_55%/0.6)] transition-all duration-300">
               {isLoading ? 'Joining...' : 'Get Early Access'}
             </Button>
           </form>
@@ -266,17 +244,14 @@ export default function Landing() {
           © 2025 Questbound. All rights reserved.
         </p>
       </footer>
-    </div>
-  );
+    </div>;
 }
-
 type FeatureItem = {
   badge?: string;
   title: string;
   description: string;
   image?: string;
 };
-
 type FeatureSectionProps = {
   tagline: string;
   headline: string;
@@ -285,10 +260,15 @@ type FeatureSectionProps = {
   ctaText: string;
   onCtaClick: () => void;
 };
-
-function FeatureSection({ tagline, headline, description, features, ctaText, onCtaClick }: FeatureSectionProps) {
-  return (
-    <section className="bg-white py-16 px-6 border-t border-stone-100">
+function FeatureSection({
+  tagline,
+  headline,
+  description,
+  features,
+  ctaText,
+  onCtaClick
+}: FeatureSectionProps) {
+  return <section className="bg-white py-16 px-6 border-t border-stone-100">
       <div className="max-w-6xl mx-auto">
         {/* Section Header */}
         <div className="text-center mb-12">
@@ -305,22 +285,15 @@ function FeatureSection({ tagline, headline, description, features, ctaText, onC
 
         {/* Feature Cards */}
         <div className="grid md:grid-cols-3 gap-8 mb-12">
-          {features.map((feature, index) => (
-            <div key={index} className="text-center">
+          {features.map((feature, index) => <div key={index} className="text-center">
               {/* Feature Image */}
               <div className="aspect-square bg-stone-900 rounded-xl mb-4 flex items-center justify-center overflow-hidden">
-                {feature.image ? (
-                  <img src={feature.image} alt={feature.title} className="w-full h-full object-contain" />
-                ) : (
-                  <span className="text-stone-400 text-xs font-tech">Feature Image</span>
-                )}
+                {feature.image ? <img src={feature.image} alt={feature.title} className="w-full h-full object-contain" /> : <span className="text-stone-400 text-xs font-tech">Feature Image</span>}
               </div>
               
-              {feature.badge && (
-                <span className="inline-block bg-orange-100 text-orange-600 text-xs font-tech font-medium px-2 py-1 rounded mb-2">
+              {feature.badge && <span className="inline-block bg-orange-100 text-orange-600 text-xs font-tech font-medium px-2 py-1 rounded mb-2">
                   {feature.badge}
-                </span>
-              )}
+                </span>}
               
               <h4 className="text-lg text-stone-900 mb-2 font-tech font-semibold">
                 {feature.title}
@@ -328,42 +301,34 @@ function FeatureSection({ tagline, headline, description, features, ctaText, onC
               <p className="text-stone-600 text-sm font-tech font-light">
                 {feature.description}
               </p>
-            </div>
-          ))}
+            </div>)}
         </div>
 
         {/* Section CTA */}
         <div className="text-center">
-          <Button
-            onClick={onCtaClick}
-            className="h-11 px-6 bg-emerald-800 hover:bg-emerald-700 text-white font-tech font-medium tracking-wide rounded-full shadow-[0_0_30px_8px_hsl(43_85%_55%/0.4)] hover:shadow-[0_0_40px_12px_hsl(43_85%_55%/0.6)] transition-all duration-300"
-          >
+          <Button onClick={onCtaClick} className="h-11 px-6 bg-emerald-800 hover:bg-emerald-700 text-white font-tech font-medium tracking-wide rounded-full shadow-[0_0_30px_8px_hsl(43_85%_55%/0.4)] hover:shadow-[0_0_40px_12px_hsl(43_85%_55%/0.6)] transition-all duration-300">
             {ctaText}
           </Button>
         </div>
       </div>
-    </section>
-  );
+    </section>;
 }
-
-function ComparisonRow({ feature, free, premium }: { feature: string; free: boolean; premium: boolean }) {
-  return (
-    <tr className="border-b border-stone-100">
+function ComparisonRow({
+  feature,
+  free,
+  premium
+}: {
+  feature: string;
+  free: boolean;
+  premium: boolean;
+}) {
+  return <tr className="border-b border-stone-100">
       <td className="py-4 pr-4 text-stone-700">{feature}</td>
       <td className="py-4 px-4 text-center">
-        {free ? (
-          <Check className="w-5 h-5 text-green-500 mx-auto" />
-        ) : (
-          <X className="w-5 h-5 text-stone-300 mx-auto" />
-        )}
+        {free ? <Check className="w-5 h-5 text-green-500 mx-auto" /> : <X className="w-5 h-5 text-stone-300 mx-auto" />}
       </td>
       <td className="py-4 pl-4 text-center">
-        {premium ? (
-          <Check className="w-5 h-5 text-green-500 mx-auto" />
-        ) : (
-          <X className="w-5 h-5 text-stone-300 mx-auto" />
-        )}
+        {premium ? <Check className="w-5 h-5 text-green-500 mx-auto" /> : <X className="w-5 h-5 text-stone-300 mx-auto" />}
       </td>
-    </tr>
-  );
+    </tr>;
 }
