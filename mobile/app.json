@@ -1,0 +1,93 @@
+{
+  "expo": {
+    "name": "Questbound",
+    "slug": "questbound",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "newArchEnabled": true,
+    "scheme": "questbound",
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#1a0e08"
+    },
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.questbound.app",
+      "buildNumber": "1",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "Questbound needs your location to track your adventures and verify quest completion.",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "Questbound needs your location to track your runs even when the app is in the background.",
+        "NSCameraUsageDescription": "Questbound needs camera access to record quest completion videos.",
+        "NSMicrophoneUsageDescription": "Questbound needs microphone access to record audio with quest videos.",
+        "NSPhotoLibraryUsageDescription": "Questbound needs photo library access to save and select quest videos.",
+        "UIBackgroundModes": ["location", "fetch", "remote-notification"]
+      },
+      "config": {
+        "usesNonExemptEncryption": false
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#1a0e08"
+      },
+      "package": "com.questbound.app",
+      "versionCode": 1,
+      "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_BACKGROUND_LOCATION",
+        "CAMERA",
+        "RECORD_AUDIO",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE"
+      ]
+    },
+    "plugins": [
+      "expo-font",
+      "expo-secure-store",
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow Questbound to use your location to track adventures."
+        }
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow Questbound to access your camera for quest videos.",
+          "microphonePermission": "Allow Questbound to access your microphone for quest videos.",
+          "recordAudioAndroid": true
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow Questbound to access your photos for quest submissions."
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/notification-icon.png",
+          "color": "#d4a857"
+        }
+      ],
+      "expo-splash-screen"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "your-eas-project-id"
+      }
+    },
+    "updates": {
+      "url": "https://u.expo.dev/your-eas-project-id"
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    }
+  }
+}
