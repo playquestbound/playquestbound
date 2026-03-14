@@ -22,6 +22,8 @@ import PlayerProfile from "./pages/PlayerProfile";
 import RunTracker from "./pages/RunTracker";
 import Store from "./pages/Store";
 import Discover from "./pages/Discover";
+import Friends from "./pages/Friends";
+import Guild from "./pages/Guild";
 import NotFound from "./pages/NotFound";
 import Landing from "./pages/Landing";
 import QuestManagement from "./pages/admin/QuestManagement";
