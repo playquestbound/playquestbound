@@ -7,7 +7,9 @@ import { CharacterProfile3D } from '@/components/3d/CharacterProfile3D';
 import { getRaceName } from '@/lib/races';
 import { Gender } from '@/lib/races';
 import { getXpProgress, formatNumber } from '@/lib/levelSystem';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, UserPlus, UserCheck, Clock } from 'lucide-react';
+import { useAuth } from '@/hooks/useAuth';
+import { useFriendshipStatus, useSendFriendRequest } from '@/hooks/useFriends';
 
 interface Customization {
   skinTone?: string;
