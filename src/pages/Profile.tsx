@@ -19,9 +19,13 @@ import {
   Users,
   Pencil,
   ShieldCheck,
-  Trophy
+  Trophy,
+  UserPlus,
+  Shield
 } from 'lucide-react';
 import { useIsAdmin } from '@/hooks/useAdminQuests';
+import { useFriendRequests } from '@/hooks/useFriends';
+import { useGuildInvites } from '@/hooks/useGuilds';
 
 interface Customization {
   skinTone?: string;
