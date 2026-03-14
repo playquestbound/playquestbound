@@ -40,8 +40,11 @@ export default function Profile() {
   const { data: completedQuests, isLoading: questsLoading } = useCompletedQuests();
   const { data: activeTitle } = useActiveTitle();
   const { data: isAdmin } = useIsAdmin();
+  const { data: friendRequests } = useFriendRequests();
+  const { data: guildInvites } = useGuildInvites();
   const { signOut } = useAuth();
   const navigate = useNavigate();
+  const pendingCount = (friendRequests?.length || 0) + (guildInvites?.length || 0);
 
   const isLoading = profileLoading || questsLoading;
 
