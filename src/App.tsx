@@ -22,6 +22,8 @@ import PlayerProfile from "./pages/PlayerProfile";
 import RunTracker from "./pages/RunTracker";
 import Store from "./pages/Store";
 import Discover from "./pages/Discover";
+import Friends from "./pages/Friends";
+import Guild from "./pages/Guild";
 import NotFound from "./pages/NotFound";
 import Landing from "./pages/Landing";
 import QuestManagement from "./pages/admin/QuestManagement";
@@ -55,6 +57,8 @@ function AppContent() {
         <Route path="/run" element={<RunTracker />} />
         <Route path="/store" element={<Store />} />
         <Route path="/discover" element={<Discover />} />
+        <Route path="/friends" element={<Friends />} />
+        <Route path="/guild" element={<Guild />} />
         <Route path="/admin/quests" element={<ProtectedRoute requireAdmin><QuestManagement /></ProtectedRoute>} />
         <Route path="/admin/models" element={<ProtectedRoute requireAdmin><ModelManagement /></ProtectedRoute>} />
         <Route path="/admin/submissions" element={<ProtectedRoute requireAdmin><SubmissionsReview /></ProtectedRoute>} />

@@ -48,7 +48,7 @@ export function RunProvider({ children }: { children: ReactNode }) {
   const [totalXpAwarded, setTotalXpAwarded] = useState(0);
 
   const watchIdRef = useRef<number | null>(null);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isRunningRef = useRef(isRunning);
   const isPausedRef = useRef(isPaused);
   const lastPositionRef = useRef<Position | null>(null);

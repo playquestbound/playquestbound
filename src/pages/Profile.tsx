@@ -19,9 +19,13 @@ import {
   Users,
   Pencil,
   ShieldCheck,
-  Trophy
+  Trophy,
+  UserPlus,
+  Shield
 } from 'lucide-react';
 import { useIsAdmin } from '@/hooks/useAdminQuests';
+import { useFriendRequests } from '@/hooks/useFriends';
+import { useGuildInvites } from '@/hooks/useGuilds';
 
 interface Customization {
   skinTone?: string;
@@ -36,8 +40,11 @@ export default function Profile() {
   const { data: completedQuests, isLoading: questsLoading } = useCompletedQuests();
   const { data: activeTitle } = useActiveTitle();
   const { data: isAdmin } = useIsAdmin();
+  const { data: friendRequests } = useFriendRequests();
+  const { data: guildInvites } = useGuildInvites();
   const { signOut } = useAuth();
   const navigate = useNavigate();
+  const pendingCount = (friendRequests?.length || 0) + (guildInvites?.length || 0);
 
   const isLoading = profileLoading || questsLoading;
 
@@ -381,19 +388,29 @@ export default function Profile() {
                 </Button>
               </EquipmentDrawer>
 
-              {/* Guilds Button - Coming Soon */}
+              {/* Friends Button */}
               <Button 
                 variant="outline"
-                className="w-full font-display tracking-wider relative border-border/30 bg-muted/30 text-muted-foreground"
-                disabled
+                className="w-full font-display tracking-wider relative border-border/50 bg-card/80 hover:bg-card text-foreground"
+                onClick={() => navigate('/friends')}
               >
-                <Users className="w-4 h-4 mr-2" />
-                Guilds
-                <span 
-                  className="absolute -top-2 -right-2 px-2 py-0.5 text-[10px] font-bold rounded-full bg-muted text-muted-foreground border border-border/50"
-                >
-                  SOON
-                </span>
+                <UserPlus className="w-4 h-4 mr-2" />
+                Companions
+                {pendingCount > 0 && (
+                  <span className="absolute -top-2 -right-2 px-2 py-0.5 text-[10px] font-bold rounded-full bg-destructive text-destructive-foreground">
+                    {pendingCount}
+                  </span>
+                )}
+              </Button>
+
+              {/* Guilds Button */}
+              <Button 
+                variant="outline"
+                className="w-full font-display tracking-wider border-border/50 bg-card/80 hover:bg-card text-foreground"
+                onClick={() => navigate('/guild')}
+              >
+                <Shield className="w-4 h-4 mr-2" />
+                Guild
               </Button>
 
               {/* Leaderboard Button */}

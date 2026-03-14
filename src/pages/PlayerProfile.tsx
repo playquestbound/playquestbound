@@ -7,7 +7,9 @@ import { CharacterProfile3D } from '@/components/3d/CharacterProfile3D';
 import { getRaceName } from '@/lib/races';
 import { Gender } from '@/lib/races';
 import { getXpProgress, formatNumber } from '@/lib/levelSystem';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, UserPlus, UserCheck, Clock } from 'lucide-react';
+import { useAuth } from '@/hooks/useAuth';
+import { useFriendshipStatus, useSendFriendRequest } from '@/hooks/useFriends';
 
 interface Customization {
   skinTone?: string;
@@ -20,6 +22,10 @@ interface Customization {
 export default function PlayerProfile() {
   const { playerId } = useParams();
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const { data: friendship } = useFriendshipStatus(playerId);
+  const sendRequest = useSendFriendRequest();
+  const isOwnProfile = user?.id === playerId;
 
   const { data: profile, isLoading } = useQuery({
     queryKey: ['player-profile', playerId],
@@ -83,7 +89,31 @@ export default function PlayerProfile() {
           >
             <ArrowLeft className="w-5 h-5" />
           </Button>
-          <h1 className="font-display text-lg font-bold">Adventurer Profile</h1>
+          <h1 className="font-display text-lg font-bold flex-1">Adventurer Profile</h1>
+          {!isOwnProfile && !friendship && (
+            <Button
+              size="sm"
+              variant="outline"
+              className="font-display text-xs"
+              onClick={() => playerId && sendRequest.mutate(playerId)}
+              disabled={sendRequest.isPending}
+            >
+              <UserPlus className="w-4 h-4 mr-1" />
+              Add Friend
+            </Button>
+          )}
+          {!isOwnProfile && friendship?.status === 'pending' && (
+            <Button size="sm" variant="outline" className="font-display text-xs" disabled>
+              <Clock className="w-4 h-4 mr-1" />
+              Pending
+            </Button>
+          )}
+          {!isOwnProfile && friendship?.status === 'accepted' && (
+            <Button size="sm" variant="outline" className="font-display text-xs text-green-500 border-green-500/30" disabled>
+              <UserCheck className="w-4 h-4 mr-1" />
+              Friends
+            </Button>
+          )}
         </div>
       </div>
 
