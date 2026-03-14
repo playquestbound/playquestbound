@@ -1,0 +1,1 @@
+UPDATE profiles SET gold = 5000 WHERE id = '802396fc-bef8-40a6-9971-bc192017fb0f';
