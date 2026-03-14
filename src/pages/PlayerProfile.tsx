@@ -22,6 +22,10 @@ interface Customization {
 export default function PlayerProfile() {
   const { playerId } = useParams();
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const { data: friendship } = useFriendshipStatus(playerId);
+  const sendRequest = useSendFriendRequest();
+  const isOwnProfile = user?.id === playerId;
 
   const { data: profile, isLoading } = useQuery({
     queryKey: ['player-profile', playerId],
