@@ -89,7 +89,31 @@ export default function PlayerProfile() {
           >
             <ArrowLeft className="w-5 h-5" />
           </Button>
-          <h1 className="font-display text-lg font-bold">Adventurer Profile</h1>
+          <h1 className="font-display text-lg font-bold flex-1">Adventurer Profile</h1>
+          {!isOwnProfile && !friendship && (
+            <Button
+              size="sm"
+              variant="outline"
+              className="font-display text-xs"
+              onClick={() => playerId && sendRequest.mutate(playerId)}
+              disabled={sendRequest.isPending}
+            >
+              <UserPlus className="w-4 h-4 mr-1" />
+              Add Friend
+            </Button>
+          )}
+          {!isOwnProfile && friendship?.status === 'pending' && (
+            <Button size="sm" variant="outline" className="font-display text-xs" disabled>
+              <Clock className="w-4 h-4 mr-1" />
+              Pending
+            </Button>
+          )}
+          {!isOwnProfile && friendship?.status === 'accepted' && (
+            <Button size="sm" variant="outline" className="font-display text-xs text-green-500 border-green-500/30" disabled>
+              <UserCheck className="w-4 h-4 mr-1" />
+              Friends
+            </Button>
+          )}
         </div>
       </div>
 

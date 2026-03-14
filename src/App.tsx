@@ -57,6 +57,8 @@ function AppContent() {
         <Route path="/run" element={<RunTracker />} />
         <Route path="/store" element={<Store />} />
         <Route path="/discover" element={<Discover />} />
+        <Route path="/friends" element={<Friends />} />
+        <Route path="/guild" element={<Guild />} />
         <Route path="/admin/quests" element={<ProtectedRoute requireAdmin><QuestManagement /></ProtectedRoute>} />
         <Route path="/admin/models" element={<ProtectedRoute requireAdmin><ModelManagement /></ProtectedRoute>} />
         <Route path="/admin/submissions" element={<ProtectedRoute requireAdmin><SubmissionsReview /></ProtectedRoute>} />
