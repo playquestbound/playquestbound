@@ -37,7 +37,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 
-const GUILD_COST = 100;
+const GUILD_COST = 1000;
 
 export default function Guild() {
   const navigate = useNavigate();

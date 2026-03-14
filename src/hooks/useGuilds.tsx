@@ -3,7 +3,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from '@/hooks/use-toast';
 
-const GUILD_CREATION_COST = 100;
+const GUILD_CREATION_COST = 1000;
 
 export function useMyGuild() {
   const { user } = useAuth();
