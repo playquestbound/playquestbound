@@ -55,10 +55,10 @@ export function CampScene({ characterRace }: CampSceneProps) {
       <div className="absolute bottom-32 left-1/2 -translate-x-1/2 z-20">
         <Button
           onClick={() => navigate('/run')}
-          className="px-6 py-3 text-sm font-display tracking-widest bg-black text-white border-2 border-white/30 rounded-full hover:bg-black/90 transition-all duration-300"
+          className="px-6 py-3 text-sm font-display tracking-widest bg-emerald-700 text-white border-2 border-emerald-400/40 rounded-full hover:bg-emerald-600 transition-all duration-300"
           style={{
-            boxShadow: '0 0 20px 8px rgba(255,255,255,0.3), 0 0 40px 16px rgba(255,255,255,0.15), inset 0 0 20px rgba(255,255,255,0.1)',
-            textShadow: '0 0 10px rgba(255,255,255,0.8), 0 0 20px rgba(255,255,255,0.5)',
+            boxShadow: '0 0 20px 8px rgba(234,179,8,0.35), 0 0 40px 16px rgba(234,179,8,0.18), inset 0 0 20px rgba(234,179,8,0.1)',
+            textShadow: '0 0 10px rgba(234,179,8,0.8), 0 0 20px rgba(234,179,8,0.5)',
           }}
         >
           EXPLORE
