@@ -36,6 +36,19 @@ export function useProfile() {
         .maybeSingle();
       
       if (error) throw error;
+      
+      // Auto-correct level if out of sync with XP
+      if (data) {
+        const correctLevel = calculateLevel(data.xp);
+        if (data.level !== correctLevel) {
+          await supabase
+            .from('profiles')
+            .update({ level: correctLevel })
+            .eq('id', user.id);
+          data.level = correctLevel;
+        }
+      }
+      
       return data;
     },
     enabled: !!user,
