@@ -1,4 +1,4 @@
-import { getXpProgress, formatNumber } from '@/lib/levelSystem';
+import { getXpProgress, formatNumber, getClassTier } from '@/lib/levelSystem';
 import { Coins } from 'lucide-react';
 
 interface StatusBarProps {
