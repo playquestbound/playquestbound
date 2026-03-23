@@ -9,7 +9,7 @@ import { EquipmentDrawer } from '@/components/profile/EquipmentDrawer';
 import { CharacterProfile3D } from '@/components/3d/CharacterProfile3D';
 import { getRaceName } from '@/lib/races';
 import { Gender } from '@/lib/races';
-import { getXpProgress, formatNumber } from '@/lib/levelSystem';
+import { getXpProgress, formatNumber, getClassTier } from '@/lib/levelSystem';
 import { toast } from '@/hooks/use-toast';
 import { 
   LogOut, 
@@ -189,7 +189,7 @@ export default function Profile() {
                   </div>
                 </div>
 
-                {/* Class badge - Top right - Muted blue/grey */}
+                {/* Class tier badge - Top right - Muted blue/grey */}
                 <div className="absolute top-5 right-4 z-20">
                   <div 
                     className="px-3 py-1 rounded-full text-xs font-display font-semibold tracking-wider uppercase"
@@ -200,7 +200,7 @@ export default function Profile() {
                       boxShadow: '0 2px 8px hsl(220 40% 15% / 0.6)',
                     }}
                   >
-                    {profile.class ? profile.class.charAt(0).toUpperCase() + profile.class.slice(1) : 'Adventurer'}
+                    {getClassTier(profile.level)}
                   </div>
                 </div>
 
