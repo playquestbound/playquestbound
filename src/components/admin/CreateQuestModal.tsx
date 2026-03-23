@@ -350,6 +350,87 @@ export function CreateQuestModal({ open, onOpenChange, onSubmit, isLoading }: Cr
             </div>
           </div>
 
+          {/* Visibility Gates */}
+          <div className="space-y-4 p-4 bg-muted/30 rounded-lg border">
+            <div className="flex items-center gap-2">
+              <Shield className="w-4 h-4 text-primary" />
+              <h4 className="font-medium">Visibility Gates</h4>
+            </div>
+
+            {/* Level Gate */}
+            <div className="space-y-2">
+              <Label htmlFor="min_level">Minimum Level Required</Label>
+              <p className="text-xs text-muted-foreground">Leave empty for no level requirement</p>
+              <Input
+                id="min_level"
+                type="number"
+                min={1}
+                max={75}
+                value={formData.min_level ?? ""}
+                onChange={(e) => setFormData(prev => ({
+                  ...prev,
+                  min_level: e.target.value ? parseInt(e.target.value) : null,
+                }))}
+                placeholder="e.g. 10"
+              />
+            </div>
+
+            {/* Geo Gate */}
+            <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                <MapPin className="w-4 h-4 text-primary" />
+                <Label>Geographic Visibility</Label>
+              </div>
+              <p className="text-xs text-muted-foreground">Only show this quest to players near a specific location</p>
+              
+              <div className="grid grid-cols-3 gap-3">
+                <div>
+                  <Label htmlFor="vis_lat" className="text-xs">Latitude</Label>
+                  <Input
+                    id="vis_lat"
+                    type="number"
+                    step="0.0001"
+                    value={formData.visibility_lat ?? ""}
+                    onChange={(e) => setFormData(prev => ({
+                      ...prev,
+                      visibility_lat: e.target.value ? parseFloat(e.target.value) : null,
+                    }))}
+                    placeholder="51.5074"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="vis_lng" className="text-xs">Longitude</Label>
+                  <Input
+                    id="vis_lng"
+                    type="number"
+                    step="0.0001"
+                    value={formData.visibility_lng ?? ""}
+                    onChange={(e) => setFormData(prev => ({
+                      ...prev,
+                      visibility_lng: e.target.value ? parseFloat(e.target.value) : null,
+                    }))}
+                    placeholder="-0.1278"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="vis_radius" className="text-xs">Radius (km)</Label>
+                  <Input
+                    id="vis_radius"
+                    type="number"
+                    step="0.1"
+                    min={0.1}
+                    value={formData.visibility_radius_km ?? ""}
+                    onChange={(e) => setFormData(prev => ({
+                      ...prev,
+                      visibility_radius_km: e.target.value ? parseFloat(e.target.value) : null,
+                    }))}
+                    placeholder="50"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
           {/* Flags */}
           <div className="space-y-4">
             <div className="flex items-center justify-between">
