@@ -93,25 +93,7 @@ export function CreateQuestModal({ open, onOpenChange, onSubmit, isLoading }: Cr
     e.preventDefault();
     await onSubmit(formData);
     // Reset form
-    setFormData({
-      title: "",
-      description: "",
-      quest_type: "run",
-      quest_category: "fitness",
-      niche: null,
-      class_affinity: null,
-      xp_reward: 50,
-      gold_reward: 10,
-      difficulty: "Easy",
-      tier: "side",
-      is_funded_eligible: false,
-      requires_manual_review: false,
-      verification_config: {
-        requires_gps: false,
-        requires_video: false,
-        challenges: [],
-      },
-    });
+    setFormData(defaultFormData);
   };
 
   const addChallenge = () => {
