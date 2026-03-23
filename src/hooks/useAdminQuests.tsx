@@ -257,6 +257,10 @@ export interface CreateQuestData {
     requires_video: boolean;
     challenges: string[];
   };
+  min_level: number | null;
+  visibility_lat: number | null;
+  visibility_lng: number | null;
+  visibility_radius_km: number | null;
 }
 
 export function useCreateQuest() {
