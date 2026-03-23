@@ -482,6 +482,7 @@ export type Database = {
           is_active: boolean
           is_funded_eligible: boolean | null
           location_type: string[] | null
+          min_level: number | null
           niche: string | null
           published_at: string | null
           quest_category: string
@@ -493,6 +494,9 @@ export type Database = {
           title: string
           updated_at: string | null
           verification_config: Json | null
+          visibility_lat: number | null
+          visibility_lng: number | null
+          visibility_radius_km: number | null
           xp_reward: number
         }
         Insert: {
@@ -505,6 +509,7 @@ export type Database = {
           is_active?: boolean
           is_funded_eligible?: boolean | null
           location_type?: string[] | null
+          min_level?: number | null
           niche?: string | null
           published_at?: string | null
           quest_category?: string
@@ -516,6 +521,9 @@ export type Database = {
           title: string
           updated_at?: string | null
           verification_config?: Json | null
+          visibility_lat?: number | null
+          visibility_lng?: number | null
+          visibility_radius_km?: number | null
           xp_reward?: number
         }
         Update: {
@@ -528,6 +536,7 @@ export type Database = {
           is_active?: boolean
           is_funded_eligible?: boolean | null
           location_type?: string[] | null
+          min_level?: number | null
           niche?: string | null
           published_at?: string | null
           quest_category?: string
@@ -539,6 +548,9 @@ export type Database = {
           title?: string
           updated_at?: string | null
           verification_config?: Json | null
+          visibility_lat?: number | null
+          visibility_lng?: number | null
+          visibility_radius_km?: number | null
           xp_reward?: number
         }
         Relationships: []
