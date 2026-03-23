@@ -284,7 +284,21 @@ export function RunProvider({ children }: { children: ReactNode }) {
 export function useRunTracker() {
   const context = useContext(RunContext);
   if (!context) {
-    throw new Error('useRunTracker must be used within a RunProvider');
+    // Return safe defaults if provider hasn't mounted yet (e.g. during error recovery)
+    return {
+      isRunning: false,
+      isPaused: false,
+      distance: 0,
+      duration: 0,
+      positions: [],
+      currentPosition: null,
+      locationError: null,
+      startTracking: () => {},
+      pauseTracking: () => {},
+      resumeTracking: () => {},
+      stopTracking: async () => {},
+      navigateToRun: () => {},
+    } as RunContextType;
   }
   return context;
 }
