@@ -17,6 +17,10 @@ export interface Quest {
   is_active: boolean;
   created_at: string;
   verification_config: Record<string, unknown> | null;
+  min_level: number | null;
+  visibility_lat: number | null;
+  visibility_lng: number | null;
+  visibility_radius_km: number | null;
 }
 
 export interface UserQuest {
