@@ -90,9 +90,11 @@ function useUserLocation() {
 
 export function useAvailableQuests(filters?: QuestFilters) {
   const { user } = useAuth();
+  const { data: profile } = useProfile();
+  const userLocation = useUserLocation();
 
   return useQuery({
-    queryKey: ['available-quests', user?.id, filters],
+    queryKey: ['available-quests', user?.id, filters, profile?.level, userLocation?.lat, userLocation?.lng],
     queryFn: async (): Promise<Quest[]> => {
       // Build query - only fetch LIVE quests
       let query = supabase
@@ -118,7 +120,25 @@ export function useAvailableQuests(filters?: QuestFilters) {
 
       if (questsError) throw questsError;
 
-      if (!user) return sortQuests((quests || []) as Quest[]);
+      // Apply level and geo visibility gates client-side
+      const userLevel = profile?.level ?? 1;
+      let filteredQuests = (quests || []) as Quest[];
+
+      filteredQuests = filteredQuests.filter(q => {
+        // Level gate
+        if (q.min_level && userLevel < q.min_level) return false;
+
+        // Geo gate
+        if (q.visibility_lat != null && q.visibility_lng != null && q.visibility_radius_km != null) {
+          if (!userLocation) return false; // hide geo-gated quests if location unknown
+          const dist = getDistanceKm(userLocation.lat, userLocation.lng, q.visibility_lat, q.visibility_lng);
+          if (dist > q.visibility_radius_km) return false;
+        }
+
+        return true;
+      });
+
+      if (!user) return sortQuests(filteredQuests);
 
       // Get user's quest history to filter out active/completed ones
       const { data: userQuests, error: userQuestsError } = await supabase
@@ -128,14 +148,13 @@ export function useAvailableQuests(filters?: QuestFilters) {
 
       if (userQuestsError) throw userQuestsError;
 
-      // Filter out quests that user has active or completed
       const activeOrCompletedQuestIds = new Set(
         userQuests?.map(uq => uq.quest_id) || []
       );
 
-      const availableQuests = (quests || []).filter(
+      const availableQuests = filteredQuests.filter(
         q => !activeOrCompletedQuestIds.has(q.id)
-      ) as Quest[];
+      );
 
       return sortQuests(availableQuests);
     },
