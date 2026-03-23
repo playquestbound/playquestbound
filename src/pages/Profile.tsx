@@ -9,7 +9,7 @@ import { EquipmentDrawer } from '@/components/profile/EquipmentDrawer';
 import { CharacterProfile3D } from '@/components/3d/CharacterProfile3D';
 import { getRaceName } from '@/lib/races';
 import { Gender } from '@/lib/races';
-import { getXpProgress, formatNumber } from '@/lib/levelSystem';
+import { getXpProgress, formatNumber, getClassTier } from '@/lib/levelSystem';
 import { toast } from '@/hooks/use-toast';
 import { 
   LogOut, 
