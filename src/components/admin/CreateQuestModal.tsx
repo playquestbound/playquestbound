@@ -62,7 +62,7 @@ const TIERS = [
 ];
 
 export function CreateQuestModal({ open, onOpenChange, onSubmit, isLoading }: CreateQuestModalProps) {
-  const [formData, setFormData] = useState<CreateQuestData>({
+  const defaultFormData: CreateQuestData = {
     title: "",
     description: "",
     quest_type: "run",
@@ -80,7 +80,13 @@ export function CreateQuestModal({ open, onOpenChange, onSubmit, isLoading }: Cr
       requires_video: false,
       challenges: [],
     },
-  });
+    min_level: null,
+    visibility_lat: null,
+    visibility_lng: null,
+    visibility_radius_km: null,
+  };
+
+  const [formData, setFormData] = useState<CreateQuestData>(defaultFormData);
   const [newChallenge, setNewChallenge] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
