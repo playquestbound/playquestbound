@@ -257,6 +257,10 @@ export interface CreateQuestData {
     requires_video: boolean;
     challenges: string[];
   };
+  min_level: number | null;
+  visibility_lat: number | null;
+  visibility_lng: number | null;
+  visibility_radius_km: number | null;
 }
 
 export function useCreateQuest() {
@@ -280,6 +284,10 @@ export function useCreateQuest() {
           is_funded_eligible: questData.is_funded_eligible,
           requires_manual_review: questData.requires_manual_review,
           verification_config: questData.verification_config,
+          min_level: questData.min_level,
+          visibility_lat: questData.visibility_lat,
+          visibility_lng: questData.visibility_lng,
+          visibility_radius_km: questData.visibility_radius_km,
           status: 'draft',
           is_active: false,
         })
