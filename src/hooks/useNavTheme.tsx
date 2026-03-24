@@ -109,9 +109,9 @@ export const designStyles: Record<DesignStyle, { name: string; description: stri
     name: 'Sleek',
     description: 'Modern dark minimal design',
   },
-  adventurer: {
-    name: 'Adventurer',
-    description: 'Classic fantasy RPG aesthetic',
+  modern: {
+    name: 'Modern',
+    description: 'Clean light minimal aesthetic',
   },
 };
 
