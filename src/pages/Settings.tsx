@@ -98,7 +98,7 @@ export default function Settings() {
 
   const designStyleOptions: { id: DesignStyle; icon: typeof Sparkles; gradient: string }[] = [
     { id: 'sleek', icon: Sparkles, gradient: 'from-gray-600 to-gray-800' },
-    { id: 'adventurer', icon: Sword, gradient: 'from-amber-700 to-amber-900' },
+    { id: 'modern', icon: Sun, gradient: 'from-emerald-700 to-emerald-900' },
   ];
 
   return (

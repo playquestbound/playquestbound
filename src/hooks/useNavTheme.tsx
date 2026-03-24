@@ -161,7 +161,7 @@ export function NavThemeProvider({ children }: { children: ReactNode }) {
   // Apply design style class to document
   useEffect(() => {
     const root = document.documentElement;
-    root.classList.remove('design-sleek', 'design-adventurer');
+    root.classList.remove('design-sleek', 'design-modern');
     root.classList.add(`design-${designStyle}`);
   }, [designStyle]);
 

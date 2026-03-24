@@ -217,24 +217,39 @@ html, body {
     background: linear-gradient(to bottom, hsl(0 0% 5%) 0%, transparent 100%);
   }
 
-  /* Adventurer style cards - Fantasy parchment look */
-  .design-adventurer .parchment-card {
-    @apply bg-card rounded-lg border-2 border-border;
-    background: linear-gradient(180deg, hsl(40 40% 94%), hsl(35 35% 88%));
-    box-shadow: 0 4px 20px -4px hsl(25 50% 25% / 0.2);
+  /* Modern style cards - Clean light minimal */
+  .design-modern .parchment-card {
+    @apply bg-card rounded-2xl border border-border;
+    box-shadow: 0 1px 3px hsl(0 0% 0% / 0.06);
   }
 
-  .design-adventurer .quest-scroll {
-    @apply relative rounded-lg border-2 border-border overflow-hidden;
-    background: linear-gradient(180deg, hsl(40 40% 94%), hsl(35 35% 88%));
-    box-shadow: 0 4px 20px -4px hsl(25 50% 25% / 0.2), inset 0 2px 4px hsl(25 50% 20% / 0.15);
+  .design-modern .quest-scroll {
+    @apply relative rounded-2xl border border-border overflow-hidden bg-card;
+    box-shadow: 0 1px 3px hsl(0 0% 0% / 0.06);
   }
 
-  .design-adventurer .quest-scroll::before,
-  .design-adventurer .quest-scroll::after {
-    content: '';
-    @apply absolute left-0 right-0 h-4 pointer-events-none;
-    background: linear-gradient(to bottom, hsl(25 50% 25%) 0%, transparent 100%);
+  .design-modern .quest-scroll::before,
+  .design-modern .quest-scroll::after {
+    display: none;
+  }
+
+  .design-modern h1,
+  .design-modern h2,
+  .design-modern h3,
+  .design-modern h4,
+  .design-modern h5,
+  .design-modern h6,
+  .design-modern .font-display {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif !important;
+  }
+
+  .design-modern body,
+  .design-modern .font-body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif !important;
+  }
+
+  .design-modern * {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   }
 
   /* Fallback for when no design class is present */
