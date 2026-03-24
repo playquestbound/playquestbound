@@ -111,9 +111,9 @@ export function BottomNav() {
       <nav 
         className="flex items-center justify-evenly backdrop-blur-sm rounded-full px-2 py-2 overflow-visible min-w-[340px] sm:min-w-0"
         style={{
-          backgroundColor: config.bgColor,
-          border: `1px solid ${config.borderColor}`,
-          boxShadow: `0 0 20px ${config.glowColor}, 0 4px 20px rgba(0,0,0,0.3)`,
+          backgroundColor: navColors.bgColor,
+          border: `1px solid ${navColors.borderColor}`,
+          boxShadow: navColors.shadowColor,
         }}
       >
         {navItems.map((item) => (
