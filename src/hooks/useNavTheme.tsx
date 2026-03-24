@@ -1,7 +1,7 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
 export type NavTheme = 'classic' | 'blue' | 'orange' | 'green' | 'red';
-export type DesignStyle = 'sleek' | 'adventurer';
+export type DesignStyle = 'sleek' | 'modern';
 
 interface NavThemeConfig {
   name: string;
@@ -109,9 +109,9 @@ export const designStyles: Record<DesignStyle, { name: string; description: stri
     name: 'Sleek',
     description: 'Modern dark minimal design',
   },
-  adventurer: {
-    name: 'Adventurer',
-    description: 'Classic fantasy RPG aesthetic',
+  modern: {
+    name: 'Modern',
+    description: 'Clean light minimal aesthetic',
   },
 };
 
@@ -161,7 +161,7 @@ export function NavThemeProvider({ children }: { children: ReactNode }) {
   // Apply design style class to document
   useEffect(() => {
     const root = document.documentElement;
-    root.classList.remove('design-sleek', 'design-adventurer');
+    root.classList.remove('design-sleek', 'design-modern');
     root.classList.add(`design-${designStyle}`);
   }, [designStyle]);
 

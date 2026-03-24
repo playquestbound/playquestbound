@@ -154,28 +154,28 @@ html, body {
     --muted-foreground: 0 0% 60%;
   }
 
-  /* Adventurer Design Style - Classic fantasy RPG with light parchment */
-  .design-adventurer.dark {
-    --background: 35 30% 92%;
-    --background-gradient: linear-gradient(180deg, hsl(40 35% 94%) 0%, hsl(35 30% 88%) 100%);
-    --foreground: 25 50% 15%;
-    --card: 38 35% 88%;
-    --card-foreground: 25 50% 15%;
-    --popover: 38 35% 90%;
-    --popover-foreground: 25 50% 15%;
-    --primary: 25 65% 20%;
-    --primary-foreground: 40 30% 95%;
-    --secondary: 40 70% 50%;
-    --secondary-foreground: 25 65% 12%;
-    --muted: 35 25% 82%;
-    --muted-foreground: 25 40% 35%;
-    --accent: 100 50% 22%;
-    --accent-foreground: 40 30% 95%;
-    --destructive: 0 55% 35%;
-    --destructive-foreground: 40 30% 95%;
-    --border: 25 45% 45%;
-    --input: 35 30% 75%;
-    --ring: 40 65% 45%;
+  /* Modern Design Style - Clean light minimal with muted forest greens */
+  .design-modern.dark {
+    --background: 0 0% 97%;
+    --background-gradient: linear-gradient(180deg, hsl(0 0% 98%) 0%, hsl(0 0% 94%) 100%);
+    --foreground: 0 0% 12%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 12%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 12%;
+    --primary: 155 35% 28%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 155 25% 38%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 92%;
+    --muted-foreground: 0 0% 45%;
+    --accent: 155 30% 32%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 55% 48%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 85%;
+    --input: 0 0% 90%;
+    --ring: 155 35% 35%;
   }
 }
 
@@ -217,24 +217,39 @@ html, body {
     background: linear-gradient(to bottom, hsl(0 0% 5%) 0%, transparent 100%);
   }
 
-  /* Adventurer style cards - Fantasy parchment look */
-  .design-adventurer .parchment-card {
-    @apply bg-card rounded-lg border-2 border-border;
-    background: linear-gradient(180deg, hsl(40 40% 94%), hsl(35 35% 88%));
-    box-shadow: 0 4px 20px -4px hsl(25 50% 25% / 0.2);
+  /* Modern style cards - Clean light minimal */
+  .design-modern .parchment-card {
+    @apply bg-card rounded-2xl border border-border;
+    box-shadow: 0 1px 3px hsl(0 0% 0% / 0.06);
   }
 
-  .design-adventurer .quest-scroll {
-    @apply relative rounded-lg border-2 border-border overflow-hidden;
-    background: linear-gradient(180deg, hsl(40 40% 94%), hsl(35 35% 88%));
-    box-shadow: 0 4px 20px -4px hsl(25 50% 25% / 0.2), inset 0 2px 4px hsl(25 50% 20% / 0.15);
+  .design-modern .quest-scroll {
+    @apply relative rounded-2xl border border-border overflow-hidden bg-card;
+    box-shadow: 0 1px 3px hsl(0 0% 0% / 0.06);
   }
 
-  .design-adventurer .quest-scroll::before,
-  .design-adventurer .quest-scroll::after {
-    content: '';
-    @apply absolute left-0 right-0 h-4 pointer-events-none;
-    background: linear-gradient(to bottom, hsl(25 50% 25%) 0%, transparent 100%);
+  .design-modern .quest-scroll::before,
+  .design-modern .quest-scroll::after {
+    display: none;
+  }
+
+  .design-modern h1,
+  .design-modern h2,
+  .design-modern h3,
+  .design-modern h4,
+  .design-modern h5,
+  .design-modern h6,
+  .design-modern .font-display {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif !important;
+  }
+
+  .design-modern body,
+  .design-modern .font-body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif !important;
+  }
+
+  .design-modern * {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   }
 
   /* Fallback for when no design class is present */
