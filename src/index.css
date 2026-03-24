@@ -224,8 +224,9 @@ html, body {
   }
 
   .design-modern .quest-scroll {
-    @apply relative rounded-2xl border border-border overflow-hidden bg-card;
-    box-shadow: 0 1px 3px hsl(0 0% 0% / 0.06);
+    @apply relative rounded-2xl border-0 overflow-hidden;
+    background: hsl(0 0% 100%);
+    box-shadow: 0 1px 4px hsl(0 0% 0% / 0.06);
   }
 
   .design-modern .quest-scroll::before,
