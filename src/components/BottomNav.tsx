@@ -15,7 +15,35 @@ const navItems = [
 
 export function BottomNav() {
   const location = useLocation();
-  const { config } = useNavTheme();
+  const { config, designStyle } = useNavTheme();
+  const isModern = designStyle === 'modern';
+
+  const navColors = useMemo(() => {
+    if (isModern) {
+      return {
+        bgColor: 'rgba(255, 255, 255, 0.92)',
+        iconColor: 'rgba(0, 0, 0, 0.5)',
+        activeIconColor: '#ffffff',
+        activeBgColor: 'hsl(155, 35%, 28%)',
+        glowColor: 'transparent',
+        borderColor: 'rgba(0, 0, 0, 0.08)',
+        shadowColor: '0 2px 20px rgba(0,0,0,0.08)',
+        labelColor: 'rgba(0, 0, 0, 0.45)',
+        activeLabelColor: '#ffffff',
+      };
+    }
+    return {
+      bgColor: config.bgColor,
+      iconColor: config.iconColor,
+      activeIconColor: config.activeIconColor,
+      activeBgColor: config.activeBgColor,
+      glowColor: config.glowColor,
+      borderColor: config.borderColor,
+      shadowColor: `0 0 20px ${config.glowColor}, 0 4px 20px rgba(0,0,0,0.3)`,
+      labelColor: config.iconColor,
+      activeLabelColor: config.activeIconColor,
+    };
+  }, [isModern, config]);
 
   const NavItem = ({ to, icon: Icon, label, isCenter }: { to: string; icon: typeof Home | null; label: string; isCenter?: boolean }) => {
     const isActive = location.pathname === to || (to !== '/' && location.pathname.startsWith(to));
