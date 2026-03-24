@@ -154,10 +154,10 @@ export default function RunTracker() {
           {!isRunning ? (
             <Button 
               size="lg" 
-              className="w-32 h-32 rounded-full bg-green-600 hover:bg-green-700"
+              className="w-20 h-20 rounded-2xl bg-primary hover:bg-primary/90 text-primary-foreground"
               onClick={startTracking}
             >
-              <Play className="w-12 h-12" />
+              <Play className="w-8 h-8" />
             </Button>
           ) : (
             <>
