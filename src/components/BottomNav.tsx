@@ -59,7 +59,9 @@ export function BottomNav() {
             alt="Quests" 
             className="w-14 h-14 sm:w-24 sm:h-24 md:w-28 md:h-28 object-contain -my-5 sm:-my-6 md:-my-8"
             style={{
-              filter: `drop-shadow(0 4px 12px ${config.glowColor})`,
+              filter: isModern 
+                ? 'brightness(0.3) drop-shadow(0 2px 6px rgba(0,0,0,0.1))' 
+                : `drop-shadow(0 4px 12px ${navColors.glowColor})`,
             }}
           />
         </Link>
