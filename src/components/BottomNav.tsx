@@ -2,6 +2,7 @@ import { Home, User, Compass, ShoppingBag } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { useNavTheme } from '@/hooks/useNavTheme';
 import questSword from '@/assets/quest-sword.png';
+import { useMemo } from 'react';
 
 
 const navItems = [
