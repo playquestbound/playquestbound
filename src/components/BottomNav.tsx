@@ -77,8 +77,8 @@ export function BottomNav() {
           <div 
             className="absolute inset-0 rounded-full"
             style={{ 
-              backgroundColor: config.activeBgColor,
-              boxShadow: `0 0 12px ${config.glowColor}`,
+              backgroundColor: navColors.activeBgColor,
+              boxShadow: isModern ? 'none' : `0 0 12px ${navColors.glowColor}`,
             }}
           />
         )}
