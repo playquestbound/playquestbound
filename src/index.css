@@ -230,6 +230,15 @@ html, body {
     box-shadow: 0 1px 4px hsl(0 0% 0% / 0.06);
   }
 
+  .design-modern .run-start-button {
+    background: hsl(155 40% 20%);
+    color: hsl(0 0% 98%);
+  }
+
+  .design-modern .run-start-button:hover {
+    background: hsl(155 40% 16%);
+  }
+
   .design-modern .quest-scroll::before,
   .design-modern .quest-scroll::after {
     display: none;
