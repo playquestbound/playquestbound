@@ -86,7 +86,7 @@ export function BottomNav() {
           <Icon 
             className="relative z-10 w-5 h-5 transition-colors duration-200"
             style={{ 
-              color: isActive ? config.activeIconColor : config.iconColor,
+              color: isActive ? navColors.activeIconColor : navColors.iconColor,
             }}
             strokeWidth={isActive ? 2.5 : 2}
           />
