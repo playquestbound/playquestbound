@@ -94,7 +94,7 @@ export function BottomNav() {
         <span 
           className="relative z-10 font-tech text-[10px] mt-0.5 transition-colors duration-200"
           style={{ 
-            color: isActive ? config.activeIconColor : config.iconColor,
+            color: isActive ? navColors.activeLabelColor : navColors.labelColor,
             fontWeight: isActive ? 500 : 400,
             opacity: isActive ? 1 : 0.7,
           }}
