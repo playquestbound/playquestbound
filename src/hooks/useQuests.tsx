@@ -74,24 +74,18 @@ function getDistanceKm(lat1: number, lng1: number, lat2: number, lng2: number): 
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 
-function useUserLocation() {
-  const [location, setLocation] = useState<{ lat: number; lng: number } | null>(null);
+export function useAvailableQuests(filters?: QuestFilters) {
+  const { user } = useAuth();
+  const { data: profile } = useProfile();
+  const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
 
   useEffect(() => {
     if (!navigator.geolocation) return;
     navigator.geolocation.getCurrentPosition(
-      (pos) => setLocation({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
+      (pos) => setUserLocation({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
       () => {} // silently fail
     );
   }, []);
-
-  return location;
-}
-
-export function useAvailableQuests(filters?: QuestFilters) {
-  const { user } = useAuth();
-  const { data: profile } = useProfile();
-  const userLocation = useUserLocation();
 
   return useQuery({
     queryKey: ['available-quests', user?.id, filters, profile?.level, userLocation?.lat, userLocation?.lng],
