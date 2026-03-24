@@ -1,7 +1,7 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
 export type NavTheme = 'classic' | 'blue' | 'orange' | 'green' | 'red';
-export type DesignStyle = 'sleek' | 'adventurer';
+export type DesignStyle = 'sleek' | 'modern';
 
 interface NavThemeConfig {
   name: string;
