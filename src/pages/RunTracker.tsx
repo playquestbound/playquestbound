@@ -152,13 +152,13 @@ export default function RunTracker() {
         {/* Control Buttons */}
         <div className="flex justify-center gap-4 pt-4">
           {!isRunning ? (
-            <Button 
-              size="lg" 
-              className="w-20 h-20 rounded-2xl bg-primary hover:bg-primary/90 text-primary-foreground shadow-md"
+            <button 
+              className="w-44 h-14 rounded-2xl bg-primary hover:bg-primary/90 text-primary-foreground shadow-md flex items-center justify-center gap-2 font-medium transition-colors"
               onClick={startTracking}
             >
-              <Play className="w-8 h-8" />
-            </Button>
+              <Play className="w-6 h-6" />
+              <span>Start</span>
+            </button>
           ) : (
             <>
               <Button 
