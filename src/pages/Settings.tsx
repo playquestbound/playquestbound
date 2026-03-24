@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
-import { ArrowLeft, Eye, Link2, Apple, Watch, Activity, Palette, Check, Sparkles, Sword, Trash2, AlertTriangle } from 'lucide-react';
+import { ArrowLeft, Eye, Link2, Apple, Watch, Activity, Palette, Check, Sparkles, Sun, Trash2, AlertTriangle } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from '@/hooks/use-toast';
 import { useNavTheme, navThemes, NavTheme, designStyles, DesignStyle } from '@/hooks/useNavTheme';
