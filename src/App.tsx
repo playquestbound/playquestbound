@@ -25,6 +25,7 @@ import Discover from "./pages/Discover";
 import Friends from "./pages/Friends";
 import Guild from "./pages/Guild";
 import NotFound from "./pages/NotFound";
+import TomodomomSimulator from "./pages/TomodomomSimulator";
 import Landing from "./pages/Landing";
 import QuestManagement from "./pages/admin/QuestManagement";
 import ModelManagement from "./pages/admin/ModelManagement";
@@ -33,7 +34,7 @@ import SubmissionsReview from "./pages/admin/SubmissionsReview";
 const queryClient = new QueryClient();
 
 // Pages where we don't show the bottom nav
-const hiddenNavRoutes = ['/auth', '/create-character', '/landing'];
+const hiddenNavRoutes = ['/auth', '/create-character', '/landing', '/tomodomo-sim'];
 
 function AppContent() {
   const location = useLocation();
@@ -62,6 +63,7 @@ function AppContent() {
         <Route path="/admin/quests" element={<ProtectedRoute requireAdmin><QuestManagement /></ProtectedRoute>} />
         <Route path="/admin/models" element={<ProtectedRoute requireAdmin><ModelManagement /></ProtectedRoute>} />
         <Route path="/admin/submissions" element={<ProtectedRoute requireAdmin><SubmissionsReview /></ProtectedRoute>} />
+        <Route path="/tomodomo-sim" element={<TomodomomSimulator />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       {showNav && <BottomNav />}
